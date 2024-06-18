@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
+// import Stack from '@mui/material/Stack';
+// import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
+// import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+// import { colors } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +25,7 @@ export default function UserTableRow({
   role,
   isVerified,
   status,
+  colorName,
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
@@ -43,14 +45,16 @@ export default function UserTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell component="th" scope="row" padding="none">
+        {/* <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Avatar alt={name} src={avatarUrl} />
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
           </Stack>
-        </TableCell>
+        </TableCell> */}
+
+        <TableCell>{name}</TableCell>
 
         <TableCell>{company}</TableCell>
 
@@ -61,6 +65,8 @@ export default function UserTableRow({
         <TableCell>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell>
+
+        <TableCell>{colorName}</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -88,6 +94,11 @@ export default function UserTableRow({
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
+
+        <MenuItem onClick={handleCloseMenu} >
+          <Iconify icon="ph:eye-duotone" sx={{ mr: 2 }} />
+          View
+        </MenuItem>
       </Popover>
     </>
   );
@@ -102,4 +113,5 @@ UserTableRow.propTypes = {
   role: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
+  colorName: PropTypes.string,
 };
