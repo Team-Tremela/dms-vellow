@@ -1,10 +1,14 @@
 import { useState } from 'react';
 
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+// import MenuItem from '@mui/material/MenuItem';
 import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
@@ -22,20 +26,25 @@ import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
+
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openModal, setOpenModal] = useState(false); // State for Modal
+
+  // State for motor details
+  const [modelName, setModelName] = useState('');
+  const [batteryName, setBatteryName] = useState('');
+  const [batteryKWH, setBatteryKWH] = useState('');
+  const [motorName, setMotorName] = useState('');
+  const [motorKW, setMotorKW] = useState('');
+  const [colors, setColors] = useState('');
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -92,14 +101,54 @@ export default function UserPage() {
     filterName,
   });
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    // Clear input fields when closing modal
+    setModelName('');
+    setBatteryName('');
+    setBatteryKWH('');
+    setMotorName('');
+    setMotorKW('');
+    setColors('');
+  };
+
+  const handleAddMotor = () => {
+    // Handle adding motor logic here
+    console.log({
+      modelName,
+      batteryName,
+      batteryKWH,
+      motorName,
+      motorKW,
+      colors,
+    });
+    // Clear input fields after adding motor
+    setModelName('');
+    setBatteryName('');
+    setBatteryKWH('');
+    setMotorName('');
+    setMotorKW('');
+    setColors('');
+    setOpenModal(false);
+  };
+
+
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Motor Management</Typography>
-
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button
+          variant="contained"
+          color="inherit"
+          startIcon={<Iconify icon="eva:plus-fill" />}
+          onClick={handleOpenModal} // Open Modal instead of Popover
+        >
           Add Motor
         </Button>
       </Stack>
@@ -170,6 +219,95 @@ export default function UserPage() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
+
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 1, // Adding border radius
+            outline: 'none', // Remove default outline
+          }}
+        >
+          <Typography variant="h6" id="modal-title">
+            Add Motor
+          </Typography>
+          <TextField
+            fullWidth
+            label="Model Name"
+            value={modelName}
+            onChange={(e) => setModelName(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: "10px", marginTop: "20px" }}
+          />
+          <TextField
+            fullWidth
+            label="Battery Name"
+            value={batteryName}
+            onChange={(e) => setBatteryName(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: "10px" }}
+          />
+          <TextField
+            fullWidth
+            label="Battery KWH"
+            value={batteryKWH}
+            onChange={(e) => setBatteryKWH(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: "10px" }}
+          />
+          <TextField
+            fullWidth
+            label="Motor Name"
+            value={motorName}
+            onChange={(e) => setMotorName(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: "10px" }}
+          />
+          <TextField
+            fullWidth
+            label="Motor KW"
+            value={motorKW}
+            onChange={(e) => setMotorKW(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: "10px" }}
+          />
+          <TextField
+            fullWidth
+            label="Colors"
+            value={colors}
+            onChange={(e) => setColors(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: "10px" }}
+          />
+          <div style={{textAlign:"center"}}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddMotor}
+            >
+              Add Motor
+            </Button>
+          </div>
+        </Box>
+      </Modal>
     </Container>
   );
 }
