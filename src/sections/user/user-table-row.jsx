@@ -66,7 +66,25 @@ export default function UserTableRow({
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell>
 
-        <TableCell>{colorName}</TableCell>
+        <TableCell>
+          <div style={{display:"flex"}}>
+            <div
+              style={{ width: "20px", height: "20px", backgroundColor: colorName,marginRight:"4px" }}
+            />
+            <div
+              style={{ width: "20px", height: "20px", backgroundColor: colorName,marginRight:"4px" }}
+            />
+            <div
+              style={{ width: "20px", height: "20px", backgroundColor: colorName,marginRight:"4px" }}
+            />
+            <div
+              style={{ width: "20px", height: "20px", backgroundColor: colorName,marginRight:"4px" }}
+            />
+            <div
+              style={{ width: "20px", height: "20px", backgroundColor: colorName }}
+            />
+          </div>
+        </TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
