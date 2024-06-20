@@ -20,10 +20,10 @@ import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
-import UserTableRow from '../user-table-row';
-import UserTableHead from '../user-table-head';
-import TableEmptyRows from '../table-empty-rows';
-import UserTableToolbar from '../user-table-toolbar';
+import UserTableRow from '../motor-table-row';
+import UserTableHead from '../motor-table-head';
+import TableEmptyRows from '../motor-empty-rows';
+import UserTableToolbar from '../motor-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 
@@ -171,9 +171,9 @@ export default function UserPage() {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Model Name' },
-                  { id: 'company', label: 'Battery Name' },
-                  { id: 'role', label: 'Battery KWH' },
+                  { id: 'modelname', label: 'Model Name' },
+                  { id: 'batteryName', label: 'Battery Name' },
+                  { id: 'batteryKWH', label: 'Battery KWH' },
                   { id: 'motorName', label: 'Motor Name' },
                   { id: 'motorkw', label: 'Motor KW' },
                   { id: 'colorName', label: 'Colors' },
@@ -186,15 +186,14 @@ export default function UserPage() {
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
-                      name={row.name}
-                      role={row.role}
-                      status={row.status}
-                      company={row.company}
-                      avatarUrl={row.avatarUrl}
-                      isVerified={row.isVerified}
+                      modelName={row.modelName}
+                      batteryName={row.batteryName}
+                      motorkw={row.motorkw}
+                      batteryKWH={row.batteryKWH}
+                      motorName={row.motorName}
                       colorName={row.colorName}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
+                      selected={selected.indexOf(row.modelname) !== -1}
+                      handleClick={(event) => handleClick(event, row.modelname)}
                     />
                   ))}
 
@@ -297,10 +296,10 @@ export default function UserPage() {
             mb={2}
             style={{ marginBottom: "10px" }}
           />
-          <div style={{textAlign:"center"}}>
+          <div style={{ textAlign: "center" }}>
             <Button
               variant="contained"
-              color="primary"
+              color="inherit"
               onClick={handleAddMotor}
             >
               Add Motor
