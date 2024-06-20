@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { UserView } from 'src/sections/user/view';
+import { MotorView } from 'src/sections/user/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function MotorPage() {
   return (
     <>
       <Helmet>
-        <title> User | Vellowmotors </title>
+        <title> Motor Management | Vellowmotors </title>
       </Helmet>
 
-      <UserView />
+      <MotorView />
     </>
   );
 }

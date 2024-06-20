@@ -1,1 +1,1 @@
-export { default as UserView } from './motor-view';
+export { default as MotorView } from './motor-view';

@@ -20,24 +20,26 @@ import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
-import UserTableRow from '../motor-table-row';
-import UserTableHead from '../motor-table-head';
-import TableEmptyRows from '../motor-empty-rows';
-import UserTableToolbar from '../motor-table-toolbar';
+import UserTableRow from '../inventory-table-row';
+import UserTableHead from '../inventory-table-head';
+import TableEmptyRows from '../inventory-empty-rows';
+import UserTableToolbar from '../inventory-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 
 // ----------------------------------------------------------------------
 
-export default function MotorPage() {
+export default function InventoryPage() {
+  console.log('Rendering InventoryPage');
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false); // State for Modal
 
+  // State for motor details
   const [modelName, setModelName] = useState('');
   const [batteryName, setBatteryName] = useState('');
   const [batteryKWH, setBatteryKWH] = useState('');
@@ -106,6 +108,7 @@ export default function MotorPage() {
 
   const handleCloseModal = () => {
     setOpenModal(false);
+    // Clear input fields when closing modal
     setModelName('');
     setBatteryName('');
     setBatteryKWH('');
@@ -115,6 +118,7 @@ export default function MotorPage() {
   };
 
   const handleAddMotor = () => {
+    // Handle adding motor logic here
     console.log({
       modelName,
       batteryName,
@@ -123,6 +127,7 @@ export default function MotorPage() {
       motorKW,
       colors,
     });
+    // Clear input fields after adding motor
     setModelName('');
     setBatteryName('');
     setBatteryKWH('');
@@ -132,19 +137,20 @@ export default function MotorPage() {
     setOpenModal(false);
   };
 
+
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Motor Management</Typography>
+        <Typography variant="h4">Inventory Management</Typography>
         <Button
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="eva:plus-fill" />}
-          onClick={handleOpenModal}
+          onClick={handleOpenModal} // Open Modal instead of Popover
         >
-          Add Motor
+          Add to Inventory
         </Button>
       </Stack>
 
@@ -230,8 +236,8 @@ export default function MotorPage() {
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
-            borderRadius: 1,
-            outline: 'none',
+            borderRadius: 1, // Adding border radius
+            outline: 'none', // Remove default outline
           }}
         >
           <Typography variant="h6" id="modal-title">
@@ -291,12 +297,15 @@ export default function MotorPage() {
             mb={2}
             style={{ marginBottom: "10px" }}
           />
-          <Button
-            variant="contained"
-            onClick={handleAddMotor}
-          >
-            Save
-          </Button>
+          <div style={{ textAlign: "center" }}>
+            <Button
+              variant="contained"
+              color="inherit"
+              onClick={handleAddMotor}
+            >
+              Add Motor
+            </Button>
+          </div>
         </Box>
       </Modal>
     </Container>
