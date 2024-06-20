@@ -78,7 +78,6 @@ export default function UserTableRow({
   const handleCloseViewModal = () => {
     setOpenViewModal(false);
   };
-  console.log({modelName});
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -95,26 +94,22 @@ export default function UserTableRow({
         <TableCell align="center">{batteryKWH}</TableCell>
 
         <TableCell>
-         {motorName}
+          {motorName}
         </TableCell>
 
         <TableCell>
           <div style={{ display: "flex" }}>
-            <div
-              style={{ width: "20px", height: "20px", backgroundColor: colorName, marginRight: "4px" }}
-            />
-            <div
-              style={{ width: "20px", height: "20px", backgroundColor: colorName, marginRight: "4px" }}
-            />
-            <div
-              style={{ width: "20px", height: "20px", backgroundColor: colorName, marginRight: "4px" }}
-            />
-            <div
-              style={{ width: "20px", height: "20px", backgroundColor: colorName, marginRight: "4px" }}
-            />
-            <div
-              style={{ width: "20px", height: "20px", backgroundColor: colorName }}
-            />
+            {colorName.map((color, index) => (
+              <div
+                key={index}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: color,
+                  marginRight: index < colorName.length - 1 ? "4px" : "4px",
+                }}
+              />
+            ))}
           </div>
         </TableCell>
 
@@ -325,5 +320,7 @@ UserTableRow.propTypes = {
   motorkw: PropTypes.any,
   selected: PropTypes.any,
   motorName: PropTypes.string,
-  colorName: PropTypes.string,
+  colorName: PropTypes.arrayOf(
+    PropTypes.arrayOf(PropTypes.string)  // Array of arrays of strings
+  ),
 };
