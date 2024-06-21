@@ -17,6 +17,11 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export default function Router() {
   const routes = useRoutes([
     {
+      path: '/',
+      element: <LoginPage />,
+    },
+    {
+      path: 'dashboard',
       element: (
         <DashboardLayout>
           <Suspense>
@@ -31,10 +36,6 @@ export default function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
       ],
-    },
-    {
-      path: 'login',
-      element: <LoginPage />,
     },
     {
       path: '404',
