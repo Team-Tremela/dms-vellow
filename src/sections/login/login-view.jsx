@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
+// import Button from '@mui/material/Button';
+// import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -26,12 +26,54 @@ export default function LoginView() {
   const theme = useTheme();
 
   const router = useRouter();
-
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClick = () => {
     router.push('/dashboard');
   };
+
+  const handleForgotPasswordClick = () => {
+    // Handle forgot password logic here
+    console.log('Forgot password email:', email);
+    // You can add your forgot password API call here
+  };
+
+  const renderForgotPasswordForm = (
+    <>
+      <Stack spacing={3}>
+        <TextField
+          name="email"
+          label="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </Stack>
+
+      <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
+        <Link
+          variant="subtitle2"
+          underline="hover"
+          style={{ cursor: 'pointer' }}
+          onClick={() => setIsForgotPassword(false)}
+        >
+          Back to login
+        </Link>
+      </Stack>
+
+      <LoadingButton
+        fullWidth
+        size="large"
+        type="submit"
+        variant="contained"
+        color="inherit"
+        onClick={handleForgotPasswordClick}
+      >
+        Submit
+      </LoadingButton>
+    </>
+  );
 
   const renderForm = (
     <>
@@ -55,7 +97,12 @@ export default function LoginView() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        <Link variant="subtitle2" underline="hover" style={{cursor:"pointer"}}>
+        <Link
+          variant="subtitle2"
+          underline="hover"
+          style={{ cursor: 'pointer' }}
+          onClick={() => setIsForgotPassword(true)}
+        >
           Forgot password?
         </Link>
       </Stack>
@@ -99,16 +146,18 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Vellowmotors-DMS</Typography>
+          <Typography variant="h4" sx={{ mb: 5 }}>
+            {isForgotPassword ? 'Forgot Password' : 'Sign in to Vellowmotors-DMS'}
+          </Typography>
 
-          <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
+          {/* <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
             <Link variant="subtitle2" sx={{ ml: 0.5 }} style={{cursor:"pointer"}}>
               Get started
             </Link>
-          </Typography>
+          </Typography> */}
 
-          <Stack direction="row" spacing={2}>
+          {/* <Stack direction="row" spacing={2}>
             <Button
               fullWidth
               size="large"
@@ -138,15 +187,15 @@ export default function LoginView() {
             >
               <Iconify icon="eva:twitter-fill" color="#1C9CEA" />
             </Button>
-          </Stack>
+          </Stack> */}
 
-          <Divider sx={{ my: 3 }}>
+          {/* <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               OR
             </Typography>
-          </Divider>
+          </Divider> */}
 
-          {renderForm}
+          {isForgotPassword ? renderForgotPasswordForm : renderForm}
         </Card>
       </Stack>
     </Box>
