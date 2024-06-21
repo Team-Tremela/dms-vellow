@@ -36,7 +36,7 @@ export default function AccountPopover() {
   const [open, setOpen] = useState(null);
   const router = useRouter();
   const handleClick = () => {
-    router.push('/');
+    router.push('/login');
   };
 
   const handleOpen = (event) => {
