@@ -13,18 +13,18 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'Motor Managemnet',
+    title: 'Motor Management',
     path: '/dashboard/motor',
     icon: icon('ic_user'),
   },
   {
-    title: 'Inventory Managemnet',
+    title: 'Inventory Management',
     path: '/dashboard/inventory',
     icon: icon('ic_inventory'),
   },
   {
-    title: 'Dealer',
-    path: '/#',
+    title: 'Dealer Management',
+    path: '/dashboard/dealer',
     icon: icon('ic_cart'),
   },
   {
