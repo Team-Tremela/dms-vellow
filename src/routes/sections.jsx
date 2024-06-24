@@ -3,6 +3,9 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
 
+import AuthGuard from './AuthGuard';
+
+
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const MotorPage = lazy(() => import('src/pages/motor'));
@@ -19,11 +22,13 @@ export default function Router() {
     {
       path: 'dashboard',
       element: (
-        <DashboardLayout>
-          <Suspense>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
+        <AuthGuard>
+          <DashboardLayout>
+            <Suspense>
+              <Outlet />
+            </Suspense>
+          </DashboardLayout>
+        </AuthGuard>
       ),
       children: [
         { element: <IndexPage />, index: true },
