@@ -29,7 +29,7 @@ const navConfig = [
   },
   {
     title: 'Report',
-    path: '/#',
+    path: '/report',
     icon: icon('ic_blog'),
   },
   {
