@@ -28,15 +28,15 @@ const navConfig = [
     icon: icon('ic_cart'),
   },
   {
-    title: 'Report',
-    path: '/report',
+    title: 'Reports',
+    path: '/dashboard/reports',
     icon: icon('ic_blog'),
   },
-  {
-    title: 'login',
-    path: '/',
-    icon: icon('ic_lock'),
-  },
+  // {
+  //   title: 'login',
+  //   path: '/',
+  //   icon: icon('ic_lock'),
+  // },
   // {
   //   title: 'Not found',
   //   path: '/404',
