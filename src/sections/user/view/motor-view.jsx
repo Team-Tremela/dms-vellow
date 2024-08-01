@@ -14,7 +14,8 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { users } from 'src/_mock/user';
+// import { users } from 'src/_mock/user';
+import { vendor } from 'src/_mock/vendor';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -38,12 +39,12 @@ export default function MotorPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openModal, setOpenModal] = useState(false);
 
-  const [modelName, setModelName] = useState('');
-  const [batteryName, setBatteryName] = useState('');
-  const [batteryKWH, setBatteryKWH] = useState('');
-  const [motorName, setMotorName] = useState('');
-  const [motorKW, setMotorKW] = useState('');
-  const [colors, setColors] = useState('');
+  const [Name, setName] = useState('');
+  // const [batteryName, setBatteryName] = useState('');
+  const [Email, setEmail] = useState('');
+  const [PhoneNumber, setPhoneNumber] = useState('');
+  const [Address, setAddress] = useState('');
+  // const [colors, setColors] = useState('');
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -55,7 +56,7 @@ export default function MotorPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = vendor.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -94,8 +95,13 @@ export default function MotorPage() {
     setFilterName(event.target.value);
   };
 
+  // const dataFiltered = applyFilter({
+  //   inputData: users,
+  //   comparator: getComparator(order, orderBy),
+  //   filterName,
+  // });
   const dataFiltered = applyFilter({
-    inputData: users,
+    inputData: vendor,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -106,29 +112,29 @@ export default function MotorPage() {
 
   const handleCloseModal = () => {
     setOpenModal(false);
-    setModelName('');
-    setBatteryName('');
-    setBatteryKWH('');
-    setMotorName('');
-    setMotorKW('');
-    setColors('');
+    setName('');
+    // setBatteryName('');
+    setEmail('');
+    setPhoneNumber('');
+    setAddress('');
+    // setColors('');
   };
 
   const handleAddMotor = () => {
-    console.log({
-      modelName,
-      batteryName,
-      batteryKWH,
-      motorName,
-      motorKW,
-      colors,
-    });
-    setModelName('');
-    setBatteryName('');
-    setBatteryKWH('');
-    setMotorName('');
-    setMotorKW('');
-    setColors('');
+    // console.log({
+    //   modelName,
+    //   batteryName,
+    //   batteryKWH,
+    //   motorName,
+    //   motorKW,
+    //   colors,
+    // });
+    setName('');
+    // setBatteryName('');
+    setEmail('');
+    setPhoneNumber('');
+    setAddress('');
+    // setColors('');
     setOpenModal(false);
   };
 
@@ -137,14 +143,14 @@ export default function MotorPage() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Motor Management</Typography>
+        <Typography variant="h4">Vendor</Typography>
         <Button
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="eva:plus-fill" />}
           onClick={handleOpenModal}
         >
-          Add Motor
+          Add Vendor
         </Button>
       </Stack>
 
@@ -161,17 +167,16 @@ export default function MotorPage() {
               <UserTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={vendor.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'modelname', label: 'Model Name' },
-                  { id: 'batteryName', label: 'Battery Name' },
-                  { id: 'batteryKWH', label: 'Battery KWH' },
-                  { id: 'motorName', label: 'Motor Name' },
-                  { id: 'motorkw', label: 'Motor KW' },
-                  { id: 'colorName', label: 'Colors' },
+                  { id: 'Name', label: 'Name' },
+                  // { id: 'ContactInformation', label: 'Contact Information' },
+                  { id: 'Address', label: 'Address' },
+                  { id: 'Email', label: 'Email' },
+                  { id: 'PhoneNumber', label: 'Phone Number' },
                   { id: '' },
                 ]}
               />
@@ -181,12 +186,12 @@ export default function MotorPage() {
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
-                      modelName={row.modelName}
-                      batteryName={row.batteryName}
-                      motorkw={row.motorkw}
-                      batteryKWH={row.batteryKWH}
-                      motorName={row.motorName}
-                      colorName={row.colorName}
+                      Name={row.Name}
+                      // batteryName={row.ContactInformation}
+                      Address={row.Address}
+                      Email={row.Email}
+                      PhoneNumber={row.PhoneNumber}
+                      // colorName={row.colorName}
                       selected={selected.indexOf(row.modelname) !== -1}
                       handleClick={(event) => handleClick(event, row.modelname)}
                     />
@@ -194,7 +199,7 @@ export default function MotorPage() {
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, vendor.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -206,7 +211,7 @@ export default function MotorPage() {
         <TablePagination
           page={page}
           component="div"
-          count={users.length}
+          count={vendor.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
@@ -235,18 +240,18 @@ export default function MotorPage() {
           }}
         >
           <Typography variant="h6" id="modal-title">
-            Add Motor
+            Add Vendor
           </Typography>
           <TextField
             fullWidth
-            label="Model Name"
-            value={modelName}
-            onChange={(e) => setModelName(e.target.value)}
+            label="Name"
+            value={Name}
+            onChange={(e) => setName(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px", marginTop: "20px" }}
           />
-          <TextField
+          {/* <TextField
             fullWidth
             label="Battery Name"
             value={batteryName}
@@ -254,35 +259,35 @@ export default function MotorPage() {
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
-          />
+          /> */}
           <TextField
             fullWidth
-            label="Battery KWH"
-            value={batteryKWH}
-            onChange={(e) => setBatteryKWH(e.target.value)}
+            label="Address"
+            value={Address}
+            onChange={(e) => setAddress(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
           <TextField
             fullWidth
-            label="Motor Name"
-            value={motorName}
-            onChange={(e) => setMotorName(e.target.value)}
+            label="Email"
+            value={Email}
+            onChange={(e) => setEmail(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
           <TextField
             fullWidth
-            label="Motor KW"
-            value={motorKW}
-            onChange={(e) => setMotorKW(e.target.value)}
+            label="Phone Number"
+            value={PhoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
-          <TextField
+          {/* <TextField
             fullWidth
             label="Colors"
             value={colors}
@@ -290,7 +295,7 @@ export default function MotorPage() {
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
-          />
+          /> */}
           <Button
             variant="contained"
             onClick={handleAddMotor}

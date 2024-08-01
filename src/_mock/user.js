@@ -6,7 +6,7 @@ import { faker } from '@faker-js/faker';
 export const users = [...Array(24)].map((_, index) => ({
   id: faker.string.uuid(),
   modelName: sample([
-    "Tesla Model S",
+    "Tesla Model S4",
     "Nissan Leaf",
     "Chevrolet Bolt EV",
     "BMW i3",

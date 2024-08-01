@@ -8,7 +8,7 @@ export default function MotorPage() {
   return (
     <>
       <Helmet>
-        <title> Motor Management | Vellowmotors </title>
+        <title> Vendor | Vellowmotors </title>
       </Helmet>
 
       <MotorView />
