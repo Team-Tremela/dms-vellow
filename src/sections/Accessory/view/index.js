@@ -1,0 +1,1 @@
+export { default as AccessoryView } from './accessory-view';

@@ -19,12 +19,12 @@ const navConfig = [
   },
   {
     title: 'Spare',
-    path: '/dashboard/inventory',
+    path: '/dashboard/spare',
     icon: icon('ic_spare'),
   },
   {
     title: 'Accessory',
-    path: '#',
+    path: '/dashboard/accessory',
     icon: icon('ic_acc'),
   },
   {
@@ -34,7 +34,7 @@ const navConfig = [
   },
   {
     title: 'Service',
-    path: '#',
+    path: '/dashboard/service',
     icon: icon('ic_service'),
   },
   {

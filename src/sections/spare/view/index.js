@@ -1,0 +1,1 @@
+export { default as SpareView } from './spare-view';

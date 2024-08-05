@@ -17,28 +17,28 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({
+export default function AccessoryTableRow({
   selected,
-  vendorID,
+  accessoryID,
   Name,
   batteryName,
-  Email,
-  PhoneNumber,
-  Address,
-  // colorName,
+  Description,
+  VendorID,
+  UnitCost,
+  LeadTime,
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [formData, setFormData] = useState({
-    vendorID,
     Name,
+    accessoryID,
     batteryName,
-    Address,
-    Email,
-    PhoneNumber,
-    // colorName,
+    UnitCost,
+    Description,
+    VendorID,
+    LeadTime,
   });
 
   const handleOpenMenu = (event) => {
@@ -87,35 +87,23 @@ export default function UserTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{vendorID}</TableCell>
+        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{accessoryID}</TableCell>
 
         <TableCell>{Name}</TableCell>
 
         {/* <TableCell>{batteryName}</TableCell> */}
 
-        <TableCell>{Address}</TableCell>
+        <TableCell>{UnitCost}</TableCell>
 
-        <TableCell>{Email}</TableCell>
+        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"200px"}}>{Description}</TableCell>
 
-        <TableCell>
-          {PhoneNumber}
+        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>
+          {VendorID}
         </TableCell>
 
-        {/* <TableCell>
-          <div style={{ display: "flex" }}>
-            {colorName.map((color, index) => (
-              <div
-                key={index}
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  backgroundColor: color,
-                  marginRight: index < colorName.length - 1 ? "4px" : "4px",
-                }}
-              />
-            ))}
-          </div>
-        </TableCell> */}
+        <TableCell>
+          {LeadTime}
+        </TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -171,16 +159,16 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Vendor Id"
-            name="VendorID"
-            value={formData.vendorID}
+            label="Accessory Id"
+            name="AccessoryID"
+            value={formData.accessoryID}
             onChange={handleFormChange}
           />
           <TextField
             fullWidth
             margin="normal"
             label="Name"
-            name="modelName"
+            name="accessoryName"
             value={formData.Name}
             onChange={handleFormChange}
           />
@@ -195,35 +183,35 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Address"
-            name="Address"
-            value={formData.Address}
+            label="Unit Cost"
+            name="UnitCost"
+            value={formData.UnitCost}
             onChange={handleFormChange}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="Email"
-            name="Email"
-            value={formData.Email}
+            label="Description"
+            name="Description"
+            value={formData.Description}
             onChange={handleFormChange}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="Phone Number"
-            name="PhoneNumber"
-            value={formData.PhoneNumber}
+            label="Vendor Id"
+            name="VendorID"
+            value={formData.VendorID}
             onChange={handleFormChange}
           />
-          {/* <TextField
+          <TextField
             fullWidth
             margin="normal"
-            label="Color"
-            name="colorName"
-            value={formData.colorName}
+            label="Lead Time"
+            name="LeadTime"
+            value={formData.LeadTime}
             onChange={handleFormChange}
-          /> */}
+          />
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
               Cancel
@@ -256,9 +244,9 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Vendor Id"
-            name="VendorID"
-            value={formData.vendorID}
+            label="Accessory Id"
+            name="AccessoryID"
+            value={formData.accessoryID}
             InputProps={{
               readOnly: true,
             }}
@@ -267,7 +255,7 @@ export default function UserTableRow({
             fullWidth
             margin="normal"
             label="Name"
-            name="modelname"
+            name="accessoryname"
             value={formData.Name}
             InputProps={{
               readOnly: true,
@@ -286,9 +274,9 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Address"
-            name="Address"
-            value={formData.Address}
+            label="Unit Cost"
+            name="UnitCost"
+            value={formData.UnitCost}
             InputProps={{
               readOnly: true,
             }}
@@ -296,9 +284,9 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Email"
-            name="Email"
-            value={formData.Email}
+            label="Description"
+            name="Description"
+            value={formData.Description}
             InputProps={{
               readOnly: true,
             }}
@@ -306,23 +294,23 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Phone Number"
-            name="PhoneNumber"
-            value={formData.PhoneNumber}
+            label="Vendor Id"
+            name="VendorID"
+            value={formData.VendorID}
             InputProps={{
               readOnly: true,
             }}
           />
-          {/* <TextField
+          <TextField
             fullWidth
             margin="normal"
-            label="Color"
-            name="colorName"
-            value={formData.colorName}
+            label="Lead Time"
+            name="LeadTime"
+            value={formData.LeadTime}
             InputProps={{
               readOnly: true,
             }}
-          /> */}
+          />
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseViewModal} variant="contained" color="inherit">
               Close
@@ -334,16 +322,14 @@ export default function UserTableRow({
   );
 }
 
-UserTableRow.propTypes = {
+AccessoryTableRow.propTypes = {
   batteryName: PropTypes.string,
   handleClick: PropTypes.func,
-  Email: PropTypes.any,
+  Description: PropTypes.any,
   Name: PropTypes.string,
-  Address: PropTypes.any,
+  UnitCost: PropTypes.any,
   selected: PropTypes.any,
-  PhoneNumber: PropTypes.string,
-  vendorID: PropTypes.string,
-  // colorName: PropTypes.arrayOf(
-  //   PropTypes.arrayOf(PropTypes.string)  // Array of arrays of strings
-  // ),
+  VendorID: PropTypes.string,
+  LeadTime: PropTypes.any,
+  accessoryID: PropTypes.any,
 };

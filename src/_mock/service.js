@@ -3,10 +3,11 @@ import { faker } from '@faker-js/faker';
 
 // ----------------------------------------------------------------------
 
-export const vendor = [...Array(25)].map((_, index) => ({
+export const accessory = [...Array(25)].map((_, index) => ({
   id: faker.string.uuid(),
-  VendorID: faker.string.uuid(),
-  Name: sample([
+  serviceID: faker.string.uuid(),
+  vehicleID: faker.string.uuid(),
+  serviceDate: sample([
     "Alice Johnson",
     "Bob Smith",
     "Carol Williams",
@@ -18,7 +19,7 @@ export const vendor = [...Array(25)].map((_, index) => ({
     "Ivy Anderson",
     "Jack Thompson",
   ]),
-  Address: sample([
+  Cost: sample([
     "123 Main St, Anytown, USA",
     "456 Elm St, Othertown, USA",
     "789 Oak St, Somewhere, USA",
@@ -30,7 +31,7 @@ export const vendor = [...Array(25)].map((_, index) => ({
     "606 Willow St, Somewhere, USA",
     "707 Aspen St, Anytown, USA",
   ]),
-  Email: sample([
+  Description: sample([
     "john.doe@example.com",
     "jane.smith@example.com",
     "alice.johnson@example.com",
@@ -42,16 +43,5 @@ export const vendor = [...Array(25)].map((_, index) => ({
     "grace.davis@example.com",
     "henry.wilson@example.com",
   ]),
-  PhoneNumber: sample([
-    "123-456-7890",
-    "234-567-8901",
-    "345-678-9012",
-    "456-789-0123",
-    "567-890-1234",
-    "678-901-2345",
-    "789-012-3456",
-    "890-123-4567",
-    "901-234-5678",
-    "012-345-6789"
-  ]),
+  dealerID: faker.string.uuid(),
 }));

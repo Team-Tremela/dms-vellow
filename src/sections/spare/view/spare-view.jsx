@@ -15,22 +15,24 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
 // import { users } from 'src/_mock/user';
-import { vendor } from 'src/_mock/vendor';
+// import { vendor } from 'src/_mock/vendor';
+// import { accessory } from 'src/_mock/accessory';
+import { spare } from 'src/_mock/spare';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
-import UserTableRow from '../motor-table-row';
-import UserTableHead from '../motor-table-head';
-import TableEmptyRows from '../motor-empty-rows';
-import UserTableToolbar from '../motor-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../utils';
+import SpareTableRow from '../spare-table-row';
+import TableEmptyRows from '../spare-empty-rows';
+import SpareTableHead from '../spare-table-head';
+import SpareTableToolbar from '../spare-table-toolbar';
+import { emptyRows,applyFilter,getComparator } from '../utils';
 
 
 // ----------------------------------------------------------------------
 
-export default function MotorPage() {
+export default function SparePage() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -41,11 +43,11 @@ export default function MotorPage() {
 
   const [Name, setName] = useState('');
   // const [batteryName, setBatteryName] = useState('');
-  const [Email, setEmail] = useState('');
-  const [PhoneNumber, setPhoneNumber] = useState('');
-  const [Address, setAddress] = useState('');
+  const [Description, setDescription] = useState('');
   const [VendorID, setVendorID] = useState('');
-  // const [colors, setColors] = useState('');
+  const [UnitCost, setUnitCost] = useState('');
+  const [LeadTime, setLeadTime] = useState('');
+  const [SpareID, setSpareID] = useState('');
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -57,7 +59,7 @@ export default function MotorPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = vendor.map((n) => n.name);
+      const newSelecteds = spare.map((n) => n.Name);
       setSelected(newSelecteds);
       return;
     }
@@ -102,7 +104,7 @@ export default function MotorPage() {
   //   filterName,
   // });
   const dataFiltered = applyFilter({
-    inputData: vendor,
+    inputData: spare,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -115,11 +117,11 @@ export default function MotorPage() {
     setOpenModal(false);
     setName('');
     // setBatteryName('');
-    setEmail('');
-    setPhoneNumber('');
-    setAddress('');
+    setDescription('');
     setVendorID('');
-    // setColors('');
+    setUnitCost('');
+    setLeadTime('');
+    setSpareID('');
   };
 
   const handleAddMotor = () => {
@@ -133,11 +135,11 @@ export default function MotorPage() {
     // });
     setName('');
     // setBatteryName('');
-    setEmail('');
-    setPhoneNumber('');
-    setAddress('');
+    setDescription('');
     setVendorID('');
-    // setColors('');
+    setUnitCost('');
+    setLeadTime('');
+    setSpareID('');
     setOpenModal(false);
   };
 
@@ -146,19 +148,19 @@ export default function MotorPage() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Vendor</Typography>
+        <Typography variant="h4">Spare</Typography>
         <Button
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="eva:plus-fill" />}
           onClick={handleOpenModal}
         >
-          Add Vendor
+          Add Spare
         </Button>
       </Stack>
 
       <Card>
-        <UserTableToolbar
+        <SpareTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -167,20 +169,21 @@ export default function MotorPage() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
+              <SpareTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={vendor.length}
+                rowCount={spare.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'VendorID', label: 'Vendor Id' },
+                  { id: 'SpareID', label: 'Spare Id' },
                   { id: 'Name', label: 'Name' },
-                  // { id: 'ContactInformation', label: 'Contact Information' },
-                  { id: 'Address', label: 'Address' },
-                  { id: 'Email', label: 'Email' },
-                  { id: 'PhoneNumber', label: 'Phone Number' },
+                  { id: 'PartNumber', label: 'Part Number' },
+                  { id: 'UnitCost', label: 'Unit Cost' },
+                  { id: 'Description', label: 'Description' },
+                  { id: 'VendorID', label: 'Vendor ID' },
+                  { id: 'LeadTime', label: 'Lead Time' },
                   { id: '' },
                 ]}
               />
@@ -188,15 +191,15 @@ export default function MotorPage() {
                 {dataFiltered
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <UserTableRow
+                    <SpareTableRow
                       key={row.id}
-                      vendorID={row.VendorID}
+                      spareID={row.SpareID}
                       Name={row.Name}
-                      // batteryName={row.ContactInformation}
-                      Address={row.Address}
-                      Email={row.Email}
-                      PhoneNumber={row.PhoneNumber}
-                      // colorName={row.colorName}
+                      partNumber={row.partNumber}
+                      UnitCost={row.UnitCost}
+                      Description={row.Description}
+                      VendorID={row.VendorID}
+                      LeadTime={row.LeadTime}
                       selected={selected.indexOf(row.modelname) !== -1}
                       handleClick={(event) => handleClick(event, row.modelname)}
                     />
@@ -204,7 +207,7 @@ export default function MotorPage() {
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, vendor.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, spare.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -216,7 +219,7 @@ export default function MotorPage() {
         <TablePagination
           page={page}
           component="div"
-          count={vendor.length}
+          count={spare.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
@@ -249,9 +252,9 @@ export default function MotorPage() {
           </Typography>
           <TextField
             fullWidth
-            label="Vendor Id"
-            value={VendorID}
-            onChange={(e) => setVendorID(e.target.value)}
+            label="Accessory Id"
+            value={SpareID}
+            onChange={(e) => setSpareID(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px", marginTop: "20px" }}
@@ -276,40 +279,40 @@ export default function MotorPage() {
           /> */}
           <TextField
             fullWidth
-            label="Address"
-            value={Address}
-            onChange={(e) => setAddress(e.target.value)}
+            label="Unit Cost"
+            value={UnitCost}
+            onChange={(e) => setUnitCost(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
           <TextField
             fullWidth
-            label="Email"
-            value={Email}
-            onChange={(e) => setEmail(e.target.value)}
+            label="Description"
+            value={Description}
+            onChange={(e) => setDescription(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
           <TextField
             fullWidth
-            label="Phone Number"
-            value={PhoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            label="Vendor Id"
+            value={VendorID}
+            onChange={(e) => setVendorID(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
-          {/* <TextField
+          <TextField
             fullWidth
-            label="Colors"
-            value={colors}
-            onChange={(e) => setColors(e.target.value)}
+            label="Lead Time"
+            value={LeadTime}
+            onChange={(e) => setLeadTime(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
-          /> */}
+          />
           <Button
             variant="contained"
             onClick={handleAddMotor}
