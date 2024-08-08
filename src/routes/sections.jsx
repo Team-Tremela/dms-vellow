@@ -11,6 +11,7 @@ export const BlogPage = lazy(() => import('src/pages/blog'));
 export const MotorPage = lazy(() => import('src/pages/motor'));
 export const InventoryPage = lazy(() => import('src/pages/inventory'));
 export const AccessoryPage = lazy(() => import('src/pages/accessory'));
+export const VechiclesPage = lazy(() => import('src/pages/vechicles'));
 export const ServicePage = lazy(() => import('src/pages/service'));
 export const SparePage = lazy(() => import('src/pages/spare'));
 export const DealerPage = lazy(() => import('src/pages/dealer'));
@@ -39,6 +40,7 @@ export default function Router() {
         { path: '/dashboard/motor', element: <MotorPage /> },
         { path: '/dashboard/inventory', element: <InventoryPage /> },
         { path: '/dashboard/accessory', element: <AccessoryPage /> },
+        { path: '/dashboard/vechicles', element: <VechiclesPage /> },
         { path: '/dashboard/spare', element: <SparePage /> },
         { path: '/dashboard/service', element: <ServicePage /> },
         { path: '/dashboard/dealer', element: <DealerPage /> },

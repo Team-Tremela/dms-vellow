@@ -1,0 +1,1 @@
+export { default as VechiclesView } from './vechicles-view';

@@ -29,7 +29,7 @@ const navConfig = [
   },
   {
     title: 'Vehicle',
-    path: '#',
+    path: '/dashboard/vechicles',
     icon: icon('ic_bike'),
   },
   {
