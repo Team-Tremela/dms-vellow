@@ -189,7 +189,7 @@ export default function VechiclesPage() {
                   { id: 'batteryNo', label: 'Battery No' },
                   { id: 'colorCode', label: 'Color Code' },
                   { id: 'mfgDate', label: 'MFG Date' },
-                  { id: 'unitCost', label: 'Unit Cost' },
+                  // { id: 'unitCost', label: 'Unit Cost' },
                   { id: 'barCode', label: 'Barcode' },
                   { id: '' },
                 ]}
@@ -209,7 +209,7 @@ export default function VechiclesPage() {
                       batteryNo={row.batteryNo}
                       colorCode={row.colorCode}
                       mfgDate={row.mfgDate}
-                      unitCost={row.unitCost}
+                      // unitCost={row.unitCost}
                       barCode={row.barCode}
                       selected={selected.indexOf(row.modelname) !== -1}
                       handleClick={(event) => handleClick(event, row.modelname)}

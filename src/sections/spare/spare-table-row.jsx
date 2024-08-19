@@ -155,7 +155,7 @@ export default function SpareTableRow({
           boxShadow: 24,
           p: 4,
         }}>
-          <h2 id="edit-modal-title">Edit Motor</h2>
+          <h2 id="edit-modal-title">Edit Spare</h2>
           <TextField
             fullWidth
             margin="normal"
@@ -240,7 +240,7 @@ export default function SpareTableRow({
           boxShadow: 24,
           p: 4,
         }}>
-          <h2 id="view-modal-title">View Vendor</h2>
+          <h2 id="view-modal-title">View Spare</h2>
           <TextField
             fullWidth
             margin="normal"

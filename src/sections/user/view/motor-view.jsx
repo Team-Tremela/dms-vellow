@@ -45,6 +45,7 @@ export default function MotorPage() {
   const [PhoneNumber, setPhoneNumber] = useState('');
   const [Address, setAddress] = useState('');
   const [VendorID, setVendorID] = useState('');
+  const [BatchNo, setBatchNo] = useState('');
   // const [colors, setColors] = useState('');
 
   const handleSort = (event, id) => {
@@ -119,6 +120,7 @@ export default function MotorPage() {
     setPhoneNumber('');
     setAddress('');
     setVendorID('');
+    setBatchNo('');
     // setColors('');
   };
 
@@ -137,6 +139,7 @@ export default function MotorPage() {
     setPhoneNumber('');
     setAddress('');
     setVendorID('');
+    setBatchNo('');
     // setColors('');
     setOpenModal(false);
   };
@@ -176,6 +179,7 @@ export default function MotorPage() {
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'VendorID', label: 'Vendor Id' },
+                  { id: 'BatchNo', label: 'Batch No' },
                   { id: 'Name', label: 'Name' },
                   // { id: 'ContactInformation', label: 'Contact Information' },
                   { id: 'Address', label: 'Address' },
@@ -192,6 +196,7 @@ export default function MotorPage() {
                       key={row.id}
                       vendorID={row.VendorID}
                       Name={row.Name}
+                      BatchNo={row.BatchNo}
                       // batteryName={row.ContactInformation}
                       Address={row.Address}
                       Email={row.Email}
@@ -260,6 +265,15 @@ export default function MotorPage() {
             fullWidth
             label="Name"
             value={Name}
+            onChange={(e) => setName(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: "10px", marginTop: "20px" }}
+          />
+          <TextField
+            fullWidth
+            label="Batch No"
+            value={BatchNo}
             onChange={(e) => setName(e.target.value)}
             variant="outlined"
             mb={2}

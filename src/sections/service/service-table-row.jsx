@@ -19,26 +19,28 @@ import Iconify from 'src/components/iconify';
 
 export default function ServiceTableRow({
   selected,
-  accessoryID,
+  ServiceID,
   Name,
-  batteryName,
+  VehicleID,
+  ServiceDate,
   Description,
-  VendorID,
   UnitCost,
-  LeadTime,
+  DealerID,
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [formData, setFormData] = useState({
+    ServiceID,
     Name,
-    accessoryID,
-    batteryName,
+    VehicleID,
+    ServiceDate,
+    // batteryName,
     UnitCost,
     Description,
-    VendorID,
-    LeadTime,
+    DealerID,
+    // LeadTime,
   });
 
   const handleOpenMenu = (event) => {
@@ -87,22 +89,40 @@ export default function ServiceTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{accessoryID}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {ServiceID}
+        </TableCell>
 
         <TableCell>{Name}</TableCell>
 
+        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{VehicleID}</TableCell>
+
+        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{ServiceDate}</TableCell>
+
         {/* <TableCell>{batteryName}</TableCell> */}
+
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '200px',
+          }}
+        >
+          {Description}
+        </TableCell>
 
         <TableCell>{UnitCost}</TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"200px"}}>{Description}</TableCell>
-
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>
-          {VendorID}
-        </TableCell>
-
-        <TableCell>
-          {LeadTime}
+        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}} >
+          {DealerID}
         </TableCell>
 
         <TableCell align="right">
@@ -144,24 +164,26 @@ export default function ServiceTableRow({
         aria-labelledby="edit-modal-title"
         aria-describedby="edit-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-          boxShadow: 24,
-          p: 4,
-        }}>
-          <h2 id="edit-modal-title">Edit Motor</h2>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <h2 id="edit-modal-title">Edit Service</h2>
           <TextField
             fullWidth
             margin="normal"
-            label="Accessory Id"
-            name="AccessoryID"
-            value={formData.accessoryID}
+            label="Service Id"
+            name="ServiceID"
+            value={formData.ServiceID}
             onChange={handleFormChange}
           />
           <TextField
@@ -170,6 +192,22 @@ export default function ServiceTableRow({
             label="Name"
             name="accessoryName"
             value={formData.Name}
+            onChange={handleFormChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Vechile Id"
+            name="VehicleID"
+            value={formData.VehicleID}
+            onChange={handleFormChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Service Date"
+            name="ServiceDate"
+            value={formData.ServiceDate}
             onChange={handleFormChange}
           />
           {/* <TextField
@@ -183,14 +221,6 @@ export default function ServiceTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Unit Cost"
-            name="UnitCost"
-            value={formData.UnitCost}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
             label="Description"
             name="Description"
             value={formData.Description}
@@ -199,17 +229,17 @@ export default function ServiceTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Vendor Id"
-            name="VendorID"
-            value={formData.VendorID}
+            label="Unit Cost"
+            name="UnitCost"
+            value={formData.UnitCost}
             onChange={handleFormChange}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="Lead Time"
-            name="LeadTime"
-            value={formData.LeadTime}
+            label="Dealer Id"
+            name="Dealer"
+            value={formData.DealerID}
             onChange={handleFormChange}
           />
           <Box mt={2} display="flex" justifyContent="flex-end">
@@ -229,24 +259,26 @@ export default function ServiceTableRow({
         aria-labelledby="view-modal-title"
         aria-describedby="view-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-          boxShadow: 24,
-          p: 4,
-        }}>
-          <h2 id="view-modal-title">View Vendor</h2>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <h2 id="view-modal-title">View Service</h2>
           <TextField
             fullWidth
             margin="normal"
-            label="Accessory Id"
-            name="AccessoryID"
-            value={formData.accessoryID}
+            label="Service Id"
+            name="ServiceID"
+            value={formData.ServiceID}
             InputProps={{
               readOnly: true,
             }}
@@ -257,6 +289,26 @@ export default function ServiceTableRow({
             label="Name"
             name="accessoryname"
             value={formData.Name}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Vechile Id"
+            name="VehicleID"
+            value={formData.VehicleID}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Service Date"
+            name="ServiceDate"
+            value={formData.ServiceDate}
             InputProps={{
               readOnly: true,
             }}
@@ -274,16 +326,6 @@ export default function ServiceTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Unit Cost"
-            name="UnitCost"
-            value={formData.UnitCost}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
             label="Description"
             name="Description"
             value={formData.Description}
@@ -294,9 +336,9 @@ export default function ServiceTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Vendor Id"
-            name="VendorID"
-            value={formData.VendorID}
+            label="Unit Cost"
+            name="UnitCost"
+            value={formData.UnitCost}
             InputProps={{
               readOnly: true,
             }}
@@ -304,9 +346,9 @@ export default function ServiceTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Lead Time"
-            name="LeadTime"
-            value={formData.LeadTime}
+            label="Dealer Id"
+            name="DealerID"
+            value={formData.DealerID}
             InputProps={{
               readOnly: true,
             }}
@@ -323,13 +365,13 @@ export default function ServiceTableRow({
 }
 
 ServiceTableRow.propTypes = {
-  batteryName: PropTypes.string,
   handleClick: PropTypes.func,
   Description: PropTypes.any,
   Name: PropTypes.string,
+  ServiceID: PropTypes.any,
+  VehicleID: PropTypes.any,
+  ServiceDate: PropTypes.any,
   UnitCost: PropTypes.any,
   selected: PropTypes.any,
-  VendorID: PropTypes.string,
-  LeadTime: PropTypes.any,
-  accessoryID: PropTypes.any,
+  DealerID: PropTypes.string,
 };

@@ -14,9 +14,7 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-// import { users } from 'src/_mock/user';
-// import { vendor } from 'src/_mock/vendor';
-import { accessory } from 'src/_mock/accessory';
+import { service } from 'src/_mock/service';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -41,12 +39,14 @@ export default function ServicePage() {
   const [openModal, setOpenModal] = useState(false);
 
   const [Name, setName] = useState('');
+  const [VechicleID, setVechicleId] = useState('');
+  const [ServiceDate, setServiceDate] = useState('');
   // const [batteryName, setBatteryName] = useState('');
   const [Description, setDescription] = useState('');
-  const [VendorID, setVendorID] = useState('');
+  const [DealerID, setDealerID] = useState('');
   const [UnitCost, setUnitCost] = useState('');
   const [LeadTime, setLeadTime] = useState('');
-  const [AccessoryID, setAccessoryID] = useState('');
+  const [ServiceID, setServiceID] = useState('');
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -58,7 +58,7 @@ export default function ServicePage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = accessory.map((n) => n.Name);
+      const newSelecteds = service.map((n) => n.Name);
       setSelected(newSelecteds);
       return;
     }
@@ -103,7 +103,7 @@ export default function ServicePage() {
   //   filterName,
   // });
   const dataFiltered = applyFilter({
-    inputData: accessory,
+    inputData: service,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -116,11 +116,13 @@ export default function ServicePage() {
     setOpenModal(false);
     setName('');
     // setBatteryName('');
+    setServiceDate('');
+    setVechicleId('');
     setDescription('');
-    setVendorID('');
+    setDealerID('');
     setUnitCost('');
     setLeadTime('');
-    setAccessoryID('');
+    setServiceID('');
   };
 
   const handleAddMotor = () => {
@@ -135,10 +137,12 @@ export default function ServicePage() {
     setName('');
     // setBatteryName('');
     setDescription('');
-    setVendorID('');
+    setServiceDate('');
+    setVechicleId('');
+    setDealerID('');
     setUnitCost('');
     setLeadTime('');
-    setAccessoryID('');
+    setServiceID('');
     setOpenModal(false);
   };
 
@@ -171,18 +175,19 @@ export default function ServicePage() {
               <ServiceTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={accessory.length}
+                rowCount={service.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'AccessoryID', label: 'Accessory Id' },
+                  { id: 'ServiceID', label: 'Service Id' },
                   { id: 'Name', label: 'Name' },
+                  { id: 'VehicleID', label: 'Vechicle Id' },
+                  { id: 'ServiceDate', label: 'Sevice Date' },
                   // { id: 'ContactInformation', label: 'Contact Information' },
-                  { id: 'UnitCost', label: 'Unit Cost' },
                   { id: 'Description', label: 'Description' },
-                  { id: 'VendorID', label: 'Vendor ID' },
-                  { id: 'LeadTime', label: 'Lead Time' },
+                  { id: 'Cost', label: 'Cost' },
+                  { id: 'DealerID', label: 'Dealer ID' },
                   { id: '' },
                 ]}
               />
@@ -192,13 +197,14 @@ export default function ServicePage() {
                   .map((row) => (
                     <ServiceTableRow
                       key={row.id}
-                      accessoryID={row.AccessoryID}
+                      ServiceID={row.ServiceID}
                       Name={row.Name}
                       // batteryName={row.ContactInformation}
-                      UnitCost={row.UnitCost}
+                      VehicleID={row.VehicleID}
+                      ServiceDate={row.ServiceDate}
                       Description={row.Description}
-                      VendorID={row.VendorID}
-                      LeadTime={row.LeadTime}
+                      UnitCost={row.UnitCost}
+                      DealerID={row.DealerID}
                       selected={selected.indexOf(row.modelname) !== -1}
                       handleClick={(event) => handleClick(event, row.modelname)}
                     />
@@ -206,7 +212,7 @@ export default function ServicePage() {
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, accessory.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, service.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -218,7 +224,7 @@ export default function ServicePage() {
         <TablePagination
           page={page}
           component="div"
-          count={accessory.length}
+          count={service.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
@@ -251,9 +257,9 @@ export default function ServicePage() {
           </Typography>
           <TextField
             fullWidth
-            label="Accessory Id"
-            value={AccessoryID}
-            onChange={(e) => setAccessoryID(e.target.value)}
+            label="Service Id"
+            value={ServiceID}
+            onChange={(e) => setServiceID(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px", marginTop: "20px" }}
@@ -263,6 +269,24 @@ export default function ServicePage() {
             label="Name"
             value={Name}
             onChange={(e) => setName(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: "10px", marginTop: "20px" }}
+          />
+          <TextField
+            fullWidth
+            label="Vechicle Id"
+            value={VechicleID}
+            onChange={(e) => setVechicleId(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: "10px", marginTop: "20px" }}
+          />
+          <TextField
+            fullWidth
+            label="Service Date"
+            value={ServiceDate}
+            onChange={(e) => setServiceDate(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px", marginTop: "20px" }}
@@ -296,9 +320,9 @@ export default function ServicePage() {
           />
           <TextField
             fullWidth
-            label="Vendor Id"
-            value={VendorID}
-            onChange={(e) => setVendorID(e.target.value)}
+            label="Dealer Id"
+            value={DealerID}
+            onChange={(e) => setDealerID(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}

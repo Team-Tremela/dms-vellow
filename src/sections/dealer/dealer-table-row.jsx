@@ -19,24 +19,24 @@ import Iconify from 'src/components/iconify';
 
 export default function UserTableRow({
   selected,
-  modelName,
-  batteryName,
-  motorkw,
-  batteryKWH,
-  motorName,
-  colorName,
+  DealerID,
+  Name,
+  Location,
+  Email,
+  PhoneNumber,
+  Address,
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [formData, setFormData] = useState({
-    modelName,
-    batteryName,
-    motorkw,
-    batteryKWH,
-    motorName,
-    colorName,
+    DealerID,
+    Name,
+    Location,
+    Email,
+    PhoneNumber,
+    Address,
   });
 
   const handleOpenMenu = (event) => {
@@ -78,7 +78,6 @@ export default function UserTableRow({
   const handleCloseViewModal = () => {
     setOpenViewModal(false);
   };
-  console.log({ colorName });
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -86,33 +85,20 @@ export default function UserTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell>{modelName}</TableCell>
+        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{DealerID}</TableCell>
 
-        <TableCell>{batteryName}</TableCell>
+        <TableCell>{Name}</TableCell>
 
-        <TableCell>{motorkw}</TableCell>
+        <TableCell>{Location}</TableCell>
 
-        <TableCell align="center">{batteryKWH}</TableCell>
+        <TableCell>{Email}</TableCell>
 
         <TableCell>
-          {motorName}
+          {PhoneNumber}
         </TableCell>
 
         <TableCell>
-          <div style={{ display: "flex" }}>
-            {colorName.map((color, index) => (
-              <div
-                key={index}
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  backgroundColor: color,
-                  marginRight: index < colorName.length - 1 ? "4px" : "0",
-                  marginBottom: "10px"
-                }}
-              />
-            ))}
-          </div>
+          {Address}
         </TableCell>
 
         <TableCell align="right">
@@ -165,53 +151,53 @@ export default function UserTableRow({
           boxShadow: 24,
           p: 4,
         }}>
-          <h2 id="edit-modal-title">Edit Motor</h2>
+          <h2 id="edit-modal-title">Edit Dealer</h2>
           <TextField
             fullWidth
             margin="normal"
-            label="Model Name"
-            name="modelName"
-            value={formData.modelName}
+            label="Dealer Id"
+            name="DealerID"
+            value={formData.DealerID}
             onChange={handleFormChange}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="Battery Name"
-            name="batteryName"
-            value={formData.batteryName}
+            label="Name"
+            name="Name"
+            value={formData.Name}
             onChange={handleFormChange}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="Motor KW"
-            name="motorkw"
-            value={formData.motorkw}
+            label="Location"
+            name="Location"
+            value={formData.Location}
             onChange={handleFormChange}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="Battery KWH"
-            name="batteryKWH"
-            value={formData.batteryKWH}
+            label="Email"
+            name="Email"
+            value={formData.Email}
             onChange={handleFormChange}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="Motor Name"
-            name="motorName"
-            value={formData.motorName}
+            label="Phone Number"
+            name="PhoneNumber"
+            value={formData.PhoneNumber}
             onChange={handleFormChange}
           />
           <TextField
             fullWidth
             margin="normal"
-            label="Color"
-            name="colorName"
-            value={formData.colorName}
+            label="Address"
+            name="Address"
+            value={formData.Address}
             onChange={handleFormChange}
           />
           <Box mt={2} display="flex" justifyContent="flex-end">
@@ -242,13 +228,13 @@ export default function UserTableRow({
           boxShadow: 24,
           p: 4,
         }}>
-          <h2 id="view-modal-title">View Motor</h2>
+          <h2 id="view-modal-title">View Dealer</h2>
           <TextField
             fullWidth
             margin="normal"
-            label="Model Name"
-            name="modelname"
-            value={formData.modelName}
+            label="Dealer Id"
+            name="DealerID"
+            value={formData.DealerID}
             InputProps={{
               readOnly: true,
             }}
@@ -256,9 +242,9 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Battery Name"
-            name="batteryName"
-            value={formData.batteryName}
+            label="Name"
+            name="Name"
+            value={formData.Name}
             InputProps={{
               readOnly: true,
             }}
@@ -266,9 +252,9 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Motor KW"
-            name="motorkw"
-            value={formData.motorkw}
+            label="Location"
+            name="Location"
+            value={formData.Location}
             InputProps={{
               readOnly: true,
             }}
@@ -276,9 +262,9 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Battery KWH"
-            name="batteryKWH"
-            value={formData.batteryKWH}
+            label="Email"
+            name="Email"
+            value={formData.Email}
             InputProps={{
               readOnly: true,
             }}
@@ -286,9 +272,9 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Motor Name"
-            name="motorName"
-            value={formData.motorName}
+            label="Phone Number"
+            name="PhoneNumber"
+            value={formData.PhoneNumber}
             InputProps={{
               readOnly: true,
             }}
@@ -296,9 +282,9 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
-            label="Color"
-            name="colorName"
-            value={formData.colorName}
+            label="Address"
+            name="Address"
+            value={formData.Address}
             InputProps={{
               readOnly: true,
             }}
@@ -315,14 +301,12 @@ export default function UserTableRow({
 }
 
 UserTableRow.propTypes = {
-  batteryName: PropTypes.any,
+  PhoneNumber: PropTypes.any,
   handleClick: PropTypes.func,
-  batteryKWH: PropTypes.any,
-  modelName: PropTypes.string,
-  motorkw: PropTypes.any,
+  Email: PropTypes.any,
+  Name: PropTypes.string,
+  DealerID: PropTypes.any,
   selected: PropTypes.any,
-  motorName: PropTypes.string,
-  colorName: PropTypes.arrayOf(
-    PropTypes.arrayOf(PropTypes.string)  // Array of arrays of strings
-  ),
+  Location: PropTypes.string,
+  Address: PropTypes.string,
 };

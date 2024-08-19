@@ -25,6 +25,7 @@ export default function UserTableRow({
   Email,
   PhoneNumber,
   Address,
+  BatchNo,
   // colorName,
   handleClick,
 }) {
@@ -38,6 +39,7 @@ export default function UserTableRow({
     Address,
     Email,
     PhoneNumber,
+    BatchNo,
     // colorName,
   });
 
@@ -89,7 +91,10 @@ export default function UserTableRow({
 
         <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{vendorID}</TableCell>
 
+        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{BatchNo}</TableCell>
+
         <TableCell>{Name}</TableCell>
+
 
         {/* <TableCell>{batteryName}</TableCell> */}
 
@@ -167,7 +172,7 @@ export default function UserTableRow({
           boxShadow: 24,
           p: 4,
         }}>
-          <h2 id="edit-modal-title">Edit Motor</h2>
+          <h2 id="edit-modal-title">Edit Vendor</h2>
           <TextField
             fullWidth
             margin="normal"
@@ -182,6 +187,14 @@ export default function UserTableRow({
             label="Name"
             name="modelName"
             value={formData.Name}
+            onChange={handleFormChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Batch No"
+            name="BatchNo"
+            value={formData.BatchNo}
             onChange={handleFormChange}
           />
           {/* <TextField
@@ -273,6 +286,16 @@ export default function UserTableRow({
               readOnly: true,
             }}
           />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Batch No"
+            name="BatchNo"
+            value={formData.BatchNo}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
           {/* <TextField
             fullWidth
             margin="normal"
@@ -339,6 +362,7 @@ UserTableRow.propTypes = {
   handleClick: PropTypes.func,
   Email: PropTypes.any,
   Name: PropTypes.string,
+  BatchNo: PropTypes.any,
   Address: PropTypes.any,
   selected: PropTypes.any,
   PhoneNumber: PropTypes.string,

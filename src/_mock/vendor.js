@@ -6,6 +6,7 @@ import { faker } from '@faker-js/faker';
 export const vendor = [...Array(25)].map((_, index) => ({
   id: faker.string.uuid(),
   VendorID: faker.string.uuid(),
+  BatchNo: faker.string.uuid(),
   Name: sample([
     "Alice Johnson",
     "Bob Smith",

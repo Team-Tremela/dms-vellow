@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { users } from 'src/_mock/user';
+import { dealer } from 'src/_mock/dealer';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -40,12 +40,12 @@ export default function DealerPage() {
   const [openModal, setOpenModal] = useState(false); // State for Modal
 
   // State for motor details
-  const [modelName, setModelName] = useState('');
-  const [batteryName, setBatteryName] = useState('');
-  const [batteryKWH, setBatteryKWH] = useState('');
-  const [motorName, setMotorName] = useState('');
-  const [motorKW, setMotorKW] = useState('');
-  const [colors, setColors] = useState('');
+  const [DealerID, setDealerID] = useState('');
+  const [Name, setName] = useState('');
+  const [Location, setLocation] = useState('');
+  const [Email, setEmail] = useState('');
+  const [PhoneNumber, setPhoneNumber] = useState('');
+  const [Address, setAddress] = useState('');
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -57,7 +57,7 @@ export default function DealerPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = dealer.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -97,7 +97,7 @@ export default function DealerPage() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: users,
+    inputData: dealer,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -109,31 +109,23 @@ export default function DealerPage() {
   const handleCloseModal = () => {
     setOpenModal(false);
     // Clear input fields when closing modal
-    setModelName('');
-    setBatteryName('');
-    setBatteryKWH('');
-    setMotorName('');
-    setMotorKW('');
-    setColors('');
+    setDealerID('');
+    setName('');
+    setLocation('');
+    setEmail('');
+    setPhoneNumber('');
+    setAddress('');
   };
 
   const handleAddMotor = () => {
     // Handle adding motor logic here
-    console.log({
-      modelName,
-      batteryName,
-      batteryKWH,
-      motorName,
-      motorKW,
-      colors,
-    });
     // Clear input fields after adding motor
-    setModelName('');
-    setBatteryName('');
-    setBatteryKWH('');
-    setMotorName('');
-    setMotorKW('');
-    setColors('');
+    setDealerID('');
+    setName('');
+    setLocation('');
+    setEmail('');
+    setPhoneNumber('');
+    setAddress('');
     setOpenModal(false);
   };
 
@@ -143,7 +135,7 @@ export default function DealerPage() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Dealer Management</Typography>
+        <Typography variant="h4">Dealer</Typography>
         <Button
           variant="contained"
           color="inherit"
@@ -167,17 +159,17 @@ export default function DealerPage() {
               <UserTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={dealer.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'modelname', label: 'Model Name' },
-                  { id: 'batteryName', label: 'Battery Name' },
-                  { id: 'batteryKWH', label: 'Battery KWH' },
-                  { id: 'motorName', label: 'Motor Name' },
-                  { id: 'motorkw', label: 'Motor KW' },
-                  { id: 'colorName', label: 'Colors' },
+                  { id: 'DealerID', label: 'Dealer Id' },
+                  { id: 'Name', label: 'Name' },
+                  { id: 'Location', label: 'Location' },
+                  { id: 'Email', label: 'Email' },
+                  { id: 'PhoneNumber', label: 'Phone Number' },
+                  { id: 'Address', label: 'Address' },
                   { id: '' },
                 ]}
               />
@@ -187,20 +179,20 @@ export default function DealerPage() {
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
-                      modelName={row.modelName}
-                      batteryName={row.batteryName}
-                      motorkw={row.motorkw}
-                      batteryKWH={row.batteryKWH}
-                      motorName={row.motorName}
-                      colorName={row.colorName}
-                      selected={selected.indexOf(row.modelname) !== -1}
-                      handleClick={(event) => handleClick(event, row.modelname)}
+                      DealerID={row.DealerID}
+                      Name={row.Name}
+                      Location={row.Location}
+                      Email={row.Email}
+                      PhoneNumber={row.PhoneNumber}
+                      Address={row.Address}
+                      selected={selected.indexOf(row.DealerID) !== -1}
+                      handleClick={(event) => handleClick(event, row.DealerID)}
                     />
                   ))}
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, dealer.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -212,7 +204,7 @@ export default function DealerPage() {
         <TablePagination
           page={page}
           component="div"
-          count={users.length}
+          count={dealer.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
@@ -241,58 +233,58 @@ export default function DealerPage() {
           }}
         >
           <Typography variant="h6" id="modal-title">
-            Add Motor
+            Add Dealer
           </Typography>
           <TextField
             fullWidth
-            label="Model Name"
-            value={modelName}
-            onChange={(e) => setModelName(e.target.value)}
+            label="Dealer Id"
+            value={DealerID}
+            onChange={(e) => setDealerID(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px", marginTop: "20px" }}
           />
           <TextField
             fullWidth
-            label="Battery Name"
-            value={batteryName}
-            onChange={(e) => setBatteryName(e.target.value)}
+            label="Name"
+            value={Name}
+            onChange={(e) => setName(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
           <TextField
             fullWidth
-            label="Battery KWH"
-            value={batteryKWH}
-            onChange={(e) => setBatteryKWH(e.target.value)}
+            label="Location"
+            value={Location}
+            onChange={(e) => setLocation(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
           <TextField
             fullWidth
-            label="Motor Name"
-            value={motorName}
-            onChange={(e) => setMotorName(e.target.value)}
+            label="Email"
+            value={Email}
+            onChange={(e) => setEmail(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
           <TextField
             fullWidth
-            label="Motor KW"
-            value={motorKW}
-            onChange={(e) => setMotorKW(e.target.value)}
+            label="Phone Number"
+            value={PhoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}
           />
           <TextField
             fullWidth
-            label="Colors"
-            value={colors}
-            onChange={(e) => setColors(e.target.value)}
+            label="Address"
+            value={Address}
+            onChange={(e) => setAddress(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px" }}

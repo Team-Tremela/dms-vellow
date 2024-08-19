@@ -129,7 +129,7 @@ export default function VechiclesTableRow({
 
         <TableCell>{mfgDate}</TableCell>
 
-        <TableCell>{unitCost}</TableCell>
+        {/* <TableCell>{unitCost}</TableCell> */}
 
         <TableCell>{barCode}</TableCell>
 
@@ -185,7 +185,7 @@ export default function VechiclesTableRow({
             p: 4,
           }}
         >
-          <h2 id="edit-modal-title">Edit Motor</h2>
+          <h2 id="edit-modal-title">Edit Vechicles</h2>
           <TextField
             fullWidth
             margin="normal"
@@ -304,7 +304,7 @@ export default function VechiclesTableRow({
             p: 4,
           }}
         >
-          <h2 id="view-modal-title">View Motor</h2>
+          <h2 id="view-modal-title">View Vechicles</h2>
           <TextField
             fullWidth
             margin="normal"
