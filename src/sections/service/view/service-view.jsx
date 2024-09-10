@@ -19,13 +19,13 @@ import { service } from 'src/_mock/service';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
+import './Service.css';
 import TableNoData from '../table-no-data';
 import TableEmptyRows from '../service-empty-rows';
 import ServiceTableRow from '../service-table-row';
 import ServiceTableHead from '../service-table-head';
 import ServiceTableToolbar from '../service-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-
 
 // ----------------------------------------------------------------------
 
@@ -244,7 +244,7 @@ export default function ServicePage() {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 400,
+            width: 800,
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
@@ -253,95 +253,91 @@ export default function ServicePage() {
           }}
         >
           <Typography variant="h6" id="modal-title">
-            Add Vendor
+            Add Service
           </Typography>
-          <TextField
-            fullWidth
-            label="Service Id"
-            value={ServiceID}
-            onChange={(e) => setServiceID(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
-          />
-          <TextField
-            fullWidth
-            label="Name"
-            value={Name}
-            onChange={(e) => setName(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
-          />
-          <TextField
-            fullWidth
-            label="Vechicle Id"
-            value={VechicleID}
-            onChange={(e) => setVechicleId(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
-          />
-          <TextField
-            fullWidth
-            label="Service Date"
-            value={ServiceDate}
-            onChange={(e) => setServiceDate(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
-          />
-          {/* <TextField
-            fullWidth
-            label="Battery Name"
-            value={batteryName}
-            onChange={(e) => setBatteryName(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          /> */}
-          <TextField
-            fullWidth
-            label="Unit Cost"
-            value={UnitCost}
-            onChange={(e) => setUnitCost(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Description"
-            value={Description}
-            onChange={(e) => setDescription(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Dealer Id"
-            value={DealerID}
-            onChange={(e) => setDealerID(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Lead Time"
-            value={LeadTime}
-            onChange={(e) => setLeadTime(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <Button
-            variant="contained"
-            onClick={handleAddMotor}
-          >
-            Save
-          </Button>
+          <div className="SModal-style">
+            <div className="SModal-inner-left">
+              <TextField
+                fullWidth
+                label="Service Id"
+                value={ServiceID}
+                onChange={(e) => setServiceID(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px', marginTop: '20px' }}
+              />
+              <TextField
+                fullWidth
+                label="Name"
+                value={Name}
+                onChange={(e) => setName(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px', marginTop: '20px' }}
+              />
+              <TextField
+                fullWidth
+                label="Vechicle Id"
+                value={VechicleID}
+                onChange={(e) => setVechicleId(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px', marginTop: '20px' }}
+              />
+              <TextField
+                fullWidth
+                label="Service Date"
+                value={ServiceDate}
+                onChange={(e) => setServiceDate(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px', marginTop: '20px' }}
+              />
+            </div>
+            <div className="SModal-inner-right">
+              <TextField
+                fullWidth
+                label="Unit Cost"
+                value={UnitCost}
+                onChange={(e) => setUnitCost(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="Description"
+                value={Description}
+                onChange={(e) => setDescription(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="Dealer Id"
+                value={DealerID}
+                onChange={(e) => setDealerID(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="Lead Time"
+                value={LeadTime}
+                onChange={(e) => setLeadTime(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+            </div>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <Button variant="contained" color="inherit" onClick={handleAddMotor}>
+              Save
+            </Button>
+          </div>
         </Box>
       </Modal>
     </Container>

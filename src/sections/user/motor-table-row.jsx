@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import MuiAlert from '@mui/material/Alert';
 import Popover from '@mui/material/Popover';
+import Snackbar from '@mui/material/Snackbar';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,6 +30,7 @@ export default function UserTableRow({
   BatchNo,
   // colorName,
   handleClick,
+  onUpdateSuccess,
 }) {
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
@@ -43,6 +46,11 @@ export default function UserTableRow({
     // colorName,
   });
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [alertType, setAlertType] = useState('success');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
+
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -51,10 +59,40 @@ export default function UserTableRow({
     setOpen(null);
   };
 
-  const handleFormSubmit = () => {
-    // Add form submission logic here
-    console.log('Form data:', formData);
-    handleCloseModal();
+  const handleFormSubmit = async () => {
+    const payload = {
+      name: formData.Name,
+      address: formData.Address,
+      email: formData.Email,
+      phone_no: formData.PhoneNumber,
+      batch_no: formData.BatchNo,
+    };
+
+    try {
+      const response = await fetch(`https://vlmtrs.onrender.com/v1/vendor/update/${formData.vendorID}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        setAlertType('success');
+        setAlertMessage('Vendor updated successfully');
+        if (onUpdateSuccess) {
+          onUpdateSuccess(); // Notify the parent component to fetch updated data
+        }
+      } else {
+        throw new Error('Failed to update vendor');
+      }
+    } catch (error) {
+      setAlertType('error');
+      setAlertMessage(error.message || 'An error occurred');
+    } finally {
+      setSnackbarOpen(true);
+      handleCloseModal();
+    }
   };
 
   const handleFormChange = (event) => {
@@ -74,6 +112,10 @@ export default function UserTableRow({
     setOpenModal(false);
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const handleOpenViewModal = () => {
     setOpenViewModal(true);
     handleCloseMenu();
@@ -82,6 +124,39 @@ export default function UserTableRow({
   const handleCloseViewModal = () => {
     setOpenViewModal(false);
   };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`https://vlmtrs.onrender.com/v1/vendor/delete/${vendorID}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setAlertType('success');
+        setAlertMessage('Vendor deleted successfully');
+        if (onUpdateSuccess) {
+          onUpdateSuccess(); // Notify the parent component to fetch updated data
+        }
+      } else {
+        throw new Error('Failed to delete vendor');
+      }
+    } catch (error) {
+      setAlertType('error');
+      setAlertMessage(error.message || 'An error occurred');
+    } finally {
+      setSnackbarOpen(true);
+      handleCloseMenu();
+    }
+  };
+
+  const handleOpenDeletePopover = (event) => {
+    setDeletePopoverOpen(event.currentTarget);
+  };
+
+  const handleCloseDeletePopover = () => {
+    setDeletePopoverOpen(null);
+  };
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -144,7 +219,7 @@ export default function UserTableRow({
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleOpenDeletePopover} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
@@ -152,6 +227,22 @@ export default function UserTableRow({
         <MenuItem onClick={handleOpenViewModal}>
           <Iconify icon="ph:eye-duotone" sx={{ mr: 2 }} />
           View
+        </MenuItem>
+      </Popover>
+
+      <Popover
+        open={Boolean(deletePopoverOpen)}
+        anchorEl={deletePopoverOpen}
+        onClose={handleCloseDeletePopover}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        <MenuItem onClick={handleDelete}>
+          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
+          Confirm Delete
+        </MenuItem>
+        <MenuItem onClick={handleCloseDeletePopover} sx={{ color: 'error.main' }}>
+          Cancel
         </MenuItem>
       </Popover>
 
@@ -185,7 +276,7 @@ export default function UserTableRow({
             fullWidth
             margin="normal"
             label="Name"
-            name="modelName"
+            name="Name"
             value={formData.Name}
             onChange={handleFormChange}
           />
@@ -353,6 +444,12 @@ export default function UserTableRow({
           </Box>
         </Box>
       </Modal>
+
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <MuiAlert elevation={6} variant="filled" onClose={handleSnackbarClose} severity={alertType}>
+          {alertMessage}
+        </MuiAlert>
+      </Snackbar>
     </>
   );
 }
@@ -367,6 +464,7 @@ UserTableRow.propTypes = {
   selected: PropTypes.any,
   PhoneNumber: PropTypes.string,
   vendorID: PropTypes.string,
+  onUpdateSuccess: PropTypes.func,
   // colorName: PropTypes.arrayOf(
   //   PropTypes.arrayOf(PropTypes.string)  // Array of arrays of strings
   // ),

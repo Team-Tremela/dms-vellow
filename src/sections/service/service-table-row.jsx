@@ -15,6 +15,8 @@ import IconButton from '@mui/material/IconButton';
 // import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
+import './Service.css';
+
 // ----------------------------------------------------------------------
 
 export default function ServiceTableRow({
@@ -102,9 +104,27 @@ export default function ServiceTableRow({
 
         <TableCell>{Name}</TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{VehicleID}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {VehicleID}
+        </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{ServiceDate}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {ServiceDate}
+        </TableCell>
 
         {/* <TableCell>{batteryName}</TableCell> */}
 
@@ -121,7 +141,14 @@ export default function ServiceTableRow({
 
         <TableCell>{UnitCost}</TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}} >
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
           {DealerID}
         </TableCell>
 
@@ -170,7 +197,7 @@ export default function ServiceTableRow({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 400,
+            width: 800,
             bgcolor: 'background.paper',
             borderRadius: 1,
             boxShadow: 24,
@@ -178,38 +205,69 @@ export default function ServiceTableRow({
           }}
         >
           <h2 id="edit-modal-title">Edit Service</h2>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Service Id"
-            name="ServiceID"
-            value={formData.ServiceID}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Name"
-            name="accessoryName"
-            value={formData.Name}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vechile Id"
-            name="VehicleID"
-            value={formData.VehicleID}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Service Date"
-            name="ServiceDate"
-            value={formData.ServiceDate}
-            onChange={handleFormChange}
-          />
+          <div className="VRModel-style">
+            <div className="VRModal-inner-left">
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Service Id"
+                name="ServiceID"
+                value={formData.ServiceID}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Name"
+                name="accessoryName"
+                value={formData.Name}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Vechile Id"
+                name="VehicleID"
+                value={formData.VehicleID}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Service Date"
+                name="ServiceDate"
+                value={formData.ServiceDate}
+                onChange={handleFormChange}
+              />
+            </div>
+            <div className="VRModal-inner-right">
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Description"
+                name="Description"
+                value={formData.Description}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Unit Cost"
+                name="UnitCost"
+                value={formData.UnitCost}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Dealer Id"
+                name="Dealer"
+                value={formData.DealerID}
+                onChange={handleFormChange}
+              />
+            </div>
+          </div>
+
           {/* <TextField
             fullWidth
             margin="normal"
@@ -218,30 +276,6 @@ export default function ServiceTableRow({
             value={formData.batteryName}
             onChange={handleFormChange}
           /> */}
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Description"
-            name="Description"
-            value={formData.Description}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Unit Cost"
-            name="UnitCost"
-            value={formData.UnitCost}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Dealer Id"
-            name="Dealer"
-            value={formData.DealerID}
-            onChange={handleFormChange}
-          />
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
               Cancel
@@ -265,7 +299,7 @@ export default function ServiceTableRow({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 400,
+            width: 800,
             bgcolor: 'background.paper',
             borderRadius: 1,
             boxShadow: 24,
@@ -273,46 +307,83 @@ export default function ServiceTableRow({
           }}
         >
           <h2 id="view-modal-title">View Service</h2>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Service Id"
-            name="ServiceID"
-            value={formData.ServiceID}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Name"
-            name="accessoryname"
-            value={formData.Name}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vechile Id"
-            name="VehicleID"
-            value={formData.VehicleID}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Service Date"
-            name="ServiceDate"
-            value={formData.ServiceDate}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
+          <div className='VRModel-style'>
+            <div className='VRModal-inner-left'>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Service Id"
+                name="ServiceID"
+                value={formData.ServiceID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Name"
+                name="accessoryname"
+                value={formData.Name}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Vechile Id"
+                name="VehicleID"
+                value={formData.VehicleID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Service Date"
+                name="ServiceDate"
+                value={formData.ServiceDate}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div className='VRModal-inner-right'>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Description"
+                name="Description"
+                value={formData.Description}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Unit Cost"
+                name="UnitCost"
+                value={formData.UnitCost}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Dealer Id"
+                name="DealerID"
+                value={formData.DealerID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+          </div>
+
           {/* <TextField
             fullWidth
             margin="normal"
@@ -323,36 +394,6 @@ export default function ServiceTableRow({
               readOnly: true,
             }}
           /> */}
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Description"
-            name="Description"
-            value={formData.Description}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Unit Cost"
-            name="UnitCost"
-            value={formData.UnitCost}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Dealer Id"
-            name="DealerID"
-            value={formData.DealerID}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseViewModal} variant="contained" color="inherit">
               Close

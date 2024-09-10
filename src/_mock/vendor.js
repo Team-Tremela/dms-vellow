@@ -1,58 +1,33 @@
-import { sample } from 'lodash';
+// import { sample } from 'lodash';
 import { faker } from '@faker-js/faker';
 
 // ----------------------------------------------------------------------
+const apiUrl = 'https://vlmtrs.onrender.com/v1/vendor/fetch-all';
+
+async function fetchData() {
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data.data; // Assuming `data.data` is an array of vendor objects
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return []; // Return an empty array if there's an error
+  }
+}
+
+const apiData = await fetchData();
+
+// const length = apiData.length();
 
 export const vendor = [...Array(25)].map((_, index) => ({
   id: faker.string.uuid(),
-  VendorID: faker.string.uuid(),
-  BatchNo: faker.string.uuid(),
-  Name: sample([
-    "Alice Johnson",
-    "Bob Smith",
-    "Carol Williams",
-    "David Brown",
-    "Eve Davis",
-    "Frank Miller",
-    "Grace Wilson",
-    "Hank Taylor",
-    "Ivy Anderson",
-    "Jack Thompson",
-  ]),
-  Address: sample([
-    "123 Main St, Anytown, USA",
-    "456 Elm St, Othertown, USA",
-    "789 Oak St, Somewhere, USA",
-    "101 Maple St, Anytown, USA",
-    "202 Pine St, Othertown, USA",
-    "303 Cedar St, Somewhere, USA",
-    "404 Birch St, Anytown, USA",
-    "505 Spruce St, Othertown, USA",
-    "606 Willow St, Somewhere, USA",
-    "707 Aspen St, Anytown, USA",
-  ]),
-  Email: sample([
-    "john.doe@example.com",
-    "jane.smith@example.com",
-    "alice.johnson@example.com",
-    "bob.brown@example.com",
-    "carol.white@example.com",
-    "david.green@example.com",
-    "emily.black@example.com",
-    "frank.gray@example.com",
-    "grace.davis@example.com",
-    "henry.wilson@example.com",
-  ]),
-  PhoneNumber: sample([
-    "123-456-7890",
-    "234-567-8901",
-    "345-678-9012",
-    "456-789-0123",
-    "567-890-1234",
-    "678-901-2345",
-    "789-012-3456",
-    "890-123-4567",
-    "901-234-5678",
-    "012-345-6789"
-  ]),
+  VendorID: apiData.length > 0 ? apiData[0].vendor_id : 'Default Vendor',
+  BatchNo: apiData.length > 0 ? apiData[0].batch_no : 'Default Vendor',
+  Name: apiData.length > 0 ? apiData[0].name : 'Default Vendor',
+  Address: apiData.length > 0 ? apiData[0].address : 'Default Vendor',
+  Email: apiData.length > 0 ? apiData[0].email : 'Default Vendor',
+  PhoneNumber: apiData.length > 0 ? apiData[0].phone_no : 'Default Vendor',
 }));

@@ -27,8 +27,7 @@ import SpareTableRow from '../spare-table-row';
 import TableEmptyRows from '../spare-empty-rows';
 import SpareTableHead from '../spare-table-head';
 import SpareTableToolbar from '../spare-table-toolbar';
-import { emptyRows,applyFilter,getComparator } from '../utils';
-
+import { emptyRows, applyFilter, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
@@ -248,7 +247,7 @@ export default function SparePage() {
           }}
         >
           <Typography variant="h6" id="modal-title">
-            Add Vendor
+            Add Spare
           </Typography>
           <TextField
             fullWidth
@@ -257,7 +256,7 @@ export default function SparePage() {
             onChange={(e) => setSpareID(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
+            style={{ marginBottom: '10px', marginTop: '20px' }}
           />
           <TextField
             fullWidth
@@ -266,7 +265,7 @@ export default function SparePage() {
             onChange={(e) => setName(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
+            style={{ marginBottom: '10px', marginTop: '20px' }}
           />
           {/* <TextField
             fullWidth
@@ -284,7 +283,7 @@ export default function SparePage() {
             onChange={(e) => setUnitCost(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
           <TextField
             fullWidth
@@ -293,7 +292,7 @@ export default function SparePage() {
             onChange={(e) => setDescription(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
           <TextField
             fullWidth
@@ -302,7 +301,7 @@ export default function SparePage() {
             onChange={(e) => setVendorID(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
           <TextField
             fullWidth
@@ -311,14 +310,13 @@ export default function SparePage() {
             onChange={(e) => setLeadTime(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
-          <Button
-            variant="contained"
-            onClick={handleAddMotor}
-          >
-            Save
-          </Button>
+          <div style={{ textAlign: 'center' }}>
+            <Button variant="contained" color="inherit" onClick={handleAddMotor}>
+              Save
+            </Button>
+          </div>
         </Box>
       </Modal>
     </Container>

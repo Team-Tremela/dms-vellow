@@ -20,6 +20,7 @@ import { vechicles } from 'src/_mock/vechicles';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
+import './vechicles-view.css';
 import TableNoData from '../table-no-data';
 import TableEmptyRows from '../vechicles-empty-rows';
 import VechiclesTableRow from '../vechicles-table-row';
@@ -145,7 +146,6 @@ export default function VechiclesPage() {
     setOpenModal(false);
   };
 
-
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
@@ -250,7 +250,7 @@ export default function VechiclesPage() {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 400,
+            width: 800,
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
@@ -261,111 +261,113 @@ export default function VechiclesPage() {
           <Typography variant="h6" id="modal-title">
             Add Vechicle
           </Typography>
-          <TextField
-            fullWidth
-            label="Vechicle Id"
-            value={vechicleID}
-            onChange={(e) => setvechicleID(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
-          />
-          <TextField
-            fullWidth
-            label="Model Name"
-            value={modelName}
-            onChange={(e) => setmodelName(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="VIN"
-            value={VIN}
-            onChange={(e) => setVIN(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Vendor Id"
-            value={vendorID}
-            onChange={(e) => setvendorID(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Chassis No"
-            value={chassisNo}
-            onChange={(e) => setchassisNo(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Motor No"
-            value={motorNo}
-            onChange={(e) => setmotorNo(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Battery No"
-            value={batteryNo}
-            onChange={(e) => setbatteryNo(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Color Code"
-            value={colorCode}
-            onChange={(e) => setmotorNo(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="MFG Date"
-            value={mfgDate}
-            onChange={(e) => setmfgDate(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Unit Cost"
-            value={unitCost}
-            onChange={(e) => setunitCost(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <TextField
-            fullWidth
-            label="Barcode"
-            value={barCode}
-            onChange={(e) => setbarCode(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <div style={{ textAlign: "center" }}>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleAddMotor}
-            >
+          <div className='VModal-style'>
+            <div className='VModal-inner-left'>
+              <TextField
+                fullWidth
+                label="Vechicle Id"
+                value={vechicleID}
+                onChange={(e) => setvechicleID(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px', marginTop: '20px' }}
+              />
+              <TextField
+                fullWidth
+                label="Model Name"
+                value={modelName}
+                onChange={(e) => setmodelName(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="VIN"
+                value={VIN}
+                onChange={(e) => setVIN(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="Vendor Id"
+                value={vendorID}
+                onChange={(e) => setvendorID(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="Chassis No"
+                value={chassisNo}
+                onChange={(e) => setchassisNo(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="Motor No"
+                value={motorNo}
+                onChange={(e) => setmotorNo(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+            </div>
+            <div className='VModal-inner-right'>
+              <TextField
+                fullWidth
+                label="Battery No"
+                value={batteryNo}
+                onChange={(e) => setbatteryNo(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="Color Code"
+                value={colorCode}
+                onChange={(e) => setmotorNo(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="MFG Date"
+                value={mfgDate}
+                onChange={(e) => setmfgDate(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="Unit Cost"
+                value={unitCost}
+                onChange={(e) => setunitCost(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                fullWidth
+                label="Barcode"
+                value={barCode}
+                onChange={(e) => setbarCode(e.target.value)}
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              />
+            </div>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <Button variant="contained" color="inherit" onClick={handleAddMotor}>
               Add Motor
             </Button>
           </div>

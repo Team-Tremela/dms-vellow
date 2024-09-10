@@ -1,0 +1,39 @@
+.VModal-style {
+  display: flex;
+}
+.VModal-inner-right {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.VModal-inner-left {
+}
+
+/* Extra small devices (max-width: 576px) */
+@media only screen and (max-width: 576px) {
+    .css-rueg5p{
+        width: 350px;
+        height: 600px;
+        overflow-y: scroll;
+    }
+    .VModal-style {
+        display: block;
+    }
+    .VModal-inner-right {
+        margin-left: 0px;
+        margin-top: 0px;
+    }
+    .VModal-inner-left {
+    }
+    }
+
+/* Small devices (max-width: 768px) */
+@media only screen and (max-width: 768px) {
+}
+
+/* Medium devices (max-width: 992px) */
+@media only screen and (max-width: 992px) {
+}
+
+/* Large devices (max-width: 1200px) */
+@media only screen and (max-width: 1200px) {
+}

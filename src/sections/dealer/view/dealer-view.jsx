@@ -19,6 +19,7 @@ import { dealer } from 'src/_mock/dealer';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
+import "./dealer-view.css";
 import TableNoData from '../table-no-data';
 import UserTableRow from '../dealer-table-row';
 import UserTableHead from '../dealer-table-head';

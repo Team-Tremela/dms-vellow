@@ -1,0 +1,39 @@
+.SModal-style {
+  display: flex;
+}
+.SModal-inner-right {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.SModal-inner-left {
+}
+
+/* Extra small devices (max-width: 576px) */
+@media only screen and (max-width: 576px) {
+  .css-rueg5p {
+    width: 350px;
+    height: 600px;
+    overflow-y: scroll;
+  }
+  .SModal-style {
+    display: block;
+  }
+  .SModal-inner-right {
+    margin-left: 0px;
+    margin-top: 0px;
+  }
+  .SModal-inner-left {
+  }
+}
+
+/* Small devices (max-width: 768px) */
+@media only screen and (max-width: 768px) {
+}
+
+/* Medium devices (max-width: 992px) */
+@media only screen and (max-width: 992px) {
+}
+
+/* Large devices (max-width: 1200px) */
+@media only screen and (max-width: 1200px) {
+}

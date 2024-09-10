@@ -15,6 +15,8 @@ import IconButton from '@mui/material/IconButton';
 // import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
+import './vechicles-table-row.css';
+
 // ----------------------------------------------------------------------
 
 export default function VechiclesTableRow({
@@ -96,19 +98,73 @@ export default function VechiclesTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{vechicleID}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {vechicleID}
+        </TableCell>
 
         <TableCell>{modelName}</TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{VIN}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {VIN}
+        </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{vendorID}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {vendorID}
+        </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{chassisNo}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {chassisNo}
+        </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{motorNo}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {motorNo}
+        </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{batteryNo}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {batteryNo}
+        </TableCell>
 
         <TableCell>
           <div style={{ display: 'flex' }}>
@@ -178,7 +234,7 @@ export default function VechiclesTableRow({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 400,
+            width: 800,
             bgcolor: 'background.paper',
             borderRadius: 1,
             boxShadow: 24,
@@ -186,94 +242,100 @@ export default function VechiclesTableRow({
           }}
         >
           <h2 id="edit-modal-title">Edit Vechicles</h2>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vechicle Id"
-            name="vechicleID"
-            value={formData.vechicleID}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Model Name"
-            name="modelName"
-            value={formData.modelName}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="VIN"
-            name="VIN"
-            value={formData.VIN}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vendor Id"
-            name="vendorID"
-            value={formData.vendorID}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Chassis No"
-            name="chassisNo"
-            value={formData.chassisNo}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Motor No"
-            name="motorNo"
-            value={formData.motorNo}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Battery No"
-            name="batteryNo"
-            value={formData.batteryNo}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Color Code"
-            name="colorCode"
-            value={formData.colorCode}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="MFG Date"
-            name="mfgDate"
-            value={formData.mfgDate}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Unit Cost"
-            name="unitCost"
-            value={formData.unitCost}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Barcode"
-            name="barCode"
-            value={formData.barCode}
-            onChange={handleFormChange}
-          />
+          <div className='VRModel-style'>
+            <div className='VRModal-inner-left'>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Vechicle Id"
+                name="vechicleID"
+                value={formData.vechicleID}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Model Name"
+                name="modelName"
+                value={formData.modelName}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="VIN"
+                name="VIN"
+                value={formData.VIN}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Vendor Id"
+                name="vendorID"
+                value={formData.vendorID}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Chassis No"
+                name="chassisNo"
+                value={formData.chassisNo}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Motor No"
+                name="motorNo"
+                value={formData.motorNo}
+                onChange={handleFormChange}
+              />
+            </div>
+            <div className='VRModal-inner-right'>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Battery No"
+                name="batteryNo"
+                value={formData.batteryNo}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Color Code"
+                name="colorCode"
+                value={formData.colorCode}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="MFG Date"
+                name="mfgDate"
+                value={formData.mfgDate}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Unit Cost"
+                name="unitCost"
+                value={formData.unitCost}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Barcode"
+                name="barCode"
+                value={formData.barCode}
+                onChange={handleFormChange}
+              />
+            </div>
+          </div>
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
               Cancel
@@ -297,7 +359,7 @@ export default function VechiclesTableRow({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 400,
+            width: 800,
             bgcolor: 'background.paper',
             borderRadius: 1,
             boxShadow: 24,
@@ -305,116 +367,122 @@ export default function VechiclesTableRow({
           }}
         >
           <h2 id="view-modal-title">View Vechicles</h2>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vechicle Id"
-            name="vechicleID"
-            value={formData.vechicleID}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Model Name"
-            name="modelName"
-            value={formData.modelName}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="VIN"
-            name="VIN"
-            value={formData.VIN}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vendor Id"
-            name="vendorID"
-            value={formData.vendorID}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Chassis No"
-            name="chassisNo"
-            value={formData.chassisNo}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Motor No"
-            name="motorNo"
-            value={formData.motorNo}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Battery No"
-            name="batteryNo"
-            value={formData.batteryNo}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Color Code"
-            name="colorCode"
-            value={formData.colorCode}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="MFG Date"
-            name="mfgDate"
-            value={formData.mfgDate}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Unit Cost"
-            name="unitCost"
-            value={formData.unitCost}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Barcode"
-            name="barCode"
-            value={formData.barCode}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
+          <div className="VRModel-style">
+            <div className="VRModal-inner-left">
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Vechicle Id"
+                name="vechicleID"
+                value={formData.vechicleID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Model Name"
+                name="modelName"
+                value={formData.modelName}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="VIN"
+                name="VIN"
+                value={formData.VIN}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Vendor Id"
+                name="vendorID"
+                value={formData.vendorID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Chassis No"
+                name="chassisNo"
+                value={formData.chassisNo}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Motor No"
+                name="motorNo"
+                value={formData.motorNo}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div className="VRModal-inner-right">
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Battery No"
+                name="batteryNo"
+                value={formData.batteryNo}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Color Code"
+                name="colorCode"
+                value={formData.colorCode}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="MFG Date"
+                name="mfgDate"
+                value={formData.mfgDate}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Unit Cost"
+                name="unitCost"
+                value={formData.unitCost}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Barcode"
+                name="barCode"
+                value={formData.barCode}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+          </div>
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseViewModal} variant="contained" color="inherit">
               Close

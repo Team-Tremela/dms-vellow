@@ -1,0 +1,44 @@
+.VRModel-style {
+  display: flex;
+}
+.VRModal-inner-right {
+  margin-left: 20px;
+  margin-top: 0px;
+}
+.VRModal-inner-left {
+}
+
+/* Extra small devices (max-width: 576px) */
+@media only screen and (max-width: 576px) {
+  .css-1kee1ax {
+    width: 350px;
+    height: 600px;
+    overflow-y: scroll;
+  }
+  .css-q81fkb {
+    width: 350px;
+    height: 600px;
+    overflow-y: scroll;
+  }
+  .VRModel-style {
+    display: block;
+  }
+  .VRModal-inner-right {
+    margin-left: 0px;
+    margin-top: 0px;
+  }
+  .VRModal-inner-left {
+  }
+}
+
+/* Small devices (max-width: 768px) */
+@media only screen and (max-width: 768px) {
+}
+
+/* Medium devices (max-width: 992px) */
+@media only screen and (max-width: 992px) {
+}
+
+/* Large devices (max-width: 1200px) */
+@media only screen and (max-width: 1200px) {
+}

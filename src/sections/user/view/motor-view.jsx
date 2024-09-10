@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -6,6 +6,8 @@ import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 // import MenuItem from '@mui/material/MenuItem';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
@@ -13,13 +15,15 @@ import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // import { users } from 'src/_mock/user';
-import { vendor } from 'src/_mock/vendor';
+// import { vendor } from 'src/_mock/vendor';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
+import "./Vendor.css";
 import TableNoData from '../table-no-data';
 import UserTableRow from '../motor-table-row';
 import UserTableHead from '../motor-table-head';
@@ -38,15 +42,47 @@ export default function MotorPage() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [vendor, setVendor] = useState([]);
 
   const [Name, setName] = useState('');
   // const [batteryName, setBatteryName] = useState('');
   const [Email, setEmail] = useState('');
   const [PhoneNumber, setPhoneNumber] = useState('');
   const [Address, setAddress] = useState('');
-  const [VendorID, setVendorID] = useState('');
+  // const [VendorID, setVendorID] = useState('');
   const [BatchNo, setBatchNo] = useState('');
   // const [colors, setColors] = useState('');
+
+  // Snackbar state for error message
+  const [errorMessage, setErrorMessage] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarOpenSuccess, setSnackbarOpenSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+
+  // Define fetchData function
+  const fetchData = async () => {
+    setLoading(true);
+    const apiUrl = 'https://vlmtrs.onrender.com/v1/vendor/fetch-all';
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        const errorData = await response.json(); // Extract error data
+        throw new Error(errorData.message || 'Failed to fetch data');
+      }
+      const data = await response.json();
+      setVendor(data.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setErrorMessage(error.message); // Use error.message for display
+      setSnackbarOpen(true);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -58,7 +94,7 @@ export default function MotorPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = vendor.map((n) => n.name);
+      const newSelecteds = vendor.map((n) => n.Name);
       setSelected(newSelecteds);
       return;
     }
@@ -119,29 +155,72 @@ export default function MotorPage() {
     setEmail('');
     setPhoneNumber('');
     setAddress('');
-    setVendorID('');
+    // setVendorID('');
     setBatchNo('');
     // setColors('');
   };
 
-  const handleAddMotor = () => {
-    // console.log({
-    //   modelName,
-    //   batteryName,
-    //   batteryKWH,
-    //   motorName,
-    //   motorKW,
-    //   colors,
-    // });
-    setName('');
-    // setBatteryName('');
-    setEmail('');
-    setPhoneNumber('');
-    setAddress('');
-    setVendorID('');
-    setBatchNo('');
-    // setColors('');
-    setOpenModal(false);
+  const handleAddMotor = async () => {
+    const newVendor = {
+      name: Name,
+      address: Address,
+      email: Email,
+      phone_no: PhoneNumber,
+      batch_no: BatchNo,
+    };
+
+    try {
+      const response = await fetch('https://vlmtrs.onrender.com/v1/vendor/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newVendor),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add vendor');
+      }
+
+      const data = await response.json();
+      console.log('Vendor added successfully:', data);
+
+      // Reset form fields after successful submission
+      setName('');
+      setEmail('');
+      setPhoneNumber('');
+      setAddress('');
+      // setVendorID('');
+      setBatchNo('');
+
+      // Close modal
+      setOpenModal(false);
+
+      // Show success message
+      setSuccessMessage('Vendor added successfully!');
+      setSnackbarOpenSuccess(true);
+
+      // Optionally, fetch the updated vendor list to reflect the new vendor in the table
+      fetchData();
+
+    } catch (error) {
+      setErrorMessage(error.message);
+      setSnackbarOpen(true);  // Open Snackbar with error message
+    }
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  const handleSnackbarCloseSuccess = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpenSuccess(false);
   };
 
   const notFound = !dataFiltered.length && !!filterName;
@@ -167,69 +246,78 @@ export default function MotorPage() {
           onFilterName={handleFilterByName}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
-                order={order}
-                orderBy={orderBy}
-                rowCount={vendor.length}
-                numSelected={selected.length}
-                onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
-                headLabel={[
-                  { id: 'VendorID', label: 'Vendor Id' },
-                  { id: 'BatchNo', label: 'Batch No' },
-                  { id: 'Name', label: 'Name' },
-                  // { id: 'ContactInformation', label: 'Contact Information' },
-                  { id: 'Address', label: 'Address' },
-                  { id: 'Email', label: 'Email' },
-                  { id: 'PhoneNumber', label: 'Phone Number' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.id}
-                      vendorID={row.VendorID}
-                      Name={row.Name}
-                      BatchNo={row.BatchNo}
-                      // batteryName={row.ContactInformation}
-                      Address={row.Address}
-                      Email={row.Email}
-                      PhoneNumber={row.PhoneNumber}
-                      // colorName={row.colorName}
-                      selected={selected.indexOf(row.modelname) !== -1}
-                      handleClick={(event) => handleClick(event, row.modelname)}
-                    />
-                  ))}
+      {loading ? ( // Show loader if data is still being fetched
+                <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+                {errorMessage ? (
+                  <Typography color="error">{errorMessage}</Typography> // Error message
+                ) : (
+                  <CircularProgress /> // Loader
+                )}
+              </Box>
+              ) : (
+                <>
+                  <Scrollbar>
+                    <TableContainer sx={{ overflow: 'unset' }}>
+                      <Table sx={{ minWidth: 800 }}>
+                        <UserTableHead
+                          order={order}
+                          orderBy={orderBy}
+                          rowCount={vendor.length}
+                          numSelected={selected.length}
+                          onRequestSort={handleSort}
+                          onSelectAllClick={handleSelectAllClick}
+                          headLabel={[
+                            { id: 'VendorID', label: 'Vendor Id' },
+                            { id: 'BatchNo', label: 'Batch No' },
+                            { id: 'Name', label: 'Name' },
+                            { id: 'Address', label: 'Address' },
+                            { id: 'Email', label: 'Email' },
+                            { id: 'PhoneNumber', label: 'Phone Number' },
+                            { id: '' },
+                          ]}
+                        />
+                        <TableBody>
+                          {dataFiltered
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((row) => (
+                              <UserTableRow
+                                key={row.vendor_id}
+                                vendorID={row.vendor_id}
+                                Name={row.name}
+                                BatchNo={row.batch_no}
+                                Address={row.address}
+                                Email={row.email}
+                                PhoneNumber={row.phone_no}
+                                selected={selected.indexOf(row.name) !== -1}
+                                handleClick={(event) => handleClick(event, row.name)}
+                                onUpdateSuccess={fetchData}
+                              />
+                            ))}
 
-                <TableEmptyRows
-                  height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, vendor.length)}
-                />
+                          <TableEmptyRows
+                            height={77}
+                            emptyRows={emptyRows(page, rowsPerPage, vendor.length)}
+                          />
 
-                {notFound && <TableNoData query={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
+                          {notFound && <TableNoData query={filterName} />}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Scrollbar>
 
-        <TablePagination
-          page={page}
-          component="div"
-          count={vendor.length}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Card>
-
-      <Modal
+                  <TablePagination
+                    page={page}
+                    component="div"
+                    count={vendor.length}
+                    rowsPerPage={rowsPerPage}
+                    onPageChange={handleChangePage}
+                    rowsPerPageOptions={[5, 10, 25]}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </>
+              )}
+            </Card>
+            <Modal
         open={openModal}
         onClose={handleCloseModal}
         aria-labelledby="modal-title"
@@ -254,15 +342,6 @@ export default function MotorPage() {
           </Typography>
           <TextField
             fullWidth
-            label="Vendor Id"
-            value={VendorID}
-            onChange={(e) => setVendorID(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
-          />
-          <TextField
-            fullWidth
             label="Name"
             value={Name}
             onChange={(e) => setName(e.target.value)}
@@ -274,20 +353,11 @@ export default function MotorPage() {
             fullWidth
             label="Batch No"
             value={BatchNo}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setBatchNo(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: "10px", marginTop: "20px" }}
           />
-          {/* <TextField
-            fullWidth
-            label="Battery Name"
-            value={batteryName}
-            onChange={(e) => setBatteryName(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          /> */}
           <TextField
             fullWidth
             label="Address"
@@ -315,15 +385,6 @@ export default function MotorPage() {
             mb={2}
             style={{ marginBottom: "10px" }}
           />
-          {/* <TextField
-            fullWidth
-            label="Colors"
-            value={colors}
-            onChange={(e) => setColors(e.target.value)}
-            variant="outlined"
-            mb={2}
-            style={{ marginBottom: "10px" }}
-          /> */}
           <Button
             variant="contained"
             onClick={handleAddMotor}
@@ -332,6 +393,29 @@ export default function MotorPage() {
           </Button>
         </Box>
       </Modal>
+      {/* Snackbar for error handling */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <MuiAlert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </MuiAlert>
+      </Snackbar>
+
+      {/* Snackbar for success message */}
+      <Snackbar
+        open={snackbarOpenSuccess}
+        autoHideDuration={6000}
+        onClose={handleSnackbarCloseSuccess}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <MuiAlert onClose={handleSnackbarCloseSuccess} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </MuiAlert>
+      </Snackbar>
     </Container>
   );
 }

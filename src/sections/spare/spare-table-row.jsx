@@ -15,6 +15,8 @@ import IconButton from '@mui/material/IconButton';
 // import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
+import './Spare.css';
+
 // ----------------------------------------------------------------------
 
 export default function SpareTableRow({
@@ -87,7 +89,16 @@ export default function SpareTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{spareID}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {spareID}
+        </TableCell>
 
         <TableCell>{Name}</TableCell>
 
@@ -95,15 +106,29 @@ export default function SpareTableRow({
 
         <TableCell>{UnitCost}</TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"200px"}}>{Description}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '200px',
+          }}
+        >
+          {Description}
+        </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
           {VendorID}
         </TableCell>
 
-        <TableCell>
-          {LeadTime}
-        </TableCell>
+        <TableCell>{LeadTime}</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -144,74 +169,82 @@ export default function SpareTableRow({
         aria-labelledby="edit-modal-title"
         aria-describedby="edit-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-          boxShadow: 24,
-          p: 4,
-        }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 800,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
           <h2 id="edit-modal-title">Edit Spare</h2>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Spare Id"
-            name="SpareID"
-            value={formData.spareID}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Name"
-            name="accessoryName"
-            value={formData.Name}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Part Number"
-            name="partNumber"
-            value={formData.partNumber}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Unit Cost"
-            name="UnitCost"
-            value={formData.UnitCost}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Description"
-            name="Description"
-            value={formData.Description}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vendor Id"
-            name="VendorID"
-            value={formData.VendorID}
-            onChange={handleFormChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Lead Time"
-            name="LeadTime"
-            value={formData.LeadTime}
-            onChange={handleFormChange}
-          />
+          <div className="VRModel-style">
+            <div className="VRModal-inner-left">
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Spare Id"
+                name="SpareID"
+                value={formData.spareID}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Name"
+                name="accessoryName"
+                value={formData.Name}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Part Number"
+                name="partNumber"
+                value={formData.partNumber}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Unit Cost"
+                name="UnitCost"
+                value={formData.UnitCost}
+                onChange={handleFormChange}
+              />
+            </div>
+            <div className="VRModal-inner-right">
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Description"
+                name="Description"
+                value={formData.Description}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Vendor Id"
+                name="VendorID"
+                value={formData.VendorID}
+                onChange={handleFormChange}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Lead Time"
+                name="LeadTime"
+                value={formData.LeadTime}
+                onChange={handleFormChange}
+              />
+            </div>
+          </div>
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
               Cancel
@@ -229,88 +262,96 @@ export default function SpareTableRow({
         aria-labelledby="view-modal-title"
         aria-describedby="view-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-          boxShadow: 24,
-          p: 4,
-        }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 800,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
           <h2 id="view-modal-title">View Spare</h2>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Spare Id"
-            name="spareID"
-            value={formData.spareID}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Name"
-            name="accessoryname"
-            value={formData.Name}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Part Number"
-            name="PartNumber"
-            value={formData.partNumber}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Unit Cost"
-            name="UnitCost"
-            value={formData.UnitCost}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Description"
-            name="Description"
-            value={formData.Description}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vendor Id"
-            name="VendorID"
-            value={formData.VendorID}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Lead Time"
-            name="LeadTime"
-            value={formData.LeadTime}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
+          <div className='VRModel-style'>
+            <div className='VRModal-inner-left'>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Spare Id"
+                name="spareID"
+                value={formData.spareID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Name"
+                name="accessoryname"
+                value={formData.Name}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Part Number"
+                name="PartNumber"
+                value={formData.partNumber}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Unit Cost"
+                name="UnitCost"
+                value={formData.UnitCost}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+            <div className='VRModal-inner-right'>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Description"
+                name="Description"
+                value={formData.Description}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Vendor Id"
+                name="VendorID"
+                value={formData.VendorID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Lead Time"
+                name="LeadTime"
+                value={formData.LeadTime}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+          </div>
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseViewModal} variant="contained" color="inherit">
               Close
