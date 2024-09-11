@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-hot-toast';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
-import MuiAlert from '@mui/material/Alert';
 import Popover from '@mui/material/Popover';
-import Snackbar from '@mui/material/Snackbar';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,7 +27,6 @@ export default function UserTableRow({
   PhoneNumber,
   Address,
   BatchNo,
-  // colorName,
   handleClick,
   onUpdateSuccess,
 }) {
@@ -43,12 +41,8 @@ export default function UserTableRow({
     Email,
     PhoneNumber,
     BatchNo,
-    // colorName,
   });
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [alertType, setAlertType] = useState('success');
-  const [alertMessage, setAlertMessage] = useState('');
   const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
 
   const handleOpenMenu = (event) => {
@@ -69,17 +63,19 @@ export default function UserTableRow({
     };
 
     try {
-      const response = await fetch(`https://vlmtrs.onrender.com/v1/vendor/update/${formData.vendorID}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `https://vlmtrs.onrender.com/v1/vendor/update/${formData.vendorID}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (response.ok) {
-        setAlertType('success');
-        setAlertMessage('Vendor updated successfully');
+        toast.success('Update successful');
         if (onUpdateSuccess) {
           onUpdateSuccess(); // Notify the parent component to fetch updated data
         }
@@ -87,10 +83,9 @@ export default function UserTableRow({
         throw new Error('Failed to update vendor');
       }
     } catch (error) {
-      setAlertType('error');
-      setAlertMessage(error.message || 'An error occurred');
+      console.log(error);
+      toast.error('Failed to update vendor');
     } finally {
-      setSnackbarOpen(true);
       handleCloseModal();
     }
   };
@@ -112,10 +107,6 @@ export default function UserTableRow({
     setOpenModal(false);
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
   const handleOpenViewModal = () => {
     setOpenViewModal(true);
     handleCloseMenu();
@@ -132,8 +123,7 @@ export default function UserTableRow({
       });
 
       if (response.ok) {
-        setAlertType('success');
-        setAlertMessage('Vendor deleted successfully');
+        toast.success('Vendor deleted successfully');
         if (onUpdateSuccess) {
           onUpdateSuccess(); // Notify the parent component to fetch updated data
         }
@@ -141,11 +131,10 @@ export default function UserTableRow({
         throw new Error('Failed to delete vendor');
       }
     } catch (error) {
-      setAlertType('error');
-      setAlertMessage(error.message || 'An error occurred');
+      console.log(error.message);
+      toast.error('Failed to delete vendor');
     } finally {
-      setSnackbarOpen(true);
-      handleCloseMenu();
+      handleCloseDeletePopover(); // Ensure this is called after Snackbar is triggered
     }
   };
 
@@ -164,12 +153,29 @@ export default function UserTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{vendorID}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {vendorID}
+        </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{BatchNo}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {BatchNo}
+        </TableCell>
 
         <TableCell>{Name}</TableCell>
-
 
         {/* <TableCell>{batteryName}</TableCell> */}
 
@@ -177,9 +183,7 @@ export default function UserTableRow({
 
         <TableCell>{Email}</TableCell>
 
-        <TableCell>
-          {PhoneNumber}
-        </TableCell>
+        <TableCell>{PhoneNumber}</TableCell>
 
         {/* <TableCell>
           <div style={{ display: "flex" }}>
@@ -252,17 +256,19 @@ export default function UserTableRow({
         aria-labelledby="edit-modal-title"
         aria-describedby="edit-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-          boxShadow: 24,
-          p: 4,
-        }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
           <h2 id="edit-modal-title">Edit Vendor</h2>
           <TextField
             fullWidth
@@ -320,22 +326,13 @@ export default function UserTableRow({
             value={formData.PhoneNumber}
             onChange={handleFormChange}
           />
-          {/* <TextField
-            fullWidth
-            margin="normal"
-            label="Color"
-            name="colorName"
-            value={formData.colorName}
-            onChange={handleFormChange}
-          /> */}
-          <Box mt={2} display="flex" justifyContent="flex-end">
-            <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
-              Cancel
-            </Button>
-            <Button onClick={handleFormSubmit} variant="contained" color="inherit">
-              Save
-            </Button>
-          </Box>
+          <Button
+            onClick={handleFormSubmit}
+            variant="contained"
+            color="primary"
+          >
+            Save Changes
+          </Button>
         </Box>
       </Modal>
 
@@ -345,23 +342,24 @@ export default function UserTableRow({
         aria-labelledby="view-modal-title"
         aria-describedby="view-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-          boxShadow: 24,
-          p: 4,
-        }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
           <h2 id="view-modal-title">View Vendor</h2>
           <TextField
             fullWidth
             margin="normal"
             label="Vendor Id"
-            name="VendorID"
             value={formData.vendorID}
             InputProps={{
               readOnly: true,
@@ -371,7 +369,6 @@ export default function UserTableRow({
             fullWidth
             margin="normal"
             label="Name"
-            name="modelname"
             value={formData.Name}
             InputProps={{
               readOnly: true,
@@ -381,7 +378,6 @@ export default function UserTableRow({
             fullWidth
             margin="normal"
             label="Batch No"
-            name="BatchNo"
             value={formData.BatchNo}
             InputProps={{
               readOnly: true,
@@ -391,7 +387,6 @@ export default function UserTableRow({
             fullWidth
             margin="normal"
             label="Battery Name"
-            name="batteryName"
             value={formData.batteryName}
             InputProps={{
               readOnly: true,
@@ -401,7 +396,6 @@ export default function UserTableRow({
             fullWidth
             margin="normal"
             label="Address"
-            name="Address"
             value={formData.Address}
             InputProps={{
               readOnly: true,
@@ -411,7 +405,6 @@ export default function UserTableRow({
             fullWidth
             margin="normal"
             label="Email"
-            name="Email"
             value={formData.Email}
             InputProps={{
               readOnly: true,
@@ -421,51 +414,33 @@ export default function UserTableRow({
             fullWidth
             margin="normal"
             label="Phone Number"
-            name="PhoneNumber"
             value={formData.PhoneNumber}
             InputProps={{
               readOnly: true,
             }}
           />
-          {/* <TextField
-            fullWidth
-            margin="normal"
-            label="Color"
-            name="colorName"
-            value={formData.colorName}
-            InputProps={{
-              readOnly: true,
-            }}
-          /> */}
-          <Box mt={2} display="flex" justifyContent="flex-end">
-            <Button onClick={handleCloseViewModal} variant="contained" color="inherit">
-              Close
-            </Button>
-          </Box>
+          <Button
+            onClick={handleCloseViewModal}
+            variant="contained"
+            color="primary"
+          >
+            Close
+          </Button>
         </Box>
       </Modal>
-
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-        <MuiAlert elevation={6} variant="filled" onClose={handleSnackbarClose} severity={alertType}>
-          {alertMessage}
-        </MuiAlert>
-      </Snackbar>
     </>
   );
 }
 
 UserTableRow.propTypes = {
+  selected: PropTypes.bool,
+  vendorID: PropTypes.string.isRequired,
+  Name: PropTypes.string.isRequired,
   batteryName: PropTypes.string,
+  Email: PropTypes.string.isRequired,
+  PhoneNumber: PropTypes.string.isRequired,
+  Address: PropTypes.string.isRequired,
+  BatchNo: PropTypes.string.isRequired,
   handleClick: PropTypes.func,
-  Email: PropTypes.any,
-  Name: PropTypes.string,
-  BatchNo: PropTypes.any,
-  Address: PropTypes.any,
-  selected: PropTypes.any,
-  PhoneNumber: PropTypes.string,
-  vendorID: PropTypes.string,
   onUpdateSuccess: PropTypes.func,
-  // colorName: PropTypes.arrayOf(
-  //   PropTypes.arrayOf(PropTypes.string)  // Array of arrays of strings
-  // ),
 };

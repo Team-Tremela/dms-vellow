@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast, Toaster } from 'react-hot-toast';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -6,8 +7,6 @@ import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
-import MuiAlert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 // import MenuItem from '@mui/material/MenuItem';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
@@ -56,9 +55,6 @@ export default function MotorPage() {
 
   // Snackbar state for error message
   const [errorMessage, setErrorMessage] = useState('');
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarOpenSuccess, setSnackbarOpenSuccess] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
 
   // Define fetchData function
   const fetchData = async () => {
@@ -74,8 +70,6 @@ export default function MotorPage() {
       setVendor(data.data);
     } catch (error) {
       console.error('Error fetching data:', error);
-      setErrorMessage(error.message); // Use error.message for display
-      setSnackbarOpen(true);
     }
     setLoading(false);
   };
@@ -197,30 +191,14 @@ export default function MotorPage() {
       setOpenModal(false);
 
       // Show success message
-      setSuccessMessage('Vendor added successfully!');
-      setSnackbarOpenSuccess(true);
+      toast.success('Vendor added successfully!');
 
       // Optionally, fetch the updated vendor list to reflect the new vendor in the table
       fetchData();
 
     } catch (error) {
       setErrorMessage(error.message);
-      setSnackbarOpen(true);  // Open Snackbar with error message
     }
-  };
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
-
-  const handleSnackbarCloseSuccess = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpenSuccess(false);
   };
 
   const notFound = !dataFiltered.length && !!filterName;
@@ -393,29 +371,7 @@ export default function MotorPage() {
           </Button>
         </Box>
       </Modal>
-      {/* Snackbar for error handling */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <MuiAlert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
-          {errorMessage}
-        </MuiAlert>
-      </Snackbar>
-
-      {/* Snackbar for success message */}
-      <Snackbar
-        open={snackbarOpenSuccess}
-        autoHideDuration={6000}
-        onClose={handleSnackbarCloseSuccess}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <MuiAlert onClose={handleSnackbarCloseSuccess} severity="success" sx={{ width: '100%' }}>
-          {successMessage}
-        </MuiAlert>
-      </Snackbar>
+      <Toaster />
     </Container>
   );
 }
