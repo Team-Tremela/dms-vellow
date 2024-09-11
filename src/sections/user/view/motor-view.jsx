@@ -22,14 +22,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import "./Vendor.css";
+import './Vendor.css';
 import TableNoData from '../table-no-data';
 import UserTableRow from '../motor-table-row';
 import UserTableHead from '../motor-table-head';
 import TableEmptyRows from '../motor-empty-rows';
 import UserTableToolbar from '../motor-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-
 
 // ----------------------------------------------------------------------
 
@@ -88,18 +87,19 @@ export default function MotorPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = vendor.map((n) => n.Name);
+      const newSelecteds = vendor.map((n) => n.vendor_id);
       setSelected(newSelecteds);
-      return;
+      // return;
+    }else{
+      setSelected([]);
     }
-    setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, vendor_id) => {
+    const selectedIndex = selected.indexOf(vendor_id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, vendor_id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -195,7 +195,6 @@ export default function MotorPage() {
 
       // Optionally, fetch the updated vendor list to reflect the new vendor in the table
       fetchData();
-
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -222,80 +221,85 @@ export default function MotorPage() {
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
+          onDeleteSuccess={fetchData}
+          setSelected={setSelected}
+          selected={selected}
         />
 
-      {loading ? ( // Show loader if data is still being fetched
-                <Box display="flex" justifyContent="center" alignItems="center" height="300px">
-                {errorMessage ? (
-                  <Typography color="error">{errorMessage}</Typography> // Error message
-                ) : (
-                  <CircularProgress /> // Loader
-                )}
-              </Box>
-              ) : (
-                <>
-                  <Scrollbar>
-                    <TableContainer sx={{ overflow: 'unset' }}>
-                      <Table sx={{ minWidth: 800 }}>
-                        <UserTableHead
-                          order={order}
-                          orderBy={orderBy}
-                          rowCount={vendor.length}
-                          numSelected={selected.length}
-                          onRequestSort={handleSort}
-                          onSelectAllClick={handleSelectAllClick}
-                          headLabel={[
-                            { id: 'VendorID', label: 'Vendor Id' },
-                            { id: 'BatchNo', label: 'Batch No' },
-                            { id: 'Name', label: 'Name' },
-                            { id: 'Address', label: 'Address' },
-                            { id: 'Email', label: 'Email' },
-                            { id: 'PhoneNumber', label: 'Phone Number' },
-                            { id: '' },
-                          ]}
-                        />
-                        <TableBody>
-                          {dataFiltered
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row) => (
-                              <UserTableRow
-                                key={row.vendor_id}
-                                vendorID={row.vendor_id}
-                                Name={row.name}
-                                BatchNo={row.batch_no}
-                                Address={row.address}
-                                Email={row.email}
-                                PhoneNumber={row.phone_no}
-                                selected={selected.indexOf(row.name) !== -1}
-                                handleClick={(event) => handleClick(event, row.name)}
-                                onUpdateSuccess={fetchData}
-                              />
-                            ))}
-
-                          <TableEmptyRows
-                            height={77}
-                            emptyRows={emptyRows(page, rowsPerPage, vendor.length)}
-                          />
-
-                          {notFound && <TableNoData query={filterName} />}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Scrollbar>
-
-                  <TablePagination
-                    page={page}
-                    component="div"
-                    count={vendor.length}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={handleChangePage}
-                    rowsPerPageOptions={[5, 10, 25]}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+        {loading ? ( // Show loader if data is still being fetched
+          <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+            {errorMessage ? (
+              <Typography color="error">{errorMessage}</Typography> // Error message
+            ) : (
+              <CircularProgress /> // Loader
+            )}
+          </Box>
+        ) : (
+          <>
+            <Scrollbar>
+              <TableContainer sx={{ overflow: 'unset' }}>
+                <Table sx={{ minWidth: 800 }}>
+                  <UserTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    rowCount={vendor.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleSort}
+                    onSelectAllClick={handleSelectAllClick}
+                    headLabel={[
+                      { id: 'VendorID', label: 'Vendor Id' },
+                      { id: 'BatchNo', label: 'Batch No' },
+                      { id: 'Name', label: 'Name' },
+                      { id: 'Address', label: 'Address' },
+                      { id: 'Email', label: 'Email' },
+                      { id: 'PhoneNumber', label: 'Phone Number' },
+                      { id: '' },
+                    ]}
+                    checked={selected.length > 0 && selected.length === vendor.length} // All selected
+                    indeterminate={selected.length > 0 && selected.length < vendor.length} // Some selected
                   />
-                </>
-              )}
-            </Card>
-            <Modal
+                  <TableBody>
+                    {dataFiltered
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row) => (
+                        <UserTableRow
+                          key={row.vendor_id}
+                          vendorID={row.vendor_id}
+                          Name={row.name}
+                          BatchNo={row.batch_no}
+                          Address={row.address}
+                          Email={row.email}
+                          PhoneNumber={row.phone_no}
+                          selected={selected.indexOf(row.vendor_id) !== -1}
+                          handleClick={(event) => handleClick(event, row.vendor_id)}
+                          onUpdateSuccess={fetchData}
+                        />
+                      ))}
+
+                    <TableEmptyRows
+                      height={77}
+                      emptyRows={emptyRows(page, rowsPerPage, vendor.length)}
+                    />
+
+                    {notFound && <TableNoData query={filterName} />}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Scrollbar>
+
+            <TablePagination
+              page={page}
+              component="div"
+              count={vendor.length}
+              rowsPerPage={rowsPerPage}
+              onPageChange={handleChangePage}
+              rowsPerPageOptions={[5, 10, 25]}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        )}
+      </Card>
+      <Modal
         open={openModal}
         onClose={handleCloseModal}
         aria-labelledby="modal-title"
@@ -325,7 +329,7 @@ export default function MotorPage() {
             onChange={(e) => setName(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
+            style={{ marginBottom: '10px', marginTop: '20px' }}
           />
           <TextField
             fullWidth
@@ -334,7 +338,7 @@ export default function MotorPage() {
             onChange={(e) => setBatchNo(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
+            style={{ marginBottom: '10px', marginTop: '20px' }}
           />
           <TextField
             fullWidth
@@ -343,7 +347,7 @@ export default function MotorPage() {
             onChange={(e) => setAddress(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
           <TextField
             fullWidth
@@ -352,7 +356,7 @@ export default function MotorPage() {
             onChange={(e) => setEmail(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
           <TextField
             fullWidth
@@ -361,12 +365,9 @@ export default function MotorPage() {
             onChange={(e) => setPhoneNumber(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
-          <Button
-            variant="contained"
-            onClick={handleAddMotor}
-          >
+          <Button variant="contained" onClick={handleAddMotor}>
             Save
           </Button>
         </Box>
