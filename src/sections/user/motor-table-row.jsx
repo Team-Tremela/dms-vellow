@@ -75,7 +75,16 @@ export default function UserTableRow({
       );
 
       if (response.ok) {
-        toast.success('Update successful');
+        toast.success('Update successful',{
+          style: {
+            backgroundColor: '#ECDFCC', // Change toast background to red
+            color: '#3C3D37', // Change text color to white for contrast
+          },
+          iconTheme: {
+            primary: '#3C3D37', // Change tick icon color to white
+            secondary: '#ECDFCC', // Change the secondary color of the icon (background) to red
+          },
+        });
         if (onUpdateSuccess) {
           onUpdateSuccess(); // Notify the parent component to fetch updated data
         }
@@ -123,7 +132,16 @@ export default function UserTableRow({
       });
 
       if (response.ok) {
-        toast.success('Vendor deleted successfully');
+        toast.success('Vendor deleted successfully', {
+          style: {
+            backgroundColor: '#B43F3F', // Change toast background to red
+            color: 'white', // Change text color to white for contrast
+          },
+          iconTheme: {
+            primary: 'white', // Change tick icon color to white
+            secondary: '#B43F3F', // Change the secondary color of the icon (background) to red
+          },
+        });
         if (onUpdateSuccess) {
           onUpdateSuccess(); // Notify the parent component to fetch updated data
         }
@@ -241,12 +259,12 @@ export default function UserTableRow({
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       >
-        <MenuItem onClick={handleDelete}>
-          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Confirm Delete
+        <MenuItem onClick={handleDelete} style={{color:"#E4003A"}}>
+          {/* <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} /> */}
+          Yes
         </MenuItem>
-        <MenuItem onClick={handleCloseDeletePopover} sx={{ color: 'error.main' }}>
-          Cancel
+        <MenuItem onClick={handleCloseDeletePopover} sx={{ color: '#3C3D37' }}>
+          No
         </MenuItem>
       </Popover>
 
