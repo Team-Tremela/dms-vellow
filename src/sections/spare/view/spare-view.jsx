@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast, Toaster } from 'react-hot-toast';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -7,17 +8,15 @@ import Table from '@mui/material/Table';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 // import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select'; // Import Select component
+import MenuItem from '@mui/material/MenuItem'; // Import MenuItem component
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-
-// import { users } from 'src/_mock/user';
-// import { vendor } from 'src/_mock/vendor';
-// import { accessory } from 'src/_mock/accessory';
-import { spare } from 'src/_mock/spare';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -39,14 +38,52 @@ export default function SparePage() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [spare, setSpare] = useState([]);
+  const [vendors, setVendors] = useState([]);
 
   const [Name, setName] = useState('');
-  // const [batteryName, setBatteryName] = useState('');
   const [Description, setDescription] = useState('');
-  const [VendorID, setVendorID] = useState('');
   const [UnitCost, setUnitCost] = useState('');
   const [LeadTime, setLeadTime] = useState('');
-  const [SpareID, setSpareID] = useState('');
+  // const [SpareID, setSpareID] = useState('');
+  const [PartNumber, setPartNumber] = useState('');
+  const [VendorID, setVendorID] = useState(''); // State for VendorID
+
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const fetchVendors = async () => {
+    try {
+      const response = await fetch('https://vlmtrs.onrender.com/v1/vendor/fetch-all');
+      const data = await response.json();
+      setVendors(data.data);
+    } catch (error) {
+      console.error('Error fetching vendors:', error);
+    }
+  };
+
+  // Define fetchData function
+  const fetchData = async () => {
+    setLoading(true);
+    const apiUrl = 'https://vlmtrs.onrender.com/v1/spare/fetch-all';
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        const errorData = await response.json(); // Extract error data
+        throw new Error(errorData.message || 'Failed to fetch data');
+      }
+      const data = await response.json();
+      setSpare(data.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+    fetchVendors();
+  }, []);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -58,18 +95,19 @@ export default function SparePage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = spare.map((n) => n.Name);
+      const newSelecteds = spare.map((n) => n.spare_id);
       setSelected(newSelecteds);
-      return;
+      // return;
+    } else {
+      setSelected([]);
     }
-    setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, spare_id) => {
+    const selectedIndex = selected.indexOf(spare_id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, spare_id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -120,26 +158,56 @@ export default function SparePage() {
     setVendorID('');
     setUnitCost('');
     setLeadTime('');
-    setSpareID('');
+    // setSpareID('');
   };
 
-  const handleAddMotor = () => {
-    // console.log({
-    //   modelName,
-    //   batteryName,
-    //   batteryKWH,
-    //   motorName,
-    //   motorKW,
-    //   colors,
-    // });
-    setName('');
-    // setBatteryName('');
-    setDescription('');
-    setVendorID('');
-    setUnitCost('');
-    setLeadTime('');
-    setSpareID('');
-    setOpenModal(false);
+  const handleAddMotor = async () => {
+    const newSpare = {
+      name: Name,
+      description: Description,
+      part_number: PartNumber,
+      unit_cost: UnitCost,
+      lead_time: LeadTime,
+      vendor_id: VendorID,
+    };
+
+    try {
+      const response = await fetch('https://vlmtrs.onrender.com/v1/spare/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newSpare),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add spare');
+      }
+
+      const data = await response.json();
+      console.log('Spare added successfully:', data);
+
+      // Reset form fields after successful submission
+      setName('');
+      setDescription('');
+      setPartNumber('');
+      // setSpareID('');
+      setUnitCost('');
+      // setAddress('');
+      setVendorID('');
+      setLeadTime('');
+
+      // Close modal
+      setOpenModal(false);
+
+      // Show success message
+      toast.success('Spare added successfully!');
+
+      // Optionally, fetch the updated vendor list to reflect the new vendor in the table
+      fetchData();
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
   };
 
   const notFound = !dataFiltered.length && !!filterName;
@@ -163,67 +231,85 @@ export default function SparePage() {
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
+          onDeleteSuccess={fetchData}
+          setSelected={setSelected}
+          selected={selected}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <SpareTableHead
-                order={order}
-                orderBy={orderBy}
-                rowCount={spare.length}
-                numSelected={selected.length}
-                onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
-                headLabel={[
-                  { id: 'SpareID', label: 'Spare Id' },
-                  { id: 'Name', label: 'Name' },
-                  { id: 'PartNumber', label: 'Part Number' },
-                  { id: 'UnitCost', label: 'Unit Cost' },
-                  { id: 'Description', label: 'Description' },
-                  { id: 'VendorID', label: 'Vendor ID' },
-                  { id: 'LeadTime', label: 'Lead Time' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <SpareTableRow
-                      key={row.id}
-                      spareID={row.SpareID}
-                      Name={row.Name}
-                      partNumber={row.partNumber}
-                      UnitCost={row.UnitCost}
-                      Description={row.Description}
-                      VendorID={row.VendorID}
-                      LeadTime={row.LeadTime}
-                      selected={selected.indexOf(row.modelname) !== -1}
-                      handleClick={(event) => handleClick(event, row.modelname)}
+        {loading ? ( // Show loader if data is still being fetched
+          <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+            {errorMessage ? (
+              <Typography color="error">{errorMessage}</Typography> // Error message
+            ) : (
+              <CircularProgress /> // Loader
+            )}
+          </Box>
+        ) : (
+          <>
+            <Scrollbar>
+              <TableContainer sx={{ overflow: 'unset' }}>
+                <Table sx={{ minWidth: 800 }}>
+                  <SpareTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    rowCount={spare.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleSort}
+                    onSelectAllClick={handleSelectAllClick}
+                    headLabel={[
+                      { id: 'SpareID', label: 'Spare Id' },
+                      { id: 'Name', label: 'Name' },
+                      { id: 'PartNumber', label: 'Part Number' },
+                      { id: 'UnitCost', label: 'Unit Cost' },
+                      { id: 'Description', label: 'Description' },
+                      { id: 'VendorID', label: 'Vendor ID' },
+                      { id: 'LeadTime', label: 'Lead Time' },
+                      { id: '' },
+                    ]}
+                    checked={selected.length > 0 && selected.length === spare.length} // All selected
+                    indeterminate={selected.length > 0 && selected.length < spare.length} // Some selected
+                  />
+                  <TableBody>
+                    {dataFiltered
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row) => (
+                        <SpareTableRow
+                          key={row.id}
+                          spareID={row.spare_id}
+                          Name={row.name}
+                          PartNumber={row.part_number}
+                          UnitCost={row.unit_cost}
+                          Description={row.description}
+                          VendorID={row.vendor_id}
+                          LeadTime={row.lead_time}
+                          selected={selected.indexOf(row.spare_id) !== -1}
+                          handleClick={(event) => handleClick(event, row.spare_id)}
+                          onUpdateSuccess={fetchData}
+                        />
+                      ))}
+
+                    <TableEmptyRows
+                      height={77}
+                      emptyRows={emptyRows(page, rowsPerPage, spare.length)}
                     />
-                  ))}
 
-                <TableEmptyRows
-                  height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, spare.length)}
-                />
+                    {notFound && <TableNoData query={filterName} />}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Scrollbar>
 
-                {notFound && <TableNoData query={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
-
-        <TablePagination
-          page={page}
-          component="div"
-          count={spare.length}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+            <TablePagination
+              page={page}
+              component="div"
+              count={spare.length}
+              rowsPerPage={rowsPerPage}
+              onPageChange={handleChangePage}
+              rowsPerPageOptions={[5, 10, 25]}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        )}
       </Card>
 
       <Modal
@@ -249,7 +335,7 @@ export default function SparePage() {
           <Typography variant="h6" id="modal-title">
             Add Spare
           </Typography>
-          <TextField
+          {/* <TextField
             fullWidth
             label="Accessory Id"
             value={SpareID}
@@ -257,7 +343,26 @@ export default function SparePage() {
             variant="outlined"
             mb={2}
             style={{ marginBottom: '10px', marginTop: '20px' }}
-          />
+          /> */}
+          {/* Vendor ID Dropdown */}
+          <Select
+            fullWidth
+            value={VendorID}
+            onChange={(e) => setVendorID(e.target.value)}
+            displayEmpty
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: '10px', marginTop: '20px' }}
+          >
+            <MenuItem value="">
+              <em>Select Vendor</em>
+            </MenuItem>
+            {vendors.map((vendor) => (
+              <MenuItem key={vendor.vendor_id} value={vendor.vendor_id}>
+                {vendor.vendor_id}
+              </MenuItem>
+            ))}
+          </Select>
           <TextField
             fullWidth
             label="Name"
@@ -265,7 +370,7 @@ export default function SparePage() {
             onChange={(e) => setName(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: '10px', marginTop: '20px' }}
+            style={{ marginBottom: '10px' }}
           />
           {/* <TextField
             fullWidth
@@ -296,9 +401,9 @@ export default function SparePage() {
           />
           <TextField
             fullWidth
-            label="Vendor Id"
-            value={VendorID}
-            onChange={(e) => setVendorID(e.target.value)}
+            label="Part Number"
+            value={PartNumber}
+            onChange={(e) => setPartNumber(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: '10px' }}
@@ -319,6 +424,7 @@ export default function SparePage() {
           </div>
         </Box>
       </Modal>
+      <Toaster />
     </Container>
   );
 }

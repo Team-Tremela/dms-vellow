@@ -19,6 +19,8 @@ export default function AccessoryTableHead({
   numSelected,
   onRequestSort,
   onSelectAllClick,
+  checked, // Add checked prop
+  indeterminate, // Add indeterminate prop
 }) {
   const onSort = (property) => (event) => {
     onRequestSort(event, property);
@@ -29,8 +31,8 @@ export default function AccessoryTableHead({
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
+            indeterminate={indeterminate} // Add indeterminate prop
+            checked={checked} // Add checked prop
             onChange={onSelectAllClick}
           />
         </TableCell>
@@ -70,4 +72,6 @@ AccessoryTableHead.propTypes = {
   numSelected: PropTypes.number,
   onRequestSort: PropTypes.func,
   onSelectAllClick: PropTypes.func,
+  checked: PropTypes.bool, // Add propTypes for checked
+  indeterminate: PropTypes.bool, // Add propTypes for indeterminate
 };
