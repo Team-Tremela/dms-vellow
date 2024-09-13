@@ -22,6 +22,21 @@ export default function SpareTableToolbar({
   onDeleteSuccess,
   tableData,
 }) {
+
+  // Function to format the current date and time
+  const formatDateTime = () => {
+    const now = new Date();
+    const options = {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+    const formattedDate = now.toLocaleDateString('en-GB', options).replace(',', '');
+    return formattedDate;
+  };
+  
   const handleDelete = async () => {
     if (selected.length === 0) {
       toast.error('No spare selected to delete!');
@@ -74,7 +89,12 @@ export default function SpareTableToolbar({
     const worksheet = XLSX.utils.json_to_sheet(tableData); // Convert table data to worksheet
     const workbook = XLSX.utils.book_new(); // Create a new workbook
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Spare'); // Append the worksheet to the workbook
-    XLSX.writeFile(workbook, 'Spare.xlsx'); // Download the Excel file
+
+    // Format the date and time
+    const dateTimeString = formatDateTime();
+    const fileName = `Spare_${dateTimeString}.xlsx`.replace(/ /g, '_'); // Replace spaces with underscores
+
+    XLSX.writeFile(workbook, fileName); // Download the Excel file
 
     // Show a success toast message after download
     toast.success('File downloaded successfully!');
