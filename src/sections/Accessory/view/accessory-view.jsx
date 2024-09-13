@@ -233,6 +233,7 @@ export default function AccessoryPage() {
           onDeleteSuccess={fetchData}
           setSelected={setSelected}
           selected={selected}
+          tableData={accessory}
         />
 
         {loading ? ( // Show loader if data is still being fetched

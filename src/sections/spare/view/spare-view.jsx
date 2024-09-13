@@ -234,6 +234,7 @@ export default function SparePage() {
           onDeleteSuccess={fetchData}
           setSelected={setSelected}
           selected={selected}
+          tableData={spare}
         />
 
         {loading ? ( // Show loader if data is still being fetched

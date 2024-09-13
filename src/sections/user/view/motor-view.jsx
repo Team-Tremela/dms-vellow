@@ -224,6 +224,7 @@ export default function MotorPage() {
           onDeleteSuccess={fetchData}
           setSelected={setSelected}
           selected={selected}
+          tableData={vendor}
         />
 
         {loading ? ( // Show loader if data is still being fetched
