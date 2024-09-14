@@ -75,7 +75,7 @@ export default function UserTableRow({
       );
 
       if (response.ok) {
-        toast.success('Update successful',{
+        toast.success('Update successful', {
           style: {
             backgroundColor: '#ECDFCC', // Change toast background to red
             color: '#3C3D37', // Change text color to white for contrast
@@ -259,7 +259,7 @@ export default function UserTableRow({
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       >
-        <MenuItem onClick={handleDelete} style={{color:"#E4003A"}}>
+        <MenuItem onClick={handleDelete} style={{ color: '#E4003A' }}>
           {/* <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} /> */}
           Yes
         </MenuItem>
@@ -344,13 +344,11 @@ export default function UserTableRow({
             value={formData.PhoneNumber}
             onChange={handleFormChange}
           />
-          <Button
-            onClick={handleFormSubmit}
-            variant="contained"
-            color="primary"
-          >
-            Save Changes
-          </Button>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Button onClick={handleFormSubmit} variant="contained" color="inherit">
+              Save Changes
+            </Button>
+          </Box>
         </Box>
       </Modal>
 
@@ -437,13 +435,11 @@ export default function UserTableRow({
               readOnly: true,
             }}
           />
-          <Button
-            onClick={handleCloseViewModal}
-            variant="contained"
-            color="primary"
-          >
-            Close
-          </Button>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Button onClick={handleCloseViewModal} variant="contained" color="inherit">
+              Close
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </>

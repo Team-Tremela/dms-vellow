@@ -109,11 +109,11 @@ export default function SpareTableRow({
           onUpdateSuccess(); // Notify the parent component to fetch updated data
         }
       } else {
-        throw new Error('Failed to update vendor');
+        throw new Error('Failed to update spare');
       }
     } catch (error) {
       console.log(error);
-      toast.error('Failed to update vendor');
+      toast.error('Failed to update spare');
     } finally {
       handleCloseModal();
     }
@@ -303,14 +303,14 @@ export default function SpareTableRow({
           <h2 id="edit-modal-title">Edit Spare</h2>
           <div className="VRModel-style">
             <div className="VRModal-inner-left">
-              <TextField
+              {/* <TextField
                 fullWidth
                 margin="normal"
                 label="Spare Id"
                 name="SpareID"
                 value={formData.spareID}
                 onChange={handleFormChange}
-              />
+              /> */}
               <Select
                 fullWidth
                 value={VendorIDD}
@@ -318,7 +318,7 @@ export default function SpareTableRow({
                 displayEmpty
                 variant="outlined"
                 mb={2}
-                style={{ marginBottom: '10px', marginTop: '20px' }}
+                style={{ marginTop: '14px' }}
               >
                 <MenuItem value="">
                   <em>Select Vendor</em>
@@ -340,6 +340,21 @@ export default function SpareTableRow({
               <TextField
                 fullWidth
                 margin="normal"
+                label="Description"
+                name="Description"
+                value={formData.Description}
+                onChange={handleFormChange}
+                variant="outlined"
+                mb={2}
+                multiline
+                rows={4} // Number of rows for the textarea
+                style={{ marginBottom: '10px' }}
+              />
+            </div>
+            <div className="VRModal-inner-right">
+              <TextField
+                fullWidth
+                margin="normal"
                 label="Part Number"
                 name="PartNumber"
                 value={formData.PartNumber}
@@ -351,16 +366,6 @@ export default function SpareTableRow({
                 label="Unit Cost"
                 name="UnitCost"
                 value={formData.UnitCost}
-                onChange={handleFormChange}
-              />
-            </div>
-            <div className="VRModal-inner-right">
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Description"
-                name="Description"
-                value={formData.Description}
                 onChange={handleFormChange}
               />
               <TextField
@@ -431,7 +436,7 @@ export default function SpareTableRow({
                 margin="normal"
                 label="Part Number"
                 name="PartNumber"
-                value={formData.partNumber}
+                value={formData.PartNumber}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -457,6 +462,11 @@ export default function SpareTableRow({
                 InputProps={{
                   readOnly: true,
                 }}
+                variant="outlined"
+                mb={2}
+                multiline
+                rows={4} // Number of rows for the textarea
+                style={{ marginBottom: '10px' }}
               />
               <TextField
                 fullWidth

@@ -369,6 +369,8 @@ export default function AccessoryPage() {
             onChange={(e) => setDescription(e.target.value)}
             variant="outlined"
             mb={2}
+            multiline
+            rows={4} // Number of rows for the textarea
             style={{ marginBottom: '10px' }}
           />
           {/* Vendor ID Dropdown */}

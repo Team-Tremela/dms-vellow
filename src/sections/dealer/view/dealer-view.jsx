@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast, Toaster } from 'react-hot-toast';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -7,26 +8,28 @@ import Table from '@mui/material/Table';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 // import MenuItem from '@mui/material/MenuItem';
+// import Select from '@mui/material/Select'; // Import Select component
+// import MenuItem from '@mui/material/MenuItem'; // Import MenuItem component
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import { dealer } from 'src/_mock/dealer';
+// import { dealer } from 'src/_mock/dealer';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import "./dealer-view.css";
+import './dealer-view.css';
 import TableNoData from '../table-no-data';
 import UserTableRow from '../dealer-table-row';
 import UserTableHead from '../dealer-table-head';
 import TableEmptyRows from '../dealer-empty-rows';
 import UserTableToolbar from '../dealer-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-
 
 // ----------------------------------------------------------------------
 
@@ -39,14 +42,40 @@ export default function DealerPage() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openModal, setOpenModal] = useState(false); // State for Modal
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [dealer, setDealer] = useState([]);
 
   // State for motor details
-  const [DealerID, setDealerID] = useState('');
+  // const [DealerID, setDealerID] = useState('');
   const [Name, setName] = useState('');
   const [Location, setLocation] = useState('');
   const [Email, setEmail] = useState('');
   const [PhoneNumber, setPhoneNumber] = useState('');
-  const [Address, setAddress] = useState('');
+  // const [Address, setAddress] = useState('');
+
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Define fetchData function
+  const fetchData = async () => {
+    setLoading(true);
+    const apiUrl = 'https://vlmtrs.onrender.com/v1/dealer/fetch-all';
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        const errorData = await response.json(); // Extract error data
+        throw new Error(errorData.message || 'Failed to fetch data');
+      }
+      const data = await response.json();
+      setDealer(data.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -58,18 +87,18 @@ export default function DealerPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = dealer.map((n) => n.name);
+      const newSelecteds = dealer.map((n) => n.dealer_id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, dealer_id) => {
+    const selectedIndex = selected.indexOf(dealer_id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, dealer_id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -110,26 +139,56 @@ export default function DealerPage() {
   const handleCloseModal = () => {
     setOpenModal(false);
     // Clear input fields when closing modal
-    setDealerID('');
+    // setDealerID('');
     setName('');
     setLocation('');
     setEmail('');
     setPhoneNumber('');
-    setAddress('');
+    // setAddress('');
   };
 
-  const handleAddMotor = () => {
-    // Handle adding motor logic here
-    // Clear input fields after adding motor
-    setDealerID('');
-    setName('');
-    setLocation('');
-    setEmail('');
-    setPhoneNumber('');
-    setAddress('');
-    setOpenModal(false);
-  };
+  const handleAddMotor = async () => {
+    const newDealer = {
+      name: Name,
+      location: Location,
+      email: Email,
+      phone_number: PhoneNumber,
+    };
+    console.log(newDealer);
+    try {
+      const response = await fetch('https://vlmtrs.onrender.com/v1/dealer/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newDealer),
+      });
 
+      if (!response.ok) {
+        throw new Error('Failed to add Dealer');
+      }
+
+      const data = await response.json();
+      console.log('Dealer added successfully:', data);
+
+      // Reset form fields after successful submission
+      setName('');
+      setLocation('');
+      setEmail('');
+      setPhoneNumber('');
+
+      // Close modal
+      setOpenModal(false);
+
+      // Show success message
+      toast.success('Dealer added successfully!');
+
+      // Optionally, fetch the updated vendor list to reflect the new vendor in the table
+      fetchData();
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
 
   const notFound = !dataFiltered.length && !!filterName;
 
@@ -152,65 +211,86 @@ export default function DealerPage() {
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
+          onDeleteSuccess={fetchData}
+          setSelected={setSelected}
+          selected={selected}
+          tableData={dealer}
         />
 
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
-                order={order}
-                orderBy={orderBy}
-                rowCount={dealer.length}
-                numSelected={selected.length}
-                onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
-                headLabel={[
-                  { id: 'DealerID', label: 'Dealer Id' },
-                  { id: 'Name', label: 'Name' },
-                  { id: 'Location', label: 'Location' },
-                  { id: 'Email', label: 'Email' },
-                  { id: 'PhoneNumber', label: 'Phone Number' },
-                  { id: 'Address', label: 'Address' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.id}
-                      DealerID={row.DealerID}
-                      Name={row.Name}
-                      Location={row.Location}
-                      Email={row.Email}
-                      PhoneNumber={row.PhoneNumber}
-                      Address={row.Address}
-                      selected={selected.indexOf(row.DealerID) !== -1}
-                      handleClick={(event) => handleClick(event, row.DealerID)}
+        {loading ? ( // Show loader if data is still being fetched
+          <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+            {errorMessage ? (
+              <Typography color="error">{errorMessage}</Typography> // Error message
+            ) : (
+              <CircularProgress /> // Loader
+            )}
+          </Box>
+        ) : (
+          <>
+            <Scrollbar>
+              <TableContainer sx={{ overflow: 'unset' }}>
+                <Table sx={{ minWidth: 800 }}>
+                  <UserTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    rowCount={dealer.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleSort}
+                    onSelectAllClick={handleSelectAllClick}
+                    headLabel={[
+                      { id: 'DealerID', label: 'Dealer Id' },
+                      { id: 'Name', label: 'Name' },
+                      { id: 'Location', label: 'Location' },
+                      { id: 'Email', label: 'Email' },
+                      { id: 'PhoneNumber', label: 'Phone Number' },
+                      { id: 'CreatedAt', label: 'Createed At' },
+                      { id: 'UpdatedAt', label: 'Updated At' },
+                      { id: '' },
+                    ]}
+                    checked={selected.length > 0 && selected.length === dealer.length} // All selected
+                    indeterminate={selected.length > 0 && selected.length < dealer.length} // Some selected
+                  />
+                  <TableBody>
+                    {dataFiltered
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row) => (
+                        <UserTableRow
+                          key={row.id}
+                          DealerID={row.dealer_id}
+                          Name={row.name}
+                          Location={row.location}
+                          Email={row.email}
+                          PhoneNumber={row.phone_number}
+                          CreatedAt={row.createdAt}
+                          UpdatedAt={row.updatedAt}
+                          selected={selected.indexOf(row.dealer_id) !== -1}
+                          handleClick={(event) => handleClick(event, row.dealer_id)}
+                          onUpdateSuccess={fetchData}
+                        />
+                      ))}
+
+                    <TableEmptyRows
+                      height={77}
+                      emptyRows={emptyRows(page, rowsPerPage, dealer.length)}
                     />
-                  ))}
 
-                <TableEmptyRows
-                  height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, dealer.length)}
-                />
+                    {notFound && <TableNoData query={filterName} />}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Scrollbar>
 
-                {notFound && <TableNoData query={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
-
-        <TablePagination
-          page={page}
-          component="div"
-          count={dealer.length}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+            <TablePagination
+              page={page}
+              component="div"
+              count={dealer.length}
+              rowsPerPage={rowsPerPage}
+              onPageChange={handleChangePage}
+              rowsPerPageOptions={[5, 10, 25]}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        )}
       </Card>
 
       <Modal
@@ -236,15 +316,15 @@ export default function DealerPage() {
           <Typography variant="h6" id="modal-title">
             Add Dealer
           </Typography>
-          <TextField
+          {/* <TextField
             fullWidth
             label="Dealer Id"
             value={DealerID}
             onChange={(e) => setDealerID(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px", marginTop: "20px" }}
-          />
+            style={{ marginBottom: '10px', marginTop: '20px' }}
+          /> */}
           <TextField
             fullWidth
             label="Name"
@@ -252,7 +332,7 @@ export default function DealerPage() {
             onChange={(e) => setName(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px', marginTop: '20px' }}
           />
           <TextField
             fullWidth
@@ -261,7 +341,7 @@ export default function DealerPage() {
             onChange={(e) => setLocation(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
           <TextField
             fullWidth
@@ -270,7 +350,7 @@ export default function DealerPage() {
             onChange={(e) => setEmail(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
           <TextField
             fullWidth
@@ -279,28 +359,25 @@ export default function DealerPage() {
             onChange={(e) => setPhoneNumber(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: '10px' }}
           />
-          <TextField
+          {/* <TextField
             fullWidth
             label="Address"
             value={Address}
             onChange={(e) => setAddress(e.target.value)}
             variant="outlined"
             mb={2}
-            style={{ marginBottom: "10px" }}
-          />
-          <div style={{ textAlign: "center" }}>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleAddMotor}
-            >
-              Add Motor
+            style={{ marginBottom: '10px' }}
+          /> */}
+          <div style={{ textAlign: 'center' }}>
+            <Button variant="contained" color="inherit" onClick={handleAddMotor}>
+              Add Dealer
             </Button>
           </div>
         </Box>
       </Modal>
+      <Toaster />
     </Container>
   );
 }

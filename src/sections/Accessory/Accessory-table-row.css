@@ -1,12 +1,11 @@
-.SModal-style {
+.AModal-style {
   display: flex;
 }
-.SModal-inner-right {
+.AModal-inner-right {
   margin-left: 20px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
-.SModal-inner-left {
-
+.AModal-inner-left {
 }
 
 /* Extra small devices (max-width: 576px) */
@@ -15,14 +14,14 @@
     width: 350px;
     overflow-y: scroll;
   }
-  .SModal-style {
+  .AModal-style {
     display: block;
   }
-  .SModal-inner-right {
+  .AModal-inner-right {
     margin-left: 0px;
     margin-top: 0px;
   }
-  .SModal-inner-left {
+  .AModal-inner-left {
   }
 }
 

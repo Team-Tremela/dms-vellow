@@ -17,6 +17,8 @@ import IconButton from '@mui/material/IconButton';
 // import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
+import './Accessory-table-row.css';
+
 // ----------------------------------------------------------------------
 
 export default function AccessoryTableRow({
@@ -107,11 +109,11 @@ export default function AccessoryTableRow({
           onUpdateSuccess(); // Notify the parent component to fetch updated data
         }
       } else {
-        throw new Error('Failed to update vendor');
+        throw new Error('Failed to update accessory');
       }
     } catch (error) {
       console.log(error);
-      toast.error('Failed to update vendor');
+      toast.error('Failed to update accessory');
     } finally {
       handleCloseModal();
     }
@@ -145,9 +147,12 @@ export default function AccessoryTableRow({
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`https://vlmtrs.onrender.com/v1/accessory/delete/${accessoryID}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `https://vlmtrs.onrender.com/v1/accessory/delete/${accessoryID}`,
+        {
+          method: 'DELETE',
+        }
+      );
 
       if (response.ok) {
         toast.success('Accessory deleted successfully', {
@@ -340,6 +345,10 @@ export default function AccessoryTableRow({
             name="Description"
             value={formData.Description}
             onChange={handleFormChange}
+            variant="outlined"
+            mb={2}
+            multiline
+            rows={4} // Number of rows for the textarea
           />
           <TextField
             fullWidth
@@ -372,7 +381,7 @@ export default function AccessoryTableRow({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 400,
+            width: 800,
             bgcolor: 'background.paper',
             borderRadius: 1,
             boxShadow: 24,
@@ -380,76 +389,77 @@ export default function AccessoryTableRow({
           }}
         >
           <h2 id="view-modal-title">View Accessory</h2>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Accessory Id"
-            name="AccessoryID"
-            value={formData.accessoryID}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Name"
-            name="accessoryname"
-            value={formData.Name}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          {/* <TextField
-            fullWidth
-            margin="normal"
-            label="Battery Name"
-            name="batteryName"
-            value={formData.batteryName}
-            InputProps={{
-              readOnly: true,
-            }}
-          /> */}
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Unit Cost"
-            name="UnitCost"
-            value={formData.UnitCost}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Description"
-            name="Description"
-            value={formData.Description}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vendor Id"
-            name="VendorID"
-            value={formData.VendorID}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Lead Time"
-            name="LeadTime"
-            value={formData.LeadTime}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
+          <div className="AModal-style">
+            <div className="AModal-inner-left">
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Accessory Id"
+                name="AccessoryID"
+                value={formData.accessoryID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Name"
+                name="accessoryname"
+                value={formData.Name}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Description"
+                name="Description"
+                value={formData.Description}
+                InputProps={{
+                  readOnly: true,
+                }}
+                variant="outlined"
+                mb={2}
+                multiline
+                rows={4} // Number of rows for the textarea
+              />
+            </div>
+            <div className="AModal-inner-right">
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Unit Cost"
+                name="UnitCost"
+                value={formData.UnitCost}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Vendor Id"
+                name="VendorID"
+                value={formData.VendorID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Lead Time"
+                name="LeadTime"
+                value={formData.LeadTime}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </div>
+          </div>
+
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseViewModal} variant="contained" color="inherit">
               Close

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-hot-toast';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -24,8 +25,10 @@ export default function UserTableRow({
   Location,
   Email,
   PhoneNumber,
-  Address,
+  CreatedAt,
+  UpdatedAt,
   handleClick,
+  onUpdateSuccess,
 }) {
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
@@ -36,8 +39,11 @@ export default function UserTableRow({
     Location,
     Email,
     PhoneNumber,
-    Address,
+    CreatedAt,
+    UpdatedAt,
   });
+
+  const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -47,10 +53,50 @@ export default function UserTableRow({
     setOpen(null);
   };
 
-  const handleFormSubmit = () => {
-    // Add form submission logic here
-    console.log('Form data:', formData);
-    handleCloseModal();
+  const handleFormSubmit = async () => {
+    const payload = {
+      name: formData.Name,
+      location: formData.Location,
+      email: formData.UnitCost,
+      phone_number: formData.PhoneNumber,
+    };
+    console.log(payload);
+    console.log(DealerID);
+    try {
+      const response = await fetch(
+        `https://vlmtrs.onrender.com/v1/dealer/update/${formData.DealerID}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (response.ok) {
+        toast.success('Update successful', {
+          style: {
+            backgroundColor: '#ECDFCC', // Change toast background to red
+            color: '#3C3D37', // Change text color to white for contrast
+          },
+          iconTheme: {
+            primary: '#3C3D37', // Change tick icon color to white
+            secondary: '#ECDFCC', // Change the secondary color of the icon (background) to red
+          },
+        });
+        if (onUpdateSuccess) {
+          onUpdateSuccess(); // Notify the parent component to fetch updated data
+        }
+      } else {
+        throw new Error('Failed to update dealer');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to update dealer');
+    } finally {
+      handleCloseModal();
+    }
   };
 
   const handleFormChange = (event) => {
@@ -78,6 +124,46 @@ export default function UserTableRow({
   const handleCloseViewModal = () => {
     setOpenViewModal(false);
   };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`https://vlmtrs.onrender.com/v1/dealer/delete/${DealerID}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        toast.success('Dealer deleted successfully', {
+          style: {
+            backgroundColor: '#B43F3F', // Change toast background to red
+            color: 'white', // Change text color to white for contrast
+          },
+          iconTheme: {
+            primary: 'white', // Change tick icon color to white
+            secondary: '#B43F3F', // Change the secondary color of the icon (background) to red
+          },
+        });
+        if (onUpdateSuccess) {
+          onUpdateSuccess(); // Notify the parent component to fetch updated data
+        }
+      } else {
+        throw new Error('Failed to delete dealer');
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error('Failed to delete dealer');
+    } finally {
+      handleCloseDeletePopover(); // Ensure this is called after Snackbar is triggered
+    }
+  };
+
+  const handleOpenDeletePopover = (event) => {
+    setDeletePopoverOpen(event.currentTarget);
+  };
+
+  const handleCloseDeletePopover = () => {
+    setDeletePopoverOpen(null);
+  };
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -85,7 +171,16 @@ export default function UserTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100px"}}>{DealerID}</TableCell>
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {DealerID}
+        </TableCell>
 
         <TableCell>{Name}</TableCell>
 
@@ -93,12 +188,28 @@ export default function UserTableRow({
 
         <TableCell>{Email}</TableCell>
 
-        <TableCell>
-          {PhoneNumber}
+        <TableCell>{PhoneNumber}</TableCell>
+
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {CreatedAt}
         </TableCell>
 
-        <TableCell>
-          {Address}
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
+          {UpdatedAt}
         </TableCell>
 
         <TableCell align="right">
@@ -123,7 +234,7 @@ export default function UserTableRow({
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleOpenDeletePopover} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
@@ -134,32 +245,50 @@ export default function UserTableRow({
         </MenuItem>
       </Popover>
 
+      <Popover
+        open={Boolean(deletePopoverOpen)}
+        anchorEl={deletePopoverOpen}
+        onClose={handleCloseDeletePopover}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        <MenuItem onClick={handleDelete} style={{ color: '#E4003A' }}>
+          {/* <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} /> */}
+          Yes
+        </MenuItem>
+        <MenuItem onClick={handleCloseDeletePopover} sx={{ color: '#3C3D37' }}>
+          No
+        </MenuItem>
+      </Popover>
+
       <Modal
         open={openModal}
         onClose={handleCloseModal}
         aria-labelledby="edit-modal-title"
         aria-describedby="edit-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-          boxShadow: 24,
-          p: 4,
-        }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
           <h2 id="edit-modal-title">Edit Dealer</h2>
-          <TextField
+          {/* <TextField
             fullWidth
             margin="normal"
             label="Dealer Id"
             name="DealerID"
             value={formData.DealerID}
             onChange={handleFormChange}
-          />
+          /> */}
           <TextField
             fullWidth
             margin="normal"
@@ -192,14 +321,14 @@ export default function UserTableRow({
             value={formData.PhoneNumber}
             onChange={handleFormChange}
           />
-          <TextField
+          {/* <TextField
             fullWidth
             margin="normal"
             label="Address"
             name="Address"
             value={formData.Address}
             onChange={handleFormChange}
-          />
+          /> */}
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
               Cancel
@@ -217,17 +346,19 @@ export default function UserTableRow({
         aria-labelledby="view-modal-title"
         aria-describedby="view-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-          boxShadow: 24,
-          p: 4,
-        }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
           <h2 id="view-modal-title">View Dealer</h2>
           <TextField
             fullWidth
@@ -284,7 +415,17 @@ export default function UserTableRow({
             margin="normal"
             label="Address"
             name="Address"
-            value={formData.Address}
+            value={formData.CreatedAt}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Address"
+            name="Address"
+            value={formData.UpdatedAt}
             InputProps={{
               readOnly: true,
             }}
@@ -308,5 +449,7 @@ UserTableRow.propTypes = {
   DealerID: PropTypes.any,
   selected: PropTypes.any,
   Location: PropTypes.string,
-  Address: PropTypes.string,
+  CreatedAt: PropTypes.string,
+  UpdatedAt: PropTypes.string,
+  onUpdateSuccess: PropTypes.func,
 };

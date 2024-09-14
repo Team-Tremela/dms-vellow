@@ -90,7 +90,7 @@ export default function MotorPage() {
       const newSelecteds = vendor.map((n) => n.vendor_id);
       setSelected(newSelecteds);
       // return;
-    }else{
+    } else {
       setSelected([]);
     }
   };
@@ -368,9 +368,11 @@ export default function MotorPage() {
             mb={2}
             style={{ marginBottom: '10px' }}
           />
-          <Button variant="contained" onClick={handleAddMotor}>
-            Save
-          </Button>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Button variant="contained" color="inherit" onClick={handleAddMotor}>
+              Save
+            </Button>
+          </Box>
         </Box>
       </Modal>
       <Toaster />

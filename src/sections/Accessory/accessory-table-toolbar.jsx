@@ -38,7 +38,7 @@ export default function AccessoryTableToolbar({
 
   const handleDelete = async () => {
     if (selected.length === 0) {
-      toast.error('No spare selected to delete!');
+      toast.error('No accessory selected to delete!');
       return;
     }
 
@@ -50,7 +50,7 @@ export default function AccessoryTableToolbar({
           method: 'DELETE',
         });
         if (!response.ok) {
-          throw new Error(`Failed to delete spare with ID: ${accessoryID}`);
+          throw new Error(`Failed to delete accessory with ID: ${accessoryID}`);
         }
         return response.json();
       } catch (error) {

@@ -48,7 +48,7 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (service) => service?.Name?.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (service) => service?.vehicle_id?.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 

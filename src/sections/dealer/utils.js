@@ -48,7 +48,7 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
     if (filterName) {
         inputData = inputData.filter(
-            (dealer) => dealer.Name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+            (dealer) => dealer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
         );
     }
 
