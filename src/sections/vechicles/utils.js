@@ -48,7 +48,7 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
     if (filterName) {
         inputData = inputData.filter(
-            (vechicles) => vechicles.modelName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+            (vechicles) => vechicles?.chassis_no?.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
         );
     }
 

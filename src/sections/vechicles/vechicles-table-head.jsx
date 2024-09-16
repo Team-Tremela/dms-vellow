@@ -19,6 +19,8 @@ export default function VechiclesTableHead({
   numSelected,
   onRequestSort,
   onSelectAllClick,
+  checked, // Add checked prop
+  indeterminate, // Add indeterminate prop
 }) {
   const onSort = (property) => (event) => {
     onRequestSort(event, property);
@@ -29,8 +31,8 @@ export default function VechiclesTableHead({
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
+            indeterminate={indeterminate} // Add indeterminate prop
+            checked={checked} // Add checked prop
             onChange={onSelectAllClick}
           />
         </TableCell>
@@ -40,7 +42,7 @@ export default function VechiclesTableHead({
             key={headCell.id}
             align={headCell.align || 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+            sx={{ whiteSpace: 'nowrap', minWidth: 0, width: 'auto' }}
           >
             <TableSortLabel
               hideSortIcon
@@ -70,4 +72,6 @@ VechiclesTableHead.propTypes = {
   numSelected: PropTypes.number,
   onRequestSort: PropTypes.func,
   onSelectAllClick: PropTypes.func,
+  checked: PropTypes.bool, // Add propTypes for checked
+  indeterminate: PropTypes.bool, // Add propTypes for indeterminate
 };

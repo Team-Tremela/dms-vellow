@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import { toast } from 'react-hot-toast';
 import { useState, useEffect } from 'react';
@@ -13,11 +14,15 @@ import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 // import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
 import './Service.css';
+// import { vechicles } from 'src/_mock/vechicles';
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +58,8 @@ export default function ServiceTableRow({
   const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
   const [dealers, setDealers] = useState([]);
   const [DealerIDD, setDealerIDD] = useState(''); // State for DealerID
+  const [vechicles, setVechicles] = useState([]);
+  const [vechicleIDD, setVechicleIDD] = useState(''); // State for DealerID
 
   const fetchDealers = async () => {
     try {
@@ -64,8 +71,19 @@ export default function ServiceTableRow({
     }
   };
 
+  const fetchVechicles = async () => {
+    try {
+      const response = await fetch('https://vlmtrs.onrender.com/v1/vehicle/fetch-all');
+      const data = await response.json();
+      setVechicles(data.data);
+    } catch (error) {
+      console.error('Error fetching dealers:', error);
+    }
+  };
+
   useEffect(() => {
     fetchDealers();
+    fetchVechicles();
   }, []);
 
   const handleOpenMenu = (event) => {
@@ -79,7 +97,7 @@ export default function ServiceTableRow({
   const handleFormSubmit = async () => {
     const payload = {
       dealer_id: DealerIDD,
-      vehicle_id: formData.VehicleID,
+      vehicle_id: formData.vechicleIDD,
       service_date: formData.ServiceDate,
       description: formData.Description,
       cost: formData.UnitCost,
@@ -113,11 +131,11 @@ export default function ServiceTableRow({
           onUpdateSuccess(); // Notify the parent component to fetch updated data
         }
       } else {
-        throw new Error('Failed to update accessory');
+        throw new Error('Failed to update service');
       }
     } catch (error) {
       console.log(error);
-      toast.error('Failed to update accessory');
+      toast.error('Failed to update service');
     } finally {
       handleCloseModal();
     }
@@ -331,6 +349,7 @@ export default function ServiceTableRow({
         aria-labelledby="edit-modal-title"
         aria-describedby="edit-modal-description"
       >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Box
           sx={{
             position: 'absolute',
@@ -365,6 +384,24 @@ export default function ServiceTableRow({
                   </MenuItem>
                 ))}
               </Select>
+              <Select
+                fullWidth
+                value={vechicleIDD}
+                onChange={(e) => setVechicleIDD(e.target.value)}
+                displayEmpty
+                variant="outlined"
+                mb={2}
+                style={{ marginBottom: '10px' }}
+              >
+                <MenuItem value="">
+                  <em>Select Vechicle</em>
+                </MenuItem>
+                {vechicles.map((vechicle) => (
+                  <MenuItem key={vechicle.vehicle_id} value={vechicle.vehicle_id}>
+                    {vechicle.vehicle_id}
+                  </MenuItem>
+                ))}
+              </Select>
               {/* <TextField
                 fullWidth
                 margin="normal"
@@ -373,14 +410,6 @@ export default function ServiceTableRow({
                 value={formData.Name}
                 onChange={handleFormChange}
               /> */}
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Vechile Id"
-                name="VehicleID"
-                value={formData.VehicleID}
-                onChange={handleFormChange}
-              />
               <TextField
                 fullWidth
                 margin="normal"
@@ -396,14 +425,27 @@ export default function ServiceTableRow({
               />
             </div>
             <div className="VRModal-inner-right">
-              <TextField
-                fullWidth
-                margin="normal"
+              <DesktopDatePicker
                 label="Service Date"
-                name="ServiceDate"
-                value={formData.ServiceDate}
-                onChange={handleFormChange}
+                inputFormat="YYYY-MM-DD"
+                value={formData.ServiceDate ? dayjs(formData.ServiceDate) : null} // Format it to dayjs object
+                onChange={(newValue) =>
+                  setFormData((prevState) => ({
+                    ...prevState,
+                    ServiceDate: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  }))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    variant="outlined"
+                    mb={2}
+                    style={{ marginBottom: '10px' }}
+                  />
+                )}
               />
+              <div style={{marginTop:'10px'}}> </div>
               <TextField
                 fullWidth
                 margin="normal"
@@ -412,14 +454,14 @@ export default function ServiceTableRow({
                 value={formData.UnitCost}
                 onChange={handleFormChange}
               />
-              <TextField
+              {/* <TextField
                 fullWidth
                 margin="normal"
                 label="Dealer Id"
                 name="Dealer"
                 value={formData.DealerID}
                 onChange={handleFormChange}
-              />
+              /> */}
             </div>
           </div>
 
@@ -440,6 +482,7 @@ export default function ServiceTableRow({
             </Button>
           </Box>
         </Box>
+        </LocalizationProvider>
       </Modal>
 
       <Modal

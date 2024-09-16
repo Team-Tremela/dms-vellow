@@ -33,6 +33,7 @@ import ServiceTableRow from '../service-table-row';
 import ServiceTableHead from '../service-table-head';
 import ServiceTableToolbar from '../service-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
+// import { vechicles } from 'src/_mock/vechicles';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +48,7 @@ export default function ServicePage() {
   const [loading, setLoading] = useState(true); // Add loading state
   const [service, setService] = useState([]);
   const [dealers, setdealers] = useState([]);
+  const [vechicles, setvechicles] = useState([]);
 
   // const [Name, setName] = useState('');
   const [VechicleID, setVechicleId] = useState('');
@@ -67,6 +69,16 @@ export default function ServicePage() {
       setdealers(data.data);
     } catch (error) {
       console.error('Error fetching vendors:', error);
+    }
+  };
+
+  const fetchVechicle = async () => {
+    try {
+      const response = await fetch('https://vlmtrs.onrender.com/v1/vehicle/fetch-all');
+      const data = await response.json();
+      setvechicles(data.data);
+    } catch (error) {
+      console.error('Error fetching vechicles:', error);
     }
   };
 
@@ -91,6 +103,7 @@ export default function ServicePage() {
   useEffect(() => {
     fetchData();
     fetchDealers();
+    fetchVechicle();
   }, []);
 
   const handleSort = (event, id) => {
@@ -367,6 +380,24 @@ export default function ServicePage() {
                     </MenuItem>
                   ))}
                 </Select>
+                <Select
+                  fullWidth
+                  value={VechicleID}
+                  onChange={(e) => setVechicleId(e.target.value)}
+                  displayEmpty
+                  variant="outlined"
+                  mb={2}
+                  style={{ marginBottom: '10px' }}
+                >
+                  <MenuItem value="">
+                    <em>Select Vechicle</em>
+                  </MenuItem>
+                  {vechicles.map((vechicle) => (
+                    <MenuItem key={vechicle.vehicle_id} value={vechicle.vehicle_id}>
+                      {vechicle.vehicle_id}
+                    </MenuItem>
+                  ))}
+                </Select>
                 {/* <TextField
                 fullWidth
                 label="Service Id"
@@ -385,15 +416,6 @@ export default function ServicePage() {
                 mb={2}
                 style={{ marginBottom: '10px', marginTop: '20px' }}
               /> */}
-                <TextField
-                  fullWidth
-                  label="Vechicle Id"
-                  value={VechicleID}
-                  onChange={(e) => setVechicleId(e.target.value)}
-                  variant="outlined"
-                  mb={2}
-                  style={{ marginBottom: '10px' }}
-                />
                 <DesktopDatePicker
                   label="Service Date"
                   inputFormat="YYYY-MM-DD"
