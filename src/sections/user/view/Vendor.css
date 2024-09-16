@@ -1,3 +1,21 @@
+/* Custom Scrollbar for WebKit browsers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; /* Width of the scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #ffffff; /* Background color of the track */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #dbdbdb; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounding of the scrollbar thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #d3d3d3; /* Color of the scrollbar thumb on hover */
+}
 /* Extra small devices (max-width: 576px) */
 @media only screen and (max-width: 576px) {
   .css-1asjwtk {

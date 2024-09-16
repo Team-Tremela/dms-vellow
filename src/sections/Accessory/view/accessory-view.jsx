@@ -25,6 +25,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
+import './Accessory.css';
 import TableNoData from '../table-no-data';
 import TableEmptyRows from '../accessory-empty-rows';
 import AccessoryTableRow from '../accessory-table-row';
@@ -247,7 +248,13 @@ export default function AccessoryPage() {
         ) : (
           <>
             <Scrollbar>
-              <TableContainer sx={{ overflow: 'unset' }}>
+              <TableContainer
+                sx={{
+                  maxHeight: 400, // Set a maximum height for the TableContainer
+                  overflowY: 'auto', // Enable vertical scrolling
+                }}
+                className="custom-scrollbar"
+              >
                 <Table sx={{ minWidth: 800 }}>
                   <AccessoryTableHead
                     order={order}

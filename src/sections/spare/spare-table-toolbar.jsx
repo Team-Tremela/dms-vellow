@@ -121,7 +121,7 @@ export default function SpareTableToolbar({
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search spare..."
+          placeholder="Search by spare name..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify

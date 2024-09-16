@@ -21,6 +21,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
+import './Spare.css';
 import TableNoData from '../table-no-data';
 import SpareTableRow from '../spare-table-row';
 import TableEmptyRows from '../spare-empty-rows';
@@ -248,7 +249,11 @@ export default function SparePage() {
         ) : (
           <>
             <Scrollbar>
-              <TableContainer sx={{ overflow: 'unset' }}>
+              <TableContainer  sx={{
+                  maxHeight: 400, // Set a maximum height for the TableContainer
+                  overflowY: 'auto', // Enable vertical scrolling
+                }}
+                className='custom-scrollbar'>
                 <Table sx={{ minWidth: 800 }}>
                   <SpareTableHead
                     order={order}

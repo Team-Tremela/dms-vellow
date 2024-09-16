@@ -266,7 +266,13 @@ export default function ServicePage() {
         ) : (
           <>
             <Scrollbar>
-              <TableContainer sx={{ overflow: 'unset' }}>
+              <TableContainer
+                sx={{
+                  maxHeight: 400, // Set a maximum height for the TableContainer
+                  overflowY: 'auto', // Enable vertical scrolling
+                }}
+                className="custom-scrollbar"
+              >
                 <Table sx={{ minWidth: 800 }}>
                   <ServiceTableHead
                     order={order}
@@ -433,7 +439,7 @@ export default function ServicePage() {
                     />
                   )}
                 />
-                <div style={{marginTop:'10px'}}> </div>
+                <div style={{ marginTop: '10px' }}> </div>
               </div>
               <div className="SModal-inner-right">
                 <TextField

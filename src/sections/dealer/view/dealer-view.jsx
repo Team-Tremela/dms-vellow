@@ -228,7 +228,11 @@ export default function DealerPage() {
         ) : (
           <>
             <Scrollbar>
-              <TableContainer sx={{ overflow: 'unset' }}>
+              <TableContainer sx={{
+                  maxHeight: 400, // Set a maximum height for the TableContainer
+                  overflowY: 'auto', // Enable vertical scrolling
+                }}
+                className='custom-scrollbar'>
                 <Table sx={{ minWidth: 800 }}>
                   <UserTableHead
                     order={order}
@@ -243,7 +247,7 @@ export default function DealerPage() {
                       { id: 'Location', label: 'Location' },
                       { id: 'Email', label: 'Email' },
                       { id: 'PhoneNumber', label: 'Phone Number' },
-                      { id: 'CreatedAt', label: 'Createed At' },
+                      { id: 'CreatedAt', label: 'Created  At' },
                       { id: 'UpdatedAt', label: 'Updated At' },
                       { id: '' },
                     ]}

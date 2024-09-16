@@ -120,7 +120,7 @@ export default function ServiceTableToolbar({
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search service..."
+          placeholder="Search by vechicle id..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify

@@ -268,7 +268,13 @@ export default function VechiclesPage() {
         ) : (
           <>
             <Scrollbar>
-              <TableContainer sx={{ overflow: 'unset' }}>
+              <TableContainer
+                sx={{
+                  maxHeight: 400, // Set a maximum height for the TableContainer
+                  overflowY: 'auto', // Enable vertical scrolling
+                }}
+                className='custom-scrollbar'
+              >
                 <Table sx={{ minWidth: 800 }}>
                   <VechiclesTableHead
                     order={order}

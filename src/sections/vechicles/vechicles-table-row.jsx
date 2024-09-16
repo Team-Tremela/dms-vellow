@@ -212,8 +212,9 @@ export default function VechiclesTableRow({
   useEffect(() => {
     if (barcodeRef.current) {
       JsBarcode(barcodeRef.current, barCode, {
-        height: 30, // Adjust height here
+        height: 25, // Adjust height here
         width: 2,
+        fontSize: 12,
       });
     }
   }, [barCode]);
@@ -356,7 +357,7 @@ export default function VechiclesTableRow({
 
         {/* <TableCell>{unitCost}</TableCell> */}
 
-        <TableCell id='barCode'>
+        <TableCell style={{padding:'0px'}}>
           <svg ref={barcodeRef} />
         </TableCell>
 

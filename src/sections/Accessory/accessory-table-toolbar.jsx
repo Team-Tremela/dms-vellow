@@ -120,7 +120,7 @@ export default function AccessoryTableToolbar({
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search accessory..."
+          placeholder="Search by accessory name..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify

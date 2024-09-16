@@ -121,7 +121,7 @@ export default function UserTableToolbar({
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search vendor..."
+          placeholder="Search by vendor name..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify

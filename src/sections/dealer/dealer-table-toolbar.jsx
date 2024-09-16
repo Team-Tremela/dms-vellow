@@ -120,7 +120,7 @@ export default function UserTableToolbar({
         <OutlinedInput
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search dealer..."
+          placeholder="Search by dealer name..."
           startAdornment={
             <InputAdornment position="start">
               <Iconify
