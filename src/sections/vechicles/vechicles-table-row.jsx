@@ -145,10 +145,18 @@ export default function VechiclesTableRow({
 
   const handleFormChange = (event) => {
     const { name: fieldName, value } = event.target;
-    setFormData({
-      ...formData,
-      [fieldName]: value,
-    });
+    // If the colorCode field is being changed, split the value by comma into an array
+    if (fieldName === 'colorCode') {
+      setFormData({
+        ...formData,
+        [fieldName]: value.split(','), // Split by commas to create an array
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [fieldName]: value,
+      });
+    }
   };
 
   const handleOpenModal = () => {
@@ -304,7 +312,7 @@ export default function VechiclesTableRow({
           {batchNo}
         </TableCell>
 
-        {/* <TableCell>
+        <TableCell>
           <div style={{ display: 'flex' }}>
             {colorCode.map((color, index) => (
               <div
@@ -319,9 +327,9 @@ export default function VechiclesTableRow({
               />
             ))}
           </div>
-        </TableCell> */}
+        </TableCell>
 
-        <TableCell>{colorCode}</TableCell>
+        {/* <TableCell>{colorCode}</TableCell> */}
         <TableCell
           style={{
             whiteSpace: 'nowrap',
@@ -357,7 +365,7 @@ export default function VechiclesTableRow({
 
         {/* <TableCell>{unitCost}</TableCell> */}
 
-        <TableCell style={{padding:'0px'}}>
+        <TableCell style={{ padding: '0px' }}>
           <svg ref={barcodeRef} />
         </TableCell>
 
@@ -717,10 +725,10 @@ VechiclesTableRow.propTypes = {
   motorNo: PropTypes.string,
   batteryNo: PropTypes.string,
   batchNo: PropTypes.string,
-  // colorCode: PropTypes.arrayOf(
-  //   PropTypes.arrayOf(PropTypes.string) // Array of arrays of strings
-  // ),
-  colorCode: PropTypes.any,
+  colorCode: PropTypes.arrayOf(
+    PropTypes.arrayOf(PropTypes.string) // Array of arrays of strings
+  ),
+  // colorCode: PropTypes.any,
   mfgDate: PropTypes.string,
   // unitCost: PropTypes.string,
   barCode: PropTypes.string,

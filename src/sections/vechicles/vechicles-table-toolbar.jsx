@@ -163,7 +163,7 @@ export default function VechiclesTableToolbar({
       { width: 20 },
       { width: 20 },
       { width: 20 },
-      { width: 20 },
+      { width: 60 },
       { width: 20 },
       { width: 40 },
       { width: 40 },
