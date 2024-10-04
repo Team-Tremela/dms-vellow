@@ -10,11 +10,16 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 // import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select'; // Import Select component
+import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem'; // Import MenuItem component
+import TableRow from '@mui/material/TableRow';
 import Container from '@mui/material/Container';
+import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
+// import IconButton from '@mui/material/IconButton';
+import Autocomplete from '@mui/material/Autocomplete';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -27,6 +32,9 @@ import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import './Service.css';
+// import CheckBoxIcon from '@mui/icons-material/CheckBox';
+// import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+
 import TableNoData from '../table-no-data';
 import TableEmptyRows from '../service-empty-rows';
 import ServiceTableRow from '../service-table-row';
@@ -38,6 +46,10 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 // ----------------------------------------------------------------------
 
 export default function ServicePage() {
+  const [totalPartsCost, setTotalPartsCost] = useState(0);
+  const [parts, setParts] = useState([]);
+  // const [selectedParts, setSelectedParts] = useState([]);
+  // const [selectedPart, setSelectedPart] = useState('');
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -57,16 +69,56 @@ export default function ServicePage() {
   const [Description, setDescription] = useState('');
   const [DealerID, setDealerID] = useState('');
   const [UnitCost, setUnitCost] = useState('');
+  const [Registrationno, setRegistrationno] = useState('');
   // const [LeadTime, setLeadTime] = useState('');
   // const [ServiceID, setServiceID] = useState('');
 
   const [errorMessage, setErrorMessage] = useState('');
 
+  const [selectedPartsArray, setSelectedPartsArray] = useState([]);
+
+  const selctedarrayvalue = Array.isArray(selectedPartsArray)
+    ? selectedPartsArray
+    : [selectedPartsArray];
+
+  console.log(typeof selectedPartsArray);
+
+  const fetchParts = async () => {
+    try {
+      const response = await fetch('https://vlmtrs.onrender.com/v1/spare/fetch-all'); // replace with your API endpoint
+      const data = await response.json();
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setParts([]); // Set dealers to an empty array
+      } else {
+        setParts(data.data); // Set dealers to the fetched data
+      }
+    } catch (error) {
+      console.error('Error fetching parts:', error);
+    }
+  };
+
+  const handleAddPart = () => {
+    // Calculate the total cost from the selected parts
+    const newTotal = selectedPartsArray.reduce((acc, part) => acc + parseFloat(part.unit_cost), 0); // Use selectedPartsArray
+    setTotalPartsCost(newTotal); // Update total cost
+    // Optionally, you might want to clear selectedPart after adding
+    // setSelectedPart(null);
+  };
+
+  // Create a variable to convert selectedPart to an array
+  // const selectedPartsArray = Array.isArray(selectedPart) ? selectedPart : [selectedPart];
+
   const fetchDealers = async () => {
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/dealer/fetch-all');
       const data = await response.json();
-      setdealers(data.data);
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setdealers([]); // Set dealers to an empty array
+      } else {
+        setdealers(data.data); // Set dealers to the fetched data
+      }
     } catch (error) {
       console.error('Error fetching vendors:', error);
     }
@@ -76,7 +128,12 @@ export default function ServicePage() {
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/vehicle/fetch-all');
       const data = await response.json();
-      setvechicles(data.data);
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setvechicles([]); // Set dealers to an empty array
+      } else {
+        setvechicles(data.data); // Set dealers to the fetched data
+      }
     } catch (error) {
       console.error('Error fetching vechicles:', error);
     }
@@ -104,7 +161,9 @@ export default function ServicePage() {
     fetchData();
     fetchDealers();
     fetchVechicle();
-  }, []);
+    fetchParts();
+    setUnitCost(totalPartsCost);
+  }, [totalPartsCost]);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -161,7 +220,7 @@ export default function ServicePage() {
   //   filterName,
   // });
   const dataFiltered = applyFilter({
-    inputData: service,
+    inputData: service || [],
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -179,6 +238,10 @@ export default function ServicePage() {
     setDescription('');
     setDealerID('');
     setUnitCost('');
+    setTotalPartsCost('');
+    // setSelectedPart('');
+    setSelectedPartsArray([]);
+    setRegistrationno('');
     // setLeadTime('');
     // setServiceID('');
   };
@@ -189,6 +252,7 @@ export default function ServicePage() {
       vehicle_id: VechicleID,
       service_date: ServiceDate,
       description: Description,
+      registration_no: Registrationno,
       cost: UnitCost,
     };
     console.log(newService);
@@ -214,6 +278,10 @@ export default function ServicePage() {
       setDescription('');
       setUnitCost('');
       setServiceDate('');
+      setTotalPartsCost('');
+      // setSelectedPart('');
+      setSelectedPartsArray([]);
+      setRegistrationno('');
 
       // Close modal
       setOpenModal(false);
@@ -277,13 +345,14 @@ export default function ServicePage() {
                   <ServiceTableHead
                     order={order}
                     orderBy={orderBy}
-                    rowCount={service.length}
+                    rowCount={service?.length || 0}
                     numSelected={selected.length}
                     onRequestSort={handleSort}
                     onSelectAllClick={handleSelectAllClick}
                     headLabel={[
                       { id: 'ServiceID', label: 'Service Id' },
                       { id: 'VehicleID', label: 'Vechicle Id' },
+                      { id: 'RegistrationNo', label: 'Registration no' },
                       { id: 'ServiceDate', label: 'Sevice Date' },
                       // { id: 'ContactInformation', label: 'Contact Information' },
                       { id: 'Description', label: 'Description' },
@@ -297,30 +366,44 @@ export default function ServicePage() {
                     indeterminate={selected.length > 0 && selected.length < service.length} // Some selected
                   />
                   <TableBody>
-                    {dataFiltered
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => (
-                        <ServiceTableRow
-                          key={row.id}
-                          ServiceID={row.service_id}
-                          // Name={row.Name}
-                          // batteryName={row.ContactInformation}
-                          VehicleID={row.vehicle_id}
-                          ServiceDate={row.service_date}
-                          Description={row.description}
-                          UnitCost={row.cost}
-                          DealerID={row.dealer_id}
-                          CreatedAt={row.createdAt}
-                          UpdatedAt={row.updatedAt}
-                          selected={selected.indexOf(row.service_id) !== -1}
-                          handleClick={(event) => handleClick(event, row.service_id)}
-                          onUpdateSuccess={fetchData}
-                        />
-                      ))}
+                    {service === undefined || service.length === 0 ? ( // Check if there are no vehicles
+                      <TableRow>
+                        <TableCell colSpan={13} align="center">
+                          {' '}
+                          {/* Adjust colSpan based on your table structure */}
+                          <Typography variant="body1">
+                            There is no data available in the Service database
+                          </Typography>
+                          <Typography variant="h6">No data available</Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      dataFiltered
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row) => (
+                          <ServiceTableRow
+                            key={row.id}
+                            ServiceID={row.service_id}
+                            // Name={row.Name}
+                            // batteryName={row.ContactInformation}
+                            VehicleID={row.vehicle_id}
+                            Registrationno={row.registration_no}
+                            ServiceDate={row.service_date}
+                            Description={row.description}
+                            UnitCost={row.cost}
+                            DealerID={row.dealer_id}
+                            CreatedAt={row.createdAt}
+                            UpdatedAt={row.updatedAt}
+                            selected={selected.indexOf(row.service_id) !== -1}
+                            handleClick={(event) => handleClick(event, row.service_id)}
+                            onUpdateSuccess={fetchData}
+                          />
+                        ))
+                    )}
 
                     <TableEmptyRows
                       height={77}
-                      emptyRows={emptyRows(page, rowsPerPage, service.length)}
+                      emptyRows={emptyRows(page, rowsPerPage, service?.length || 0)}
                     />
 
                     {notFound && <TableNoData query={filterName} />}
@@ -332,7 +415,7 @@ export default function ServicePage() {
             <TablePagination
               page={page}
               component="div"
-              count={service.length}
+              count={service?.length || 0}
               rowsPerPage={rowsPerPage}
               onPageChange={handleChangePage}
               rowsPerPageOptions={[5, 10, 25]}
@@ -355,7 +438,7 @@ export default function ServicePage() {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              width: 800,
+              width: 1400,
               bgcolor: 'background.paper',
               boxShadow: 24,
               p: 4,
@@ -404,15 +487,15 @@ export default function ServicePage() {
                     </MenuItem>
                   ))}
                 </Select>
-                {/* <TextField
-                fullWidth
-                label="Service Id"
-                value={ServiceID}
-                onChange={(e) => setServiceID(e.target.value)}
-                variant="outlined"
-                mb={2}
-                style={{ marginBottom: '10px' }}
-              /> */}
+                <TextField
+                  fullWidth
+                  label="Registration no"
+                  value={Registrationno}
+                  onChange={(e) => setRegistrationno(e.target.value)}
+                  variant="outlined"
+                  mb={2}
+                  style={{ marginBottom: '10px' }}
+                />
                 {/* <TextField
                 fullWidth
                 label="Name"
@@ -440,12 +523,50 @@ export default function ServicePage() {
                   )}
                 />
                 <div style={{ marginTop: '10px' }}> </div>
+                {/* Select Part */}
+                <Autocomplete
+                  multiple
+                  options={parts}
+                  disableCloseOnSelect
+                  getOptionLabel={(part) => `${part.name} - ₹${part.unit_cost}`}
+                  value={selctedarrayvalue} // Use selectedPartsArray for value
+                  onChange={(event, newValue) => {
+                    console.log('Selected Parts:', newValue);
+                    setSelectedPartsArray(newValue); // Update the selected parts correctly
+                  }}
+                  renderOption={(props, part) => {
+                    const isSelected = selectedPartsArray.some(
+                      (selectedd) => selectedd.id === part.id
+                    ); // Adjust based on your part's unique identifier
+                    return (
+                      <li {...props}>
+                        <Checkbox checked={isSelected} style={{ marginRight: 8 }} />
+                        {part.name} - ₹{part.unit_cost}
+                      </li>
+                    );
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Part" variant="outlined" fullWidth />
+                  )}
+                  style={{ marginBottom: '10px' }}
+                />
+
+                <Button color="primary" onClick={handleAddPart}>
+                  Add parts &nbsp;<Iconify icon="eva:plus-circle-fill" />
+                </Button>
+                {/* Add Part Button
+                <IconButton color="primary" onClick={handleAddPart}>
+                  <Iconify icon="eva:plus-circle-fill" /> Add
+                </IconButton> */}
               </div>
+
               <div className="SModal-inner-right">
                 <TextField
                   fullWidth
+                  disabled
+                  className='cs-cost'
                   label="Unit Cost"
-                  value={UnitCost}
+                  value={totalPartsCost}
                   onChange={(e) => setUnitCost(e.target.value)}
                   variant="outlined"
                   mb={2}
@@ -461,6 +582,24 @@ export default function ServicePage() {
                   multiline
                   rows={4} // Number of rows for the textarea
                   style={{ marginBottom: '10px' }}
+                />
+                <TextField
+                  fullWidth
+                  label="Discount"
+                  value={Description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  variant="outlined"
+                  mb={2}
+                  style={{ marginBottom: '10px' }}
+                />
+                <TextField
+                  fullWidth
+                  value={Description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  // variant="outlined"
+                  mb={2}
+                  style={{ marginBottom: '10px' }}
+                  type="file"
                 />
                 {/* <TextField
                 fullWidth

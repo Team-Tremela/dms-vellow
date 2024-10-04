@@ -31,7 +31,7 @@ export default function VechiclesTableRow({
   selected,
   vechicleID,
   modelName,
-  VIN,
+  // VIN,
   dealerID,
   chassisNo,
   motorNo,
@@ -53,7 +53,7 @@ export default function VechiclesTableRow({
   const [formData, setFormData] = useState({
     vechicleID,
     modelName,
-    VIN,
+    // VIN,
     dealerID,
     chassisNo,
     motorNo,
@@ -73,7 +73,12 @@ export default function VechiclesTableRow({
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/dealer/fetch-all');
       const data = await response.json();
-      setDealers(data.data);
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setDealers([]); // Set dealers to an empty array
+      } else {
+        setDealers(data.data); // Set dealers to the fetched data
+      }
     } catch (error) {
       console.error('Error fetching dealers:', error);
     }
@@ -94,7 +99,7 @@ export default function VechiclesTableRow({
   const handleFormSubmit = async () => {
     const payload = {
       dealer_id: DealerIDD,
-      vin: formData.VIN,
+      // vin: formData.VIN,
       chassis_no: formData.chassisNo,
       motor_no: formData.motorNo,
       battery_no: formData.batteryNo,
@@ -227,6 +232,8 @@ export default function VechiclesTableRow({
     }
   }, [barCode]);
 
+  console.log(colorCode);
+
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -247,7 +254,7 @@ export default function VechiclesTableRow({
 
         <TableCell>{modelName}</TableCell>
 
-        <TableCell
+        {/* <TableCell
           style={{
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -256,7 +263,7 @@ export default function VechiclesTableRow({
           }}
         >
           {VIN}
-        </TableCell>
+        </TableCell> */}
 
         <TableCell
           style={{
@@ -313,20 +320,24 @@ export default function VechiclesTableRow({
         </TableCell>
 
         <TableCell>
-          <div style={{ display: 'flex' }}>
-            {colorCode.map((color, index) => (
-              <div
-                key={index}
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  backgroundColor: color,
-                  marginRight: index < colorCode.length - 1 ? '4px' : '0',
-                  marginBottom: '10px',
-                }}
-              />
-            ))}
-          </div>
+          {
+            colorCode && colorCode.length > 0 ? (
+              <div style={{ display: 'flex' }}>
+                {colorCode.map((color, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      backgroundColor: color,
+                      marginRight: index < colorCode.length - 1 ? '4px' : '0',
+                      marginBottom: '10px',
+                    }}
+                  />
+                ))}
+              </div>
+            ) : null // Render nothing if no color data is available
+          }
         </TableCell>
 
         {/* <TableCell>{colorCode}</TableCell> */}
@@ -475,14 +486,14 @@ export default function VechiclesTableRow({
                   value={formData.modelName}
                   onChange={handleFormChange}
                 />
-                <TextField
+                {/* <TextField
                   fullWidth
                   margin="normal"
                   label="VIN"
                   name="VIN"
                   value={formData.VIN}
                   onChange={handleFormChange}
-                />
+                /> */}
                 <TextField
                   fullWidth
                   margin="normal"
@@ -499,8 +510,6 @@ export default function VechiclesTableRow({
                   value={formData.motorNo}
                   onChange={handleFormChange}
                 />
-              </div>
-              <div className="VRModal-inner-right">
                 <TextField
                   fullWidth
                   margin="normal"
@@ -509,6 +518,8 @@ export default function VechiclesTableRow({
                   value={formData.batteryNo}
                   onChange={handleFormChange}
                 />
+              </div>
+              <div className="VRModal-inner-right">
                 <TextField
                   fullWidth
                   margin="normal"
@@ -610,7 +621,7 @@ export default function VechiclesTableRow({
                   readOnly: true,
                 }}
               />
-              <TextField
+              {/* <TextField
                 fullWidth
                 margin="normal"
                 label="VIN"
@@ -619,7 +630,7 @@ export default function VechiclesTableRow({
                 InputProps={{
                   readOnly: true,
                 }}
-              />
+              /> */}
               <TextField
                 fullWidth
                 margin="normal"
@@ -719,7 +730,7 @@ VechiclesTableRow.propTypes = {
   handleClick: PropTypes.func,
   vechicleID: PropTypes.any,
   modelName: PropTypes.any,
-  VIN: PropTypes.string,
+  // VIN: PropTypes.string,
   dealerID: PropTypes.any,
   chassisNo: PropTypes.string,
   motorNo: PropTypes.string,

@@ -10,7 +10,9 @@ import Button from '@mui/material/Button';
 // import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select'; // Import Select component
 import MenuItem from '@mui/material/MenuItem'; // Import MenuItem component
+import TableRow from '@mui/material/TableRow';
 import Container from '@mui/material/Container';
+import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
@@ -52,7 +54,7 @@ export default function AccessoryPage() {
   const [Description, setDescription] = useState('');
   const [VendorID, setVendorID] = useState('');
   const [UnitCost, setUnitCost] = useState('');
-  const [LeadTime, setLeadTime] = useState('');
+  // const [LeadTime, setLeadTime] = useState('');
   // const [AccessoryID, setAccessoryID] = useState('');
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -61,7 +63,12 @@ export default function AccessoryPage() {
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/vendor/fetch-all');
       const data = await response.json();
-      setVendors(data.data);
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setVendors([]); // Set dealers to an empty array
+      } else {
+        setVendors(data.data); // Set dealers to the fetched data
+      }
     } catch (error) {
       console.error('Error fetching vendors:', error);
     }
@@ -145,7 +152,7 @@ export default function AccessoryPage() {
   //   filterName,
   // });
   const dataFiltered = applyFilter({
-    inputData: accessory,
+    inputData: accessory || [],
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -161,7 +168,7 @@ export default function AccessoryPage() {
     setDescription('');
     setVendorID('');
     setUnitCost('');
-    setLeadTime('');
+    // setLeadTime('');
     // setAccessoryID('');
   };
 
@@ -171,7 +178,7 @@ export default function AccessoryPage() {
       name: Name,
       description: Description,
       unit_cost: UnitCost,
-      lead_time: LeadTime,
+      // lead_time: LeadTime,
     };
     console.log(newAccessory);
     try {
@@ -195,7 +202,7 @@ export default function AccessoryPage() {
       setVendorID('');
       setDescription('');
       setUnitCost('');
-      setLeadTime('');
+      // setLeadTime('');
 
       // Close modal
       setOpenModal(false);
@@ -259,7 +266,7 @@ export default function AccessoryPage() {
                   <AccessoryTableHead
                     order={order}
                     orderBy={orderBy}
-                    rowCount={accessory.length}
+                    rowCount={accessory?.length || 0}
                     numSelected={selected.length}
                     onRequestSort={handleSort}
                     onSelectAllClick={handleSelectAllClick}
@@ -270,34 +277,47 @@ export default function AccessoryPage() {
                       { id: 'UnitCost', label: 'Unit Cost' },
                       { id: 'Description', label: 'Description' },
                       { id: 'VendorID', label: 'Vendor ID' },
-                      { id: 'LeadTime', label: 'Lead Time' },
+                      // { id: 'LeadTime', label: 'Lead Time' },
                       { id: '' },
                     ]}
                     checked={selected.length > 0 && selected.length === accessory.length} // All selected
                     indeterminate={selected.length > 0 && selected.length < accessory.length} // Some selected
                   />
                   <TableBody>
-                    {dataFiltered
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => (
-                        <AccessoryTableRow
-                          key={row.id}
-                          accessoryID={row.accessory_id}
-                          Name={row.name}
-                          // batteryName={row.ContactInformation}
-                          UnitCost={row.unit_cost}
-                          Description={row.description}
-                          VendorID={row.vendor_id}
-                          LeadTime={row.lead_time}
-                          selected={selected.indexOf(row.accessory_id) !== -1}
-                          handleClick={(event) => handleClick(event, row.accessory_id)}
-                          onUpdateSuccess={fetchData}
-                        />
-                      ))}
+                    {accessory === undefined || accessory.length === 0 ? ( // Check if there are no vehicles
+                      <TableRow>
+                        <TableCell colSpan={13} align="center">
+                          {' '}
+                          {/* Adjust colSpan based on your table structure */}
+                          <Typography variant="body1">
+                            There is no data available in the Accessory database
+                          </Typography>
+                          <Typography variant="h6">No data available</Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      dataFiltered
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row) => (
+                          <AccessoryTableRow
+                            key={row.id}
+                            accessoryID={row.accessory_id}
+                            Name={row.name}
+                            // batteryName={row.ContactInformation}
+                            UnitCost={row.unit_cost}
+                            Description={row.description}
+                            VendorID={row.vendor_id}
+                            // LeadTime={row.lead_time}
+                            selected={selected.indexOf(row.accessory_id) !== -1}
+                            handleClick={(event) => handleClick(event, row.accessory_id)}
+                            onUpdateSuccess={fetchData}
+                          />
+                        ))
+                    )}
 
                     <TableEmptyRows
                       height={77}
-                      emptyRows={emptyRows(page, rowsPerPage, accessory.length)}
+                      emptyRows={emptyRows(page, rowsPerPage, accessory?.length || 0)}
                     />
 
                     {notFound && <TableNoData query={filterName} />}
@@ -309,7 +329,7 @@ export default function AccessoryPage() {
             <TablePagination
               page={page}
               component="div"
-              count={accessory.length}
+              count={accessory?.length || 0}
               rowsPerPage={rowsPerPage}
               onPageChange={handleChangePage}
               rowsPerPageOptions={[5, 10, 25]}
@@ -399,7 +419,7 @@ export default function AccessoryPage() {
               </MenuItem>
             ))}
           </Select>
-          <TextField
+          {/* <TextField
             fullWidth
             label="Lead Time"
             value={LeadTime}
@@ -407,7 +427,7 @@ export default function AccessoryPage() {
             variant="outlined"
             mb={2}
             style={{ marginBottom: '10px' }}
-          />
+          /> */}
           <div style={{ textAlign: 'center' }}>
             <Button variant="contained" color="inherit" onClick={handleAddMotor}>
               Save

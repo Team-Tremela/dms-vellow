@@ -8,7 +8,9 @@ import Table from '@mui/material/Table';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 // import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
 import Container from '@mui/material/Container';
+import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
@@ -48,8 +50,11 @@ export default function MotorPage() {
   const [Email, setEmail] = useState('');
   const [PhoneNumber, setPhoneNumber] = useState('');
   const [Address, setAddress] = useState('');
+  const [GST, setGST] = useState('');
+  const [Aadharcard, setAadharcard] = useState('');
+  const [PAN, setPAN] = useState('');
   // const [VendorID, setVendorID] = useState('');
-  const [BatchNo, setBatchNo] = useState('');
+  // const [BatchNo, setBatchNo] = useState('');
   // const [colors, setColors] = useState('');
 
   // Snackbar state for error message
@@ -133,7 +138,7 @@ export default function MotorPage() {
   //   filterName,
   // });
   const dataFiltered = applyFilter({
-    inputData: vendor,
+    inputData: vendor || [],
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -149,8 +154,11 @@ export default function MotorPage() {
     setEmail('');
     setPhoneNumber('');
     setAddress('');
+    setGST('');
+    setAadharcard('');
+    setPAN('');
     // setVendorID('');
-    setBatchNo('');
+    // setBatchNo('');
     // setColors('');
   };
 
@@ -160,7 +168,10 @@ export default function MotorPage() {
       address: Address,
       email: Email,
       phone_no: PhoneNumber,
-      batch_no: BatchNo,
+      // batch_no: BatchNo,
+      gst: GST,
+      aadhar_card: Aadharcard,
+      pan: PAN,
     };
 
     try {
@@ -185,7 +196,10 @@ export default function MotorPage() {
       setPhoneNumber('');
       setAddress('');
       // setVendorID('');
-      setBatchNo('');
+      // setBatchNo('');
+      setGST('');
+      setAadharcard('');
+      setPAN('');
 
       // Close modal
       setOpenModal(false);
@@ -238,52 +252,73 @@ export default function MotorPage() {
         ) : (
           <>
             <Scrollbar>
-              <TableContainer sx={{
+              <TableContainer
+                sx={{
                   maxHeight: 400, // Set a maximum height for the TableContainer
                   overflowY: 'auto', // Enable vertical scrolling
                 }}
-                className='custom-scrollbar'>
+                className="custom-scrollbar"
+              >
                 <Table sx={{ minWidth: 800 }}>
                   <UserTableHead
                     order={order}
                     orderBy={orderBy}
-                    rowCount={vendor.length}
+                    rowCount={vendor?.length || 0}
                     numSelected={selected.length}
                     onRequestSort={handleSort}
                     onSelectAllClick={handleSelectAllClick}
                     headLabel={[
                       { id: 'VendorID', label: 'Vendor Id' },
-                      { id: 'BatchNo', label: 'Batch No' },
+                      // { id: 'BatchNo', label: 'Batch No' },
                       { id: 'Name', label: 'Name' },
                       { id: 'Address', label: 'Address' },
                       { id: 'Email', label: 'Email' },
                       { id: 'PhoneNumber', label: 'Phone Number' },
+                      { id: 'AadharCard', label: 'Aadhar Card' },
+                      { id: 'PAN', label: 'PAN' },
+                      { id: 'GST', label: 'GST' },
                       { id: '' },
                     ]}
                     checked={selected.length > 0 && selected.length === vendor.length} // All selected
                     indeterminate={selected.length > 0 && selected.length < vendor.length} // Some selected
                   />
                   <TableBody>
-                    {dataFiltered
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => (
-                        <UserTableRow
-                          key={row.vendor_id}
-                          vendorID={row.vendor_id}
-                          Name={row.name}
-                          BatchNo={row.batch_no}
-                          Address={row.address}
-                          Email={row.email}
-                          PhoneNumber={row.phone_no}
-                          selected={selected.indexOf(row.vendor_id) !== -1}
-                          handleClick={(event) => handleClick(event, row.vendor_id)}
-                          onUpdateSuccess={fetchData}
-                        />
-                      ))}
+                    {vendor === undefined || vendor.length === 0 ? ( // Check if there are no vehicles
+                      <TableRow>
+                        <TableCell colSpan={13} align="center">
+                          {' '}
+                          {/* Adjust colSpan based on your table structure */}
+                          <Typography variant="body1">
+                            There is no data available in the Vendor database
+                          </Typography>
+                          <Typography variant="h6">No data available</Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      dataFiltered
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row) => (
+                          <UserTableRow
+                            key={row.vendor_id}
+                            vendorID={row.vendor_id}
+                            Name={row.name}
+                            // BatchNo={row.batch_no}
+                            Address={row.address}
+                            Email={row.email}
+                            PhoneNumber={row.phone_no}
+                            Aadharcard={row.aadhar_card}
+                            PAN={row.pan}
+                            GST={row.gst}
+                            selected={selected.indexOf(row.vendor_id) !== -1}
+                            handleClick={(event) => handleClick(event, row.vendor_id)}
+                            onUpdateSuccess={fetchData}
+                          />
+                        ))
+                    )}
 
                     <TableEmptyRows
                       height={77}
-                      emptyRows={emptyRows(page, rowsPerPage, vendor.length)}
+                      emptyRows={emptyRows(page, rowsPerPage, vendor?.length || 0)}
                     />
 
                     {notFound && <TableNoData query={filterName} />}
@@ -295,7 +330,7 @@ export default function MotorPage() {
             <TablePagination
               page={page}
               component="div"
-              count={vendor.length}
+              count={vendor?.length || 0}
               rowsPerPage={rowsPerPage}
               onPageChange={handleChangePage}
               rowsPerPageOptions={[5, 10, 25]}
@@ -336,7 +371,7 @@ export default function MotorPage() {
             mb={2}
             style={{ marginBottom: '10px', marginTop: '20px' }}
           />
-          <TextField
+          {/* <TextField
             fullWidth
             label="Batch No"
             value={BatchNo}
@@ -344,7 +379,7 @@ export default function MotorPage() {
             variant="outlined"
             mb={2}
             style={{ marginBottom: '10px' }}
-          />
+          /> */}
           <TextField
             fullWidth
             label="Address"
@@ -368,6 +403,33 @@ export default function MotorPage() {
             label="Phone Number"
             value={PhoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: '10px' }}
+          />
+          <TextField
+            fullWidth
+            label="Aadhar Card"
+            value={Aadharcard}
+            onChange={(e) => setAadharcard(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: '10px' }}
+          />
+          <TextField
+            fullWidth
+            label="GST"
+            value={GST}
+            onChange={(e) => setGST(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: '10px' }}
+          />
+          <TextField
+            fullWidth
+            label="PAN"
+            value={PAN}
+            onChange={(e) => setPAN(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: '10px' }}

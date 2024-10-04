@@ -35,7 +35,7 @@ export function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-export function applyFilter({ inputData, comparator, filterName }) {
+export function applyFilter({ inputData = [], comparator, filterName }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {

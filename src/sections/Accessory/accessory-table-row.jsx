@@ -29,7 +29,7 @@ export default function AccessoryTableRow({
   Description,
   VendorID,
   UnitCost,
-  LeadTime,
+  // LeadTime,
   handleClick,
   onUpdateSuccess,
 }) {
@@ -43,7 +43,7 @@ export default function AccessoryTableRow({
     UnitCost,
     Description,
     VendorID,
-    LeadTime,
+    // LeadTime,
   });
 
   const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
@@ -54,7 +54,12 @@ export default function AccessoryTableRow({
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/vendor/fetch-all');
       const data = await response.json();
-      setVendors(data.data);
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setVendors([]); // Set dealers to an empty array
+      } else {
+        setVendors(data.data); // Set dealers to the fetched data
+      }
     } catch (error) {
       console.error('Error fetching vendors:', error);
     }
@@ -78,7 +83,7 @@ export default function AccessoryTableRow({
       name: formData.Name,
       description: formData.Description,
       unit_cost: formData.UnitCost,
-      lead_time: formData.LeadTime,
+      // lead_time: formData.LeadTime,
     };
     console.log(payload);
     console.log(accessoryID);
@@ -233,7 +238,7 @@ export default function AccessoryTableRow({
           {VendorID}
         </TableCell>
 
-        <TableCell>{LeadTime}</TableCell>
+        {/* <TableCell>{LeadTime}</TableCell> */}
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -350,14 +355,14 @@ export default function AccessoryTableRow({
             multiline
             rows={4} // Number of rows for the textarea
           />
-          <TextField
+          {/* <TextField
             fullWidth
             margin="normal"
             label="Lead Time"
             name="LeadTime"
             value={formData.LeadTime}
             onChange={handleFormChange}
-          />
+          /> */}
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
               Cancel
@@ -447,7 +452,7 @@ export default function AccessoryTableRow({
                   readOnly: true,
                 }}
               />
-              <TextField
+              {/* <TextField
                 fullWidth
                 margin="normal"
                 label="Lead Time"
@@ -456,7 +461,7 @@ export default function AccessoryTableRow({
                 InputProps={{
                   readOnly: true,
                 }}
-              />
+              /> */}
             </div>
           </div>
 
@@ -479,7 +484,7 @@ AccessoryTableRow.propTypes = {
   UnitCost: PropTypes.any,
   selected: PropTypes.any,
   VendorID: PropTypes.string,
-  LeadTime: PropTypes.any,
+  // LeadTime: PropTypes.any,
   accessoryID: PropTypes.any,
   onUpdateSuccess: PropTypes.func,
 };

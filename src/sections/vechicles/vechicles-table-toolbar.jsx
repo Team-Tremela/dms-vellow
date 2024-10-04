@@ -1,13 +1,16 @@
 // import * as XLSX from 'xlsx';
 import ExcelJS from 'exceljs';
+import { useState } from 'react';
 import JsBarcode from 'jsbarcode';
 import PropTypes from 'prop-types';
 // import Barcode from 'react-barcode';
 import { toast } from 'react-hot-toast';
 // import { renderToStaticMarkup } from 'react-dom/server';
 
+import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
+import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -26,6 +29,10 @@ export default function VechiclesTableToolbar({
   onDeleteSuccess,
   tableData,
 }) {
+
+  const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
+
+  // const id = open ? 'delete-popover' : undefined;
   // Function to format the current date and time
   const formatDateTime = () => {
     const now = new Date();
@@ -84,7 +91,17 @@ export default function VechiclesTableToolbar({
       onDeleteSuccess();
     } catch (error) {
       toast.error('Some vechicle could not be deleted. Please try again.');
+    } finally {
+      handleCloseDeletePopover(); // Ensure this is called after Snackbar is triggered
     }
+  };
+
+  const handleOpenDeletePopover = (event) => {
+    setDeletePopoverOpen(event.currentTarget);
+  };
+
+  const handleCloseDeletePopover = () => {
+    setDeletePopoverOpen(null);
   };
 
   console.log(tableData);
@@ -210,7 +227,8 @@ export default function VechiclesTableToolbar({
             item.mfg_date,
             item.createdAt,
             item.updatedAt,
-          ]).eachCell({ includeEmpty: true }, (cell) => {
+          ])
+          .eachCell({ includeEmpty: true }, (cell) => {
             cell.style = centerAlignStyle;
           }); // Apply center alignment to each row
 
@@ -426,11 +444,38 @@ export default function VechiclesTableToolbar({
 
       <div>
         {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton onClick={handleDelete}>
-              <Iconify icon="eva:trash-2-fill" />
-            </IconButton>
-          </Tooltip>
+          <>
+            <Tooltip title="Delete">
+              <IconButton onClick={handleOpenDeletePopover}>
+                <Iconify icon="eva:trash-2-fill" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Mail">
+              <IconButton>
+                <Iconify icon="eva:email-fill" />
+              </IconButton>
+            </Tooltip>
+
+            <Popover
+              open={Boolean(deletePopoverOpen)}
+              anchorEl={deletePopoverOpen}
+              onClose={handleCloseDeletePopover}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+            >
+              <Typography sx={{ p: 2 }}>Are you sure you want to delete?</Typography>
+              <div style={{ display: 'flex', padding: '10px', justifyContent:"center" }}>
+                <Button variant="contained" color="inherit" onClick={handleDelete} style={{marginRight:"10px"}}>
+                  Yes
+                </Button>
+                <Button color="primary" onClick={handleCloseDeletePopover} style={{marginLeft:"10px"}}>
+                  No
+                </Button>
+              </div>
+            </Popover>
+          </>
         ) : (
           <>
             <Tooltip title="Filter list">

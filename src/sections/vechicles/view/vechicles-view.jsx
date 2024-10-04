@@ -11,7 +11,9 @@ import Button from '@mui/material/Button';
 // import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select'; // Import Select component
 import MenuItem from '@mui/material/MenuItem'; // Import MenuItem component
+import TableRow from '@mui/material/TableRow';
 import Container from '@mui/material/Container';
+import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
@@ -54,7 +56,7 @@ export default function VechiclesPage() {
   // State for motor details
   const [vechicleID, setvechicleID] = useState('');
   const [modelName, setmodelName] = useState('');
-  const [VIN, setVIN] = useState('');
+  // const [VIN, setVIN] = useState('');
   const [dealerID, setdealerID] = useState('');
   const [chassisNo, setchassisNo] = useState('');
   const [motorNo, setmotorNo] = useState('');
@@ -71,7 +73,12 @@ export default function VechiclesPage() {
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/dealer/fetch-all');
       const data = await response.json();
-      setdealers(data.data);
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setdealers([]); // Set dealers to an empty array
+      } else {
+        setdealers(data.data); // Set dealers to the fetched data
+      }
     } catch (error) {
       console.error('Error fetching vendors:', error);
     }
@@ -150,10 +157,12 @@ export default function VechiclesPage() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: vechicles,
+    inputData: vechicles || [],
     comparator: getComparator(order, orderBy),
     filterName,
   });
+
+  console.log('inputdata', dataFiltered);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -164,7 +173,7 @@ export default function VechiclesPage() {
     // Clear input fields when closing modal
     setvechicleID('');
     setmodelName('');
-    setVIN('');
+    // setVIN('');
     setdealerID('');
     setchassisNo('');
     setmotorNo('');
@@ -177,14 +186,18 @@ export default function VechiclesPage() {
   };
 
   const handleAddMotor = async () => {
+    const colorArray = colorCode.split(',').map((color) => color.trim());
+
+    console.log(colorArray);
+
     const newVechicle = {
       vehicle_id: vechicleID,
       dealer_id: dealerID,
-      vin: VIN,
+      // vin: VIN,
       chassis_no: chassisNo,
       motor_no: motorNo,
       battery_no: batteryNo,
-      color_code: colorCode,
+      color_code: colorArray,
       mfg_date: mfgDate,
       model_name: modelName,
       barcode: barCode,
@@ -210,7 +223,7 @@ export default function VechiclesPage() {
       // Reset form fields after successful submission
       setvechicleID('');
       setmodelName('');
-      setVIN('');
+      // setVIN('');
       setdealerID('');
       setchassisNo('');
       setmotorNo('');
@@ -234,7 +247,7 @@ export default function VechiclesPage() {
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
-    <Container>
+    <Container className='custom-sc'>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Vechicles</Typography>
         <Button
@@ -273,20 +286,20 @@ export default function VechiclesPage() {
                   maxHeight: 400, // Set a maximum height for the TableContainer
                   overflowY: 'auto', // Enable vertical scrolling
                 }}
-                className='custom-scrollbar'
+                className="custom-scrollbar"
               >
                 <Table sx={{ minWidth: 800 }}>
                   <VechiclesTableHead
                     order={order}
                     orderBy={orderBy}
-                    rowCount={vechicles.length}
+                    rowCount={vechicles?.length || 0}
                     numSelected={selected.length}
                     onRequestSort={handleSort}
                     onSelectAllClick={handleSelectAllClick}
                     headLabel={[
                       { id: 'vechicleID', label: 'Vechicle Id' },
                       { id: 'modelName', label: 'Model Name' },
-                      { id: 'VIN', label: 'VIN' },
+                      // { id: 'VIN', label: 'VIN' },
                       { id: 'dealerID', label: 'Dealer Id' },
                       { id: 'chassisNo', label: 'Chassis No' },
                       { id: 'motorNo', label: 'Motor No' },
@@ -304,34 +317,47 @@ export default function VechiclesPage() {
                     indeterminate={selected.length > 0 && selected.length < vechicles.length} // Some selected
                   />
                   <TableBody>
-                    {dataFiltered
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => (
-                        <VechiclesTableRow
-                          key={row.id}
-                          vechicleID={row.vehicle_id}
-                          modelName={row.model_name}
-                          VIN={row.vin}
-                          dealerID={row.dealer_id}
-                          chassisNo={row.chassis_no}
-                          motorNo={row.motor_no}
-                          batteryNo={row.battery_no}
-                          batchNo={row.batch_no}
-                          colorCode={row.color_code}
-                          mfgDate={row.mfg_date}
-                          CreatedAt={row.createdAt}
-                          UpdatedAt={row.updatedAt}
-                          // unitCost={row.unitCost}
-                          barCode={row.barcode}
-                          selected={selected.indexOf(row.vehicle_id) !== -1}
-                          handleClick={(event) => handleClick(event, row.vehicle_id)}
-                          onUpdateSuccess={fetchData}
-                        />
-                      ))}
+                    {vechicles === undefined || vechicles.length === 0 ? ( // Check if there are no vehicles
+                      <TableRow>
+                        <TableCell colSpan={13} align="center">
+                          {' '}
+                          {/* Adjust colSpan based on your table structure */}
+                          <Typography variant="body1">
+                            There is no data available in the vechicle database
+                          </Typography>
+                          <Typography variant="h6">No data available</Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      dataFiltered
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row) => (
+                          <VechiclesTableRow
+                            key={row.id}
+                            vechicleID={row.vehicle_id}
+                            modelName={row.model_name}
+                            // VIN={row.vin}
+                            dealerID={row.dealer_id}
+                            chassisNo={row.chassis_no}
+                            motorNo={row.motor_no}
+                            batteryNo={row.battery_no}
+                            batchNo={row.batch_no}
+                            colorCode={row.color_code}
+                            mfgDate={row.mfg_date}
+                            CreatedAt={row.createdAt}
+                            UpdatedAt={row.updatedAt}
+                            // unitCost={row.unitCost}
+                            barCode={row.barcode}
+                            selected={selected.indexOf(row.vehicle_id) !== -1}
+                            handleClick={(event) => handleClick(event, row.vehicle_id)}
+                            onUpdateSuccess={fetchData}
+                          />
+                        ))
+                    )}
 
                     <TableEmptyRows
                       height={77}
-                      emptyRows={emptyRows(page, rowsPerPage, vechicles.length)}
+                      emptyRows={emptyRows(page, rowsPerPage, vechicles?.length || 0)}
                     />
 
                     {notFound && <TableNoData query={filterName} />}
@@ -343,7 +369,7 @@ export default function VechiclesPage() {
             <TablePagination
               page={page}
               component="div"
-              count={vechicles.length}
+              count={vechicles?.length || 0}
               rowsPerPage={rowsPerPage}
               onPageChange={handleChangePage}
               rowsPerPageOptions={[5, 10, 25]}
@@ -415,7 +441,7 @@ export default function VechiclesPage() {
                   mb={2}
                   style={{ marginBottom: '10px' }}
                 />
-                <TextField
+                {/* <TextField
                   fullWidth
                   label="VIN"
                   value={VIN}
@@ -423,7 +449,7 @@ export default function VechiclesPage() {
                   variant="outlined"
                   mb={2}
                   style={{ marginBottom: '10px' }}
-                />
+                /> */}
                 <TextField
                   fullWidth
                   label="Chassis No"
@@ -442,8 +468,6 @@ export default function VechiclesPage() {
                   mb={2}
                   style={{ marginBottom: '10px' }}
                 />
-              </div>
-              <div className="VModal-inner-right">
                 <TextField
                   fullWidth
                   label="Battery No"
@@ -453,6 +477,8 @@ export default function VechiclesPage() {
                   mb={2}
                   style={{ marginBottom: '10px' }}
                 />
+              </div>
+              <div className="VModal-inner-right">
                 <TextField
                   fullWidth
                   label="Batch No"

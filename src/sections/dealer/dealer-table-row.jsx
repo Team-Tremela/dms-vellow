@@ -25,6 +25,9 @@ export default function UserTableRow({
   Location,
   Email,
   PhoneNumber,
+  Aadharcard,
+  GST,
+  PAN,
   CreatedAt,
   UpdatedAt,
   handleClick,
@@ -39,6 +42,9 @@ export default function UserTableRow({
     Location,
     Email,
     PhoneNumber,
+    Aadharcard,
+    GST,
+    PAN,
     CreatedAt,
     UpdatedAt,
   });
@@ -59,6 +65,9 @@ export default function UserTableRow({
       location: formData.Location,
       email: formData.UnitCost,
       phone_number: formData.PhoneNumber,
+      aadhar_card: formData.Aadharcard,
+      pan: formData.PAN,
+      gst: formData.GST,
     };
     console.log(payload);
     console.log(DealerID);
@@ -189,6 +198,12 @@ export default function UserTableRow({
         <TableCell>{Email}</TableCell>
 
         <TableCell>{PhoneNumber}</TableCell>
+
+        <TableCell>{Aadharcard}</TableCell>
+        
+        <TableCell>{PAN}</TableCell>
+        
+        <TableCell>{GST}</TableCell>
 
         <TableCell
           style={{
@@ -321,6 +336,30 @@ export default function UserTableRow({
             value={formData.PhoneNumber}
             onChange={handleFormChange}
           />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Aadhar Card"
+            name="Aadharcard"
+            value={formData.Aadharcard}
+            onChange={handleFormChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="PAN"
+            name="PAN"
+            value={formData.PAN}
+            onChange={handleFormChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="GST"
+            name="GST"
+            value={formData.GST}
+            onChange={handleFormChange}
+          />
           {/* <TextField
             fullWidth
             margin="normal"
@@ -413,6 +452,33 @@ export default function UserTableRow({
           <TextField
             fullWidth
             margin="normal"
+            label="Aadhar Card"
+            value={formData.Aadharcard}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="PAN"
+            value={formData.PAN}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="GST"
+            value={formData.GST}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
             label="Address"
             name="Address"
             value={formData.CreatedAt}
@@ -449,6 +515,9 @@ UserTableRow.propTypes = {
   DealerID: PropTypes.any,
   selected: PropTypes.any,
   Location: PropTypes.string,
+  Aadharcard: PropTypes.any.isRequired,
+  PAN: PropTypes.any.isRequired,
+  GST: PropTypes.any.isRequired,
   CreatedAt: PropTypes.string,
   UpdatedAt: PropTypes.string,
   onUpdateSuccess: PropTypes.func,

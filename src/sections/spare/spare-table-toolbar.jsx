@@ -1,9 +1,12 @@
 import * as XLSX from 'xlsx';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-hot-toast';
 
+import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
+import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -22,6 +25,8 @@ export default function SpareTableToolbar({
   onDeleteSuccess,
   tableData,
 }) {
+  
+  const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
 
   // Function to format the current date and time
   const formatDateTime = () => {
@@ -36,7 +41,7 @@ export default function SpareTableToolbar({
     const formattedDate = now.toLocaleDateString('en-GB', options).replace(',', '');
     return formattedDate;
   };
-  
+
   const handleDelete = async () => {
     if (selected.length === 0) {
       toast.error('No spare selected to delete!');
@@ -82,6 +87,14 @@ export default function SpareTableToolbar({
     } catch (error) {
       toast.error('Some spare could not be deleted. Please try again.');
     }
+  };
+
+  const handleOpenDeletePopover = (event) => {
+    setDeletePopoverOpen(event.currentTarget);
+  };
+
+  const handleCloseDeletePopover = () => {
+    setDeletePopoverOpen(null);
   };
 
   // Function to export table data to Excel
@@ -135,11 +148,42 @@ export default function SpareTableToolbar({
 
       <div>
         {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton onClick={handleDelete}>
-              <Iconify icon="eva:trash-2-fill" />
-            </IconButton>
-          </Tooltip>
+          <>
+            <Tooltip title="Delete">
+              <IconButton onClick={handleOpenDeletePopover}>
+                <Iconify icon="eva:trash-2-fill" />
+              </IconButton>
+            </Tooltip>
+
+            <Popover
+              open={Boolean(deletePopoverOpen)}
+              anchorEl={deletePopoverOpen}
+              onClose={handleCloseDeletePopover}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+            >
+              <Typography sx={{ p: 2 }}>Are you sure you want to delete?</Typography>
+              <div style={{ display: 'flex', padding: '10px', justifyContent: 'center' }}>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  onClick={handleDelete}
+                  style={{ marginRight: '10px' }}
+                >
+                  Yes
+                </Button>
+                <Button
+                  color="primary"
+                  onClick={handleCloseDeletePopover}
+                  style={{ marginLeft: '10px' }}
+                >
+                  No
+                </Button>
+              </div>
+            </Popover>
+          </>
         ) : (
           <>
             <Tooltip title="Filter list">

@@ -30,6 +30,7 @@ export default function Main({ children, sx, ...other }) {
         ...sx,
       }}
       {...other}
+      className='custom-sc'
     >
       {children}
     </Box>

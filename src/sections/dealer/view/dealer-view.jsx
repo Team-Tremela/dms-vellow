@@ -10,7 +10,9 @@ import Button from '@mui/material/Button';
 // import MenuItem from '@mui/material/MenuItem';
 // import Select from '@mui/material/Select'; // Import Select component
 // import MenuItem from '@mui/material/MenuItem'; // Import MenuItem component
+import TableRow from '@mui/material/TableRow';
 import Container from '@mui/material/Container';
+import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
@@ -52,6 +54,9 @@ export default function DealerPage() {
   const [Email, setEmail] = useState('');
   const [PhoneNumber, setPhoneNumber] = useState('');
   // const [Address, setAddress] = useState('');
+  const [GST, setGST] = useState('');
+  const [Aadharcard, setAadharcard] = useState('');
+  const [PAN, setPAN] = useState('');
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -127,7 +132,7 @@ export default function DealerPage() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: dealer,
+    inputData: dealer || [],
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -145,6 +150,9 @@ export default function DealerPage() {
     setEmail('');
     setPhoneNumber('');
     // setAddress('');
+    setGST('');
+    setAadharcard('');
+    setPAN('');
   };
 
   const handleAddMotor = async () => {
@@ -153,6 +161,9 @@ export default function DealerPage() {
       location: Location,
       email: Email,
       phone_number: PhoneNumber,
+      gst: GST,
+      aadhar_card: Aadharcard,
+      pan: PAN,
     };
     console.log(newDealer);
     try {
@@ -176,6 +187,9 @@ export default function DealerPage() {
       setLocation('');
       setEmail('');
       setPhoneNumber('');
+      setGST('');
+      setAadharcard('');
+      setPAN('');
 
       // Close modal
       setOpenModal(false);
@@ -228,16 +242,18 @@ export default function DealerPage() {
         ) : (
           <>
             <Scrollbar>
-              <TableContainer sx={{
+              <TableContainer
+                sx={{
                   maxHeight: 400, // Set a maximum height for the TableContainer
                   overflowY: 'auto', // Enable vertical scrolling
                 }}
-                className='custom-scrollbar'>
+                className="custom-scrollbar"
+              >
                 <Table sx={{ minWidth: 800 }}>
                   <UserTableHead
                     order={order}
                     orderBy={orderBy}
-                    rowCount={dealer.length}
+                    rowCount={dealer?.length || 0}
                     numSelected={selected.length}
                     onRequestSort={handleSort}
                     onSelectAllClick={handleSelectAllClick}
@@ -247,6 +263,9 @@ export default function DealerPage() {
                       { id: 'Location', label: 'Location' },
                       { id: 'Email', label: 'Email' },
                       { id: 'PhoneNumber', label: 'Phone Number' },
+                      { id: 'AadharCard', label: 'Aadhar Card' },
+                      { id: 'PAN', label: 'PAN' },
+                      { id: 'GST', label: 'GST' },
                       { id: 'CreatedAt', label: 'Created  At' },
                       { id: 'UpdatedAt', label: 'Updated At' },
                       { id: '' },
@@ -255,27 +274,43 @@ export default function DealerPage() {
                     indeterminate={selected.length > 0 && selected.length < dealer.length} // Some selected
                   />
                   <TableBody>
-                    {dataFiltered
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => (
-                        <UserTableRow
-                          key={row.id}
-                          DealerID={row.dealer_id}
-                          Name={row.name}
-                          Location={row.location}
-                          Email={row.email}
-                          PhoneNumber={row.phone_number}
-                          CreatedAt={row.createdAt}
-                          UpdatedAt={row.updatedAt}
-                          selected={selected.indexOf(row.dealer_id) !== -1}
-                          handleClick={(event) => handleClick(event, row.dealer_id)}
-                          onUpdateSuccess={fetchData}
-                        />
-                      ))}
+                    {dealer === undefined || dealer.length === 0 ? ( // Check if there are no vehicles
+                      <TableRow>
+                        <TableCell colSpan={13} align="center">
+                          {' '}
+                          {/* Adjust colSpan based on your table structure */}
+                          <Typography variant="body1">
+                            There is no data available in the Dealer database
+                          </Typography>
+                          <Typography variant="h6">No data available</Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      dataFiltered
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row) => (
+                          <UserTableRow
+                            key={row.id}
+                            DealerID={row.dealer_id}
+                            Name={row.name}
+                            Location={row.location}
+                            Email={row.email}
+                            PhoneNumber={row.phone_number}
+                            Aadharcard={row.aadhar_card}
+                            PAN={row.pan}
+                            GST={row.gst}
+                            CreatedAt={row.createdAt}
+                            UpdatedAt={row.updatedAt}
+                            selected={selected.indexOf(row.dealer_id) !== -1}
+                            handleClick={(event) => handleClick(event, row.dealer_id)}
+                            onUpdateSuccess={fetchData}
+                          />
+                        ))
+                    )}
 
                     <TableEmptyRows
                       height={77}
-                      emptyRows={emptyRows(page, rowsPerPage, dealer.length)}
+                      emptyRows={emptyRows(page, rowsPerPage, dealer?.length || 0)}
                     />
 
                     {notFound && <TableNoData query={filterName} />}
@@ -287,7 +322,7 @@ export default function DealerPage() {
             <TablePagination
               page={page}
               component="div"
-              count={dealer.length}
+              count={dealer?.length || 0}
               rowsPerPage={rowsPerPage}
               onPageChange={handleChangePage}
               rowsPerPageOptions={[5, 10, 25]}
@@ -361,6 +396,33 @@ export default function DealerPage() {
             label="Phone Number"
             value={PhoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: '10px' }}
+          />
+          <TextField
+            fullWidth
+            label="Aadhar Card"
+            value={Aadharcard}
+            onChange={(e) => setAadharcard(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: '10px' }}
+          />
+          <TextField
+            fullWidth
+            label="GST"
+            value={GST}
+            onChange={(e) => setGST(e.target.value)}
+            variant="outlined"
+            mb={2}
+            style={{ marginBottom: '10px' }}
+          />
+          <TextField
+            fullWidth
+            label="PAN"
+            value={PAN}
+            onChange={(e) => setPAN(e.target.value)}
             variant="outlined"
             mb={2}
             style={{ marginBottom: '10px' }}

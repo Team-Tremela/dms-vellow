@@ -29,7 +29,7 @@ export default function SpareTableRow({
   Description,
   VendorID,
   UnitCost,
-  LeadTime,
+  // LeadTime,
   handleClick,
   onUpdateSuccess,
 }) {
@@ -43,7 +43,7 @@ export default function SpareTableRow({
     UnitCost,
     Description,
     VendorID,
-    LeadTime,
+    // LeadTime,
   });
 
   const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
@@ -54,7 +54,12 @@ export default function SpareTableRow({
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/vendor/fetch-all');
       const data = await response.json();
-      setVendors(data.data);
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setVendors([]); // Set dealers to an empty array
+      } else {
+        setVendors(data.data); // Set dealers to the fetched data
+      }
     } catch (error) {
       console.error('Error fetching vendors:', error);
     }
@@ -79,7 +84,7 @@ export default function SpareTableRow({
       description: formData.Description,
       part_number: formData.PartNumber,
       unit_cost: formData.UnitCost,
-      lead_time: formData.LeadTime,
+      // lead_time: formData.LeadTime,
     };
     console.log(payload.part_number);
     try {
@@ -230,7 +235,7 @@ export default function SpareTableRow({
           {VendorID}
         </TableCell>
 
-        <TableCell>{LeadTime}</TableCell>
+        {/* <TableCell>{LeadTime}</TableCell> */}
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -368,14 +373,14 @@ export default function SpareTableRow({
                 value={formData.UnitCost}
                 onChange={handleFormChange}
               />
-              <TextField
+              {/* <TextField
                 fullWidth
                 margin="normal"
                 label="Lead Time"
                 name="LeadTime"
                 value={formData.LeadTime}
                 onChange={handleFormChange}
-              />
+              /> */}
             </div>
           </div>
           <Box mt={2} display="flex" justifyContent="flex-end">
@@ -478,7 +483,7 @@ export default function SpareTableRow({
                   readOnly: true,
                 }}
               />
-              <TextField
+              {/* <TextField
                 fullWidth
                 margin="normal"
                 label="Lead Time"
@@ -487,7 +492,7 @@ export default function SpareTableRow({
                 InputProps={{
                   readOnly: true,
                 }}
-              />
+              /> */}
             </div>
           </div>
           <Box mt={2} display="flex" justifyContent="flex-end">
@@ -509,7 +514,7 @@ SpareTableRow.propTypes = {
   UnitCost: PropTypes.any,
   selected: PropTypes.any,
   VendorID: PropTypes.string,
-  LeadTime: PropTypes.any,
+  // LeadTime: PropTypes.any,
   spareID: PropTypes.any,
   onUpdateSuccess: PropTypes.func,
 };

@@ -37,9 +37,14 @@ export default function ServiceTableRow({
   DealerID,
   handleClick,
   CreatedAt,
+  Registrationno,
   UpdatedAt,
   onUpdateSuccess,
 }) {
+  const [totalPartsCost, setTotalPartsCost] = useState(0);
+  const [parts, setParts] = useState([]);
+  const [selectedParts, setSelectedParts] = useState([]);
+  const [selectedPart, setSelectedPart] = useState('');
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
@@ -52,7 +57,7 @@ export default function ServiceTableRow({
     UnitCost,
     Description,
     DealerID,
-    // LeadTime,
+    Registrationno,
   });
 
   const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
@@ -61,11 +66,44 @@ export default function ServiceTableRow({
   const [vechicles, setVechicles] = useState([]);
   const [vechicleIDD, setVechicleIDD] = useState(''); // State for DealerID
 
+  const fetchParts = async () => {
+    try {
+      const response = await fetch('https://vlmtrs.onrender.com/v1/spare/fetch-all'); // replace with your API endpoint
+      const data = await response.json();
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setParts([]); // Set dealers to an empty array
+      } else {
+        setParts(data.data); // Set dealers to the fetched data
+      }
+    } catch (error) {
+      console.error('Error fetching parts:', error);
+    }
+  };
+
+  const handleAddPart = () => {
+    const part = parts.find((p) => p.id === selectedPart);
+    if (part) {
+      setSelectedParts([...selectedParts, part]);
+      // Convert prevCost and part.unit_cost to numbers to ensure proper addition
+      setTotalPartsCost((prevCost) => (parseFloat(prevCost) || 0) + parseFloat(part.unit_cost));
+    }
+  };
+
+  useEffect(() => {
+    fetchParts();
+  }, [totalPartsCost]);
+
   const fetchDealers = async () => {
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/dealer/fetch-all');
       const data = await response.json();
-      setDealers(data.data);
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setDealers([]); // Set dealers to an empty array
+      } else {
+        setDealers(data.data); // Set dealers to the fetched data
+      }
     } catch (error) {
       console.error('Error fetching dealers:', error);
     }
@@ -75,7 +113,12 @@ export default function ServiceTableRow({
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/vehicle/fetch-all');
       const data = await response.json();
-      setVechicles(data.data);
+      // Check if data is undefined or if data.data is not an array
+      if (!data || !Array.isArray(data.data)) {
+        setVechicles([]); // Set dealers to an empty array
+      } else {
+        setVechicles(data.data); // Set dealers to the fetched data
+      }
     } catch (error) {
       console.error('Error fetching dealers:', error);
     }
@@ -101,6 +144,7 @@ export default function ServiceTableRow({
       service_date: formData.ServiceDate,
       description: formData.Description,
       cost: formData.UnitCost,
+      registration_no: formData.Registrationno,
     };
     console.log(payload);
     console.log(ServiceID);
@@ -243,6 +287,17 @@ export default function ServiceTableRow({
             maxWidth: '100px',
           }}
         >
+          {Registrationno}
+        </TableCell>
+
+        <TableCell
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px',
+          }}
+        >
           {ServiceDate}
         </TableCell>
 
@@ -350,111 +405,148 @@ export default function ServiceTableRow({
         aria-describedby="edit-modal-description"
       >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 800,
-            bgcolor: 'background.paper',
-            borderRadius: 1,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <h2 id="edit-modal-title">Edit Service</h2>
-          <div className="VRModel-style">
-            <div className="VRModal-inner-left">
-              <Select
-                fullWidth
-                value={DealerIDD}
-                onChange={(e) => setDealerIDD(e.target.value)}
-                displayEmpty
-                variant="outlined"
-                mb={2}
-                style={{ marginBottom: '10px', marginTop: '10px' }}
-              >
-                <MenuItem value="">
-                  <em>Select Dealer</em>
-                </MenuItem>
-                {dealers.map((dealer) => (
-                  <MenuItem key={dealer.dealer_id} value={dealer.dealer_id}>
-                    {dealer.dealer_id}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 800,
+              bgcolor: 'background.paper',
+              borderRadius: 1,
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
+            <h2 id="edit-modal-title">Edit Service</h2>
+            <div className="VRModel-style">
+              <div className="VRModal-inner-left">
+                <Select
+                  fullWidth
+                  value={DealerIDD}
+                  onChange={(e) => setDealerIDD(e.target.value)}
+                  displayEmpty
+                  variant="outlined"
+                  mb={2}
+                  style={{ marginBottom: '10px', marginTop: '10px' }}
+                >
+                  <MenuItem value="">
+                    <em>Select Dealer</em>
                   </MenuItem>
-                ))}
-              </Select>
-              <Select
-                fullWidth
-                value={vechicleIDD}
-                onChange={(e) => setVechicleIDD(e.target.value)}
-                displayEmpty
-                variant="outlined"
-                mb={2}
-                style={{ marginBottom: '10px' }}
-              >
-                <MenuItem value="">
-                  <em>Select Vechicle</em>
-                </MenuItem>
-                {vechicles.map((vechicle) => (
-                  <MenuItem key={vechicle.vehicle_id} value={vechicle.vehicle_id}>
-                    {vechicle.vehicle_id}
+                  {dealers.map((dealer) => (
+                    <MenuItem key={dealer.dealer_id} value={dealer.dealer_id}>
+                      {dealer.dealer_id}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Select
+                  fullWidth
+                  value={vechicleIDD}
+                  onChange={(e) => setVechicleIDD(e.target.value)}
+                  displayEmpty
+                  variant="outlined"
+                  mb={2}
+                  style={{ marginBottom: '10px' }}
+                >
+                  <MenuItem value="">
+                    <em>Select Vechicle</em>
                   </MenuItem>
-                ))}
-              </Select>
-              {/* <TextField
-                fullWidth
-                margin="normal"
-                label="Name"
-                name="accessoryName"
-                value={formData.Name}
-                onChange={handleFormChange}
-              /> */}
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Description"
-                name="Description"
-                value={formData.Description}
-                onChange={handleFormChange}
-                variant="outlined"
-                mb={2}
-                multiline
-                rows={4} // Number of rows for the textarea
-                style={{ marginBottom: '10px' }}
-              />
-            </div>
-            <div className="VRModal-inner-right">
-              <DesktopDatePicker
-                label="Service Date"
-                inputFormat="YYYY-MM-DD"
-                value={formData.ServiceDate ? dayjs(formData.ServiceDate) : null} // Format it to dayjs object
-                onChange={(newValue) =>
-                  setFormData((prevState) => ({
-                    ...prevState,
-                    ServiceDate: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  }))
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    variant="outlined"
-                    mb={2}
-                    style={{ marginBottom: '10px' }}
-                  />
-                )}
-              />
-              <div style={{marginTop:'10px'}}> </div>
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Unit Cost"
-                name="UnitCost"
-                value={formData.UnitCost}
-                onChange={handleFormChange}
-              />
-              {/* <TextField
+                  {vechicles.map((vechicle) => (
+                    <MenuItem key={vechicle.vehicle_id} value={vechicle.vehicle_id}>
+                      {vechicle.vehicle_id}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <TextField
+                  fullWidth
+                  margin="normal"
+                  label="Registration no"
+                  name="Registrationno"
+                  value={formData.Registrationno}
+                  onChange={handleFormChange}
+                />
+                <TextField
+                  fullWidth
+                  margin="normal"
+                  label="Description"
+                  name="Description"
+                  value={formData.Description}
+                  onChange={handleFormChange}
+                  variant="outlined"
+                  mb={2}
+                  multiline
+                  rows={4} // Number of rows for the textarea
+                  style={{ marginBottom: '10px' }}
+                />
+                <DesktopDatePicker
+                  label="Service Date"
+                  inputFormat="YYYY-MM-DD"
+                  value={formData.ServiceDate ? dayjs(formData.ServiceDate) : null} // Format it to dayjs object
+                  onChange={(newValue) =>
+                    setFormData((prevState) => ({
+                      ...prevState,
+                      ServiceDate: newValue ? newValue.format('YYYY-MM-DD') : '',
+                    }))
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      variant="outlined"
+                      mb={2}
+                      style={{ marginBottom: '10px' }}
+                    />
+                  )}
+                />
+                <div style={{ marginTop: '10px' }}> </div>
+              </div>
+              <div className="VRModal-inner-right">
+                <TextField
+                  fullWidth
+                  margin="normal"
+                  label="Previously added parts"
+                  name="Description"
+                  value={formData.Description}
+                  onChange={handleFormChange}
+                  variant="outlined"
+                  mb={2}
+                  multiline
+                  rows={4} // Number of rows for the textarea
+                  style={{ marginBottom: '10px' }}
+                />
+                {/* Select Part */}
+                <Select
+                  fullWidth
+                  value={selectedPart}
+                  onChange={(e) => setSelectedPart(e.target.value)}
+                  displayEmpty
+                  variant="outlined"
+                  mb={2}
+                  style={{ marginBottom: '10px' }}
+                >
+                  <MenuItem value="">
+                    <em>Select Part</em>
+                  </MenuItem>
+                  {parts.map((part) => (
+                    <MenuItem key={part.id} value={part.id}>
+                      {part.name} - ₹{part.unit_cost}
+                    </MenuItem>
+                  ))}
+                </Select>
+
+                {/* Add Part Button */}
+                <IconButton color="primary" onClick={handleAddPart}>
+                  <Iconify icon="eva:plus-circle-fill" />
+                </IconButton>
+                <TextField
+                  fullWidth
+                  margin="normal"
+                  label="Unit Cost"
+                  name="UnitCost"
+                  value={formData.totalPartsCost}
+                  onChange={handleFormChange}
+                />
+                {/* <TextField
                 fullWidth
                 margin="normal"
                 label="Dealer Id"
@@ -462,10 +554,10 @@ export default function ServiceTableRow({
                 value={formData.DealerID}
                 onChange={handleFormChange}
               /> */}
+              </div>
             </div>
-          </div>
 
-          {/* <TextField
+            {/* <TextField
             fullWidth
             margin="normal"
             label="Battery Name"
@@ -473,15 +565,15 @@ export default function ServiceTableRow({
             value={formData.batteryName}
             onChange={handleFormChange}
           /> */}
-          <Box mt={2} display="flex" justifyContent="flex-end">
-            <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
-              Cancel
-            </Button>
-            <Button onClick={handleFormSubmit} variant="contained" color="inherit">
-              Save
-            </Button>
+            <Box mt={2} display="flex" justifyContent="flex-end">
+              <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
+                Cancel
+              </Button>
+              <Button onClick={handleFormSubmit} variant="contained" color="inherit">
+                Save
+              </Button>
+            </Box>
           </Box>
-        </Box>
         </LocalizationProvider>
       </Modal>
 
@@ -523,6 +615,16 @@ export default function ServiceTableRow({
                 label="Vechile Id"
                 name="VehicleID"
                 value={formData.VehicleID}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Registration no"
+                name="Registrationno"
+                value={formData.Registrationno}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -606,6 +708,7 @@ ServiceTableRow.propTypes = {
   VehicleID: PropTypes.any,
   ServiceDate: PropTypes.any,
   UnitCost: PropTypes.any,
+  Registrationno: PropTypes.any,
   selected: PropTypes.any,
   DealerID: PropTypes.string,
   CreatedAt: PropTypes.string,

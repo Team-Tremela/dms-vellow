@@ -26,7 +26,10 @@ export default function UserTableRow({
   Email,
   PhoneNumber,
   Address,
-  BatchNo,
+  Aadharcard,
+  GST,
+  PAN,
+  // BatchNo,
   handleClick,
   onUpdateSuccess,
 }) {
@@ -40,7 +43,10 @@ export default function UserTableRow({
     Address,
     Email,
     PhoneNumber,
-    BatchNo,
+    Aadharcard,
+    GST,
+    PAN,
+    // BatchNo,
   });
 
   const [deletePopoverOpen, setDeletePopoverOpen] = useState(null);
@@ -59,7 +65,10 @@ export default function UserTableRow({
       address: formData.Address,
       email: formData.Email,
       phone_no: formData.PhoneNumber,
-      batch_no: formData.BatchNo,
+      aadhar_card: formData.Aadharcard,
+      pan: formData.PAN,
+      gst: formData.GST,
+      // batch_no: formData.BatchNo,
     };
 
     try {
@@ -182,7 +191,7 @@ export default function UserTableRow({
           {vendorID}
         </TableCell>
 
-        <TableCell
+        {/* <TableCell
           style={{
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -191,7 +200,7 @@ export default function UserTableRow({
           }}
         >
           {BatchNo}
-        </TableCell>
+        </TableCell> */}
 
         <TableCell>{Name}</TableCell>
 
@@ -202,6 +211,12 @@ export default function UserTableRow({
         <TableCell>{Email}</TableCell>
 
         <TableCell>{PhoneNumber}</TableCell>
+
+        <TableCell>{Aadharcard}</TableCell>
+        
+        <TableCell>{PAN}</TableCell>
+        
+        <TableCell>{GST}</TableCell>
 
         {/* <TableCell>
           <div style={{ display: "flex" }}>
@@ -304,14 +319,14 @@ export default function UserTableRow({
             value={formData.Name}
             onChange={handleFormChange}
           />
-          <TextField
+          {/* <TextField
             fullWidth
             margin="normal"
             label="Batch No"
             name="BatchNo"
             value={formData.BatchNo}
             onChange={handleFormChange}
-          />
+          /> */}
           {/* <TextField
             fullWidth
             margin="normal"
@@ -342,6 +357,30 @@ export default function UserTableRow({
             label="Phone Number"
             name="PhoneNumber"
             value={formData.PhoneNumber}
+            onChange={handleFormChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Aadhar Card"
+            name="Aadharcard"
+            value={formData.Aadharcard}
+            onChange={handleFormChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="PAN"
+            name="PAN"
+            value={formData.PAN}
+            onChange={handleFormChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="GST"
+            name="GST"
+            value={formData.GST}
             onChange={handleFormChange}
           />
           <Box mt={2} display="flex" justifyContent="center">
@@ -390,7 +429,7 @@ export default function UserTableRow({
               readOnly: true,
             }}
           />
-          <TextField
+          {/* <TextField
             fullWidth
             margin="normal"
             label="Batch No"
@@ -398,7 +437,7 @@ export default function UserTableRow({
             InputProps={{
               readOnly: true,
             }}
-          />
+          /> */}
           {/* <TextField
             fullWidth
             margin="normal"
@@ -435,6 +474,33 @@ export default function UserTableRow({
               readOnly: true,
             }}
           />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Aadhar Card"
+            value={formData.Aadharcard}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="PAN"
+            value={formData.PAN}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="GST"
+            value={formData.GST}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
           <Box mt={2} display="flex" justifyContent="center">
             <Button onClick={handleCloseViewModal} variant="contained" color="inherit">
               Close
@@ -454,7 +520,10 @@ UserTableRow.propTypes = {
   Email: PropTypes.string.isRequired,
   PhoneNumber: PropTypes.string.isRequired,
   Address: PropTypes.string.isRequired,
-  BatchNo: PropTypes.string.isRequired,
+  Aadharcard: PropTypes.any.isRequired,
+  PAN: PropTypes.any.isRequired,
+  GST: PropTypes.any.isRequired,
+  // BatchNo: PropTypes.string.isRequired,
   handleClick: PropTypes.func,
   onUpdateSuccess: PropTypes.func,
 };
