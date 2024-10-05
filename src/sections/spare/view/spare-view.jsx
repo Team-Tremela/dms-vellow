@@ -93,6 +93,74 @@ export default function SparePage() {
     fetchVendors();
   }, []);
 
+  const validateFields = () => {
+    // Regular expressions for validation
+    const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
+    const textPattern = /^[A-Za-z\s]+$/; // Only letters and spaces for text fields
+    const numberPattern = /^(0|[1-9][0-9]*)(\.[0-9]{1,2})?$/;
+
+    if(!VendorID){
+      toast.error('Please select a Vendor');
+      return false;
+    }
+
+    if(!idPattern.test(VendorID)){
+      toast.error('Vendor must be a combination letter, number, _')
+    }
+
+    // Dealer ID Validation
+    if (!Name) {
+      toast.error('Please enter a name');
+      return false;
+    }
+    if (!textPattern.test(Name)) {
+      toast.error('Dealer Name must be a combination of letters');
+      return false;
+    }
+
+    // Vehicle ID Validation
+    if (!UnitCost) {
+      toast.error('Please enter Unit cost');
+      return false;
+    }
+    // Convert UnitCost to a number
+    const unitCostNumber = parseFloat(UnitCost);
+
+    // Check if the conversion is successful and matches the pattern
+    if (Number.isNaN(unitCostNumber) || !numberPattern.test(UnitCost)) {
+      toast.error('Unit cost must be a valid number');
+      return false;
+    }
+
+    // Registration number validation
+    if (!Description) {
+      toast.error('Please enter description');
+      return false;
+    }
+    if (!textPattern.test(Description)) {
+      toast.error('Description should contain only letters');
+      return false;
+    }
+
+    // Vehicle ID Validation
+    if (!PartNumber) {
+      toast.error('Please enter Unit cost');
+      return false;
+    }
+    if (!numberPattern.test(PartNumber)) {
+      toast.error('Unit cost must be a combination numbers');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (validateFields()) {
+      handleAddMotor(); // Call the function only if validation passes
+    }
+  };
+
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -415,6 +483,7 @@ export default function SparePage() {
             value={UnitCost}
             onChange={(e) => setUnitCost(e.target.value)}
             variant="outlined"
+            type='number'
             mb={2}
             style={{ marginBottom: '10px' }}
           />
@@ -446,7 +515,7 @@ export default function SparePage() {
             style={{ marginBottom: '10px' }}
           /> */}
           <div style={{ textAlign: 'center' }}>
-            <Button variant="contained" color="inherit" onClick={handleAddMotor}>
+            <Button variant="contained" color="inherit" onClick={handleSubmit}>
               Save
             </Button>
           </div>

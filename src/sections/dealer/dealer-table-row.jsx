@@ -59,6 +59,89 @@ export default function UserTableRow({
     setOpen(null);
   };
 
+  const validateFields = () => {
+    // Regular expressions for validation
+    // const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
+    const textPattern = /^[A-Za-z\s',]+$/; // Only letters and spaces for text fields
+    // const numberPattern = /^[0-9]+$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneNumberPattern = /^(?:\+?\d{1,3})?[-. ]?\(?\d{1,4}?\)?[-. ]?\d{1,4}[-. ]?\d{1,9}$/;
+    const aadharPattern = /^\d{4}\s?\d{4}\s?\d{4}$/;
+    const gstPattern = /^[0-9]{2}[A-Z]{4}[0-9]{4}[A-Z]{1}[0-9]{1}[Z]{1}[0-9]{1}$/;
+    const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+    if (!Name) {
+      toast.error('Please enter a name');
+      return false;
+    }
+    if (!textPattern.test(Name)) {
+      toast.error('Name must be a combination of letters');
+      return false;
+    }
+
+    if (!Location) {
+      toast.error('Please enter a Location');
+      return false;
+    }
+    if (!textPattern.test(Location)) {
+      toast.error('Location must be a combination of letters');
+      return false;
+    }
+
+    if (!Email) {
+      toast.error('Please enter a Email');
+      return false;
+    }
+    if (!emailPattern.test(Email)) {
+      toast.error('Please enter a valid Email ex@gmail.com');
+      return false;
+    }
+
+    if (!PhoneNumber) {
+      toast.error('Please enter a Phone number');
+      return false;
+    }
+    if (!phoneNumberPattern.test(PhoneNumber)) {
+      toast.error('Please enter a valid phone number');
+      return false;
+    }
+
+    if (!Aadharcard) {
+      toast.error('Please enter a Aadhar Card number');
+      return false;
+    }
+    if (!aadharPattern.test(Aadharcard)) {
+      toast.error('Please enter a valid Aadhar Card number');
+      return false;
+    }
+
+    if (!GST) {
+      toast.error('Please enter a GST number');
+      return false;
+    }
+    if (!gstPattern.test(GST)) {
+      toast.error('Please enter a valid GST number');
+      return false;
+    }
+
+    if (!PAN) {
+      toast.error('Please enter a PAN number');
+      return false;
+    }
+    if (!panPattern.test(PAN)) {
+      toast.error('Please enter a valid PAN number');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (validateFields()) {
+      handleFormSubmit(); // Call the function only if validation passes
+    }
+  };
+
   const handleFormSubmit = async () => {
     const payload = {
       name: formData.Name,
@@ -200,9 +283,9 @@ export default function UserTableRow({
         <TableCell>{PhoneNumber}</TableCell>
 
         <TableCell>{Aadharcard}</TableCell>
-        
+
         <TableCell>{PAN}</TableCell>
-        
+
         <TableCell>{GST}</TableCell>
 
         <TableCell
@@ -372,7 +455,7 @@ export default function UserTableRow({
             <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
               Cancel
             </Button>
-            <Button onClick={handleFormSubmit} variant="contained" color="inherit">
+            <Button onClick={handleSubmit} variant="contained" color="inherit">
               Save
             </Button>
           </Box>

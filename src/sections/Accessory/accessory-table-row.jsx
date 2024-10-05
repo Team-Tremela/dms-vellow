@@ -69,6 +69,54 @@ export default function AccessoryTableRow({
     fetchVendors();
   }, []);
 
+  const validateFields = () => {
+    // Regular expressions for validation
+    const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
+    const textPattern = /^[A-Za-z\s]+$/; // Only letters and spaces for text fields
+    const numberPattern = /^[0-9]+$/;
+
+    if(!VendorIDD){
+      toast.error('Please select a Vendor');
+      return false;
+    }
+
+    if(!idPattern.test(VendorIDD)){
+      toast.error('Vendor must be a combination letter, number, _')
+    }
+
+    // Dealer ID Validation
+    if (!Name) {
+      toast.error('Please enter a name');
+      return false;
+    }
+    if (!textPattern.test(Name)) {
+      toast.error('Name must be a combination of letters');
+      return false;
+    }
+
+    // Vehicle ID Validation
+    if (!UnitCost) {
+      toast.error('Please enter Unit cost');
+      return false;
+    }
+    if (!numberPattern.test(UnitCost)) {
+      toast.error('Unit cost must be a combination numbers');
+      return false;
+    }
+
+    // Registration number validation
+    if (!Description) {
+      toast.error('Please enter description');
+      return false;
+    }
+    if (!textPattern.test(Description)) {
+      toast.error('Description should contain only letters');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -121,6 +169,12 @@ export default function AccessoryTableRow({
       toast.error('Failed to update accessory');
     } finally {
       handleCloseModal();
+    }
+  };
+
+  const handleSubmit = () => {
+    if (validateFields()) {
+      handleFormSubmit(); // Call the function only if validation passes
     }
   };
 
@@ -367,7 +421,7 @@ export default function AccessoryTableRow({
             <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
               Cancel
             </Button>
-            <Button onClick={handleFormSubmit} variant="contained" color="inherit">
+            <Button onClick={handleSubmit} variant="contained" color="inherit">
               Save
             </Button>
           </Box>

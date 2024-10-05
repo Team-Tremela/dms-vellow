@@ -8,12 +8,14 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select'; // Import Select component
 import Popover from '@mui/material/Popover';
+// import Checkbox from '@mui/material/Checkbox';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
+import Autocomplete from '@mui/material/Autocomplete';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -43,8 +45,8 @@ export default function ServiceTableRow({
 }) {
   const [totalPartsCost, setTotalPartsCost] = useState(0);
   const [parts, setParts] = useState([]);
-  const [selectedParts, setSelectedParts] = useState([]);
-  const [selectedPart, setSelectedPart] = useState('');
+  // const [selectedParts, setSelectedParts] = useState([]);
+  // const [selectedPart, setSelectedPart] = useState('');
   const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
@@ -66,6 +68,12 @@ export default function ServiceTableRow({
   const [vechicles, setVechicles] = useState([]);
   const [vechicleIDD, setVechicleIDD] = useState(''); // State for DealerID
 
+  const [selectedPartsArray, setSelectedPartsArray] = useState([]);
+
+  const selctedarrayvalue = Array.isArray(selectedPartsArray)
+    ? selectedPartsArray
+    : [selectedPartsArray];
+
   const fetchParts = async () => {
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/spare/fetch-all'); // replace with your API endpoint
@@ -82,12 +90,11 @@ export default function ServiceTableRow({
   };
 
   const handleAddPart = () => {
-    const part = parts.find((p) => p.id === selectedPart);
-    if (part) {
-      setSelectedParts([...selectedParts, part]);
-      // Convert prevCost and part.unit_cost to numbers to ensure proper addition
-      setTotalPartsCost((prevCost) => (parseFloat(prevCost) || 0) + parseFloat(part.unit_cost));
-    }
+    // Calculate the total cost from the selected parts
+    const newTotal = selectedPartsArray.reduce((acc, part) => acc + parseFloat(part.unit_cost), 0); // Use selectedPartsArray
+    setTotalPartsCost(newTotal); // Update total cost
+    // Optionally, you might want to clear selectedPart after adding
+    // setSelectedPart(null);
   };
 
   useEffect(() => {
@@ -128,6 +135,68 @@ export default function ServiceTableRow({
     fetchDealers();
     fetchVechicles();
   }, []);
+
+  const validateFields = () => {
+    let isValid = true;
+
+    // Dealer ID validation
+    if (!DealerIDD) {
+      toast.error('Please select a Dealer.');
+      isValid = false;
+      return isValid;
+    }
+
+    // Vehicle ID validation
+    if (!vechicleIDD) {
+      toast.error('Please select a Vehicle.');
+      isValid = false;
+      return isValid;
+    }
+
+    // Registration number validation (alphanumeric)
+    const registrationPattern = /^[a-zA-Z0-9]+$/;
+    if (!formData.Registrationno || !registrationPattern.test(formData.Registrationno)) {
+      toast.error('Please enter a valid Registration Number (letters and numbers only).');
+      isValid = false;
+      return isValid;
+    }
+
+    // Description validation (only text)
+    const descriptionPattern = /^[a-zA-Z\s]+$/;
+    if (!formData.Description || !descriptionPattern.test(formData.Description)) {
+      toast.error('Please enter a valid Description (text only).');
+      isValid = false;
+      return isValid;
+    }
+
+    // Service date validation (current or future date)
+    const today = dayjs();
+    if (!formData.ServiceDate || dayjs(formData.ServiceDate).isBefore(today, 'day')) {
+      toast.error('Service Date should be today or a future date.');
+      isValid = false;
+      return isValid;
+    }
+
+    // Parts selection validation
+    if (selectedPartsArray.length === 0) {
+      toast.error('Please select at least one part.');
+      isValid = false;
+      return isValid;
+    }
+
+    // Unit cost validation
+    if (
+      !formData.totalPartsCost ||
+      Number.isNaN(Number(formData.totalPartsCost)) ||
+      formData.totalPartsCost <= 0
+    ) {
+      toast.error('Please enter a valid positive Unit Cost.');
+      isValid = false;
+      return isValid;
+    }
+
+    return isValid;
+  };
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -182,6 +251,12 @@ export default function ServiceTableRow({
       toast.error('Failed to update service');
     } finally {
       handleCloseModal();
+    }
+  };
+
+  const handleSubmit = () => {
+    if (validateFields()) {
+      handleFormSubmit(); // Call the function only if validation passes
     }
   };
 
@@ -478,6 +553,53 @@ export default function ServiceTableRow({
                   rows={4} // Number of rows for the textarea
                   style={{ marginBottom: '10px' }}
                 />
+                {/* Select Part */}
+                <Autocomplete
+                  multiple
+                  options={parts}
+                  disableCloseOnSelect
+                  getOptionLabel={(part) => `${part.name} - ₹${part.unit_cost}`}
+                  value={selctedarrayvalue} // Use selectedPartsArray for value
+                  onChange={(event, newValue) => {
+                    console.log('Selected Parts:', newValue);
+                    setSelectedPartsArray(newValue); // Update the selected parts correctly
+                  }}
+                  renderOption={(props, part) => {
+                    const isSelected = selectedPartsArray.some(
+                      (selectedd) => selectedd.id === part.id
+                    ); // Adjust based on your part's unique identifier
+                    return (
+                      <li {...props}>
+                        <Checkbox checked={isSelected} style={{ marginRight: 8 }} />
+                        {part.name} - ₹{part.unit_cost}
+                      </li>
+                    );
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Part" variant="outlined" fullWidth />
+                  )}
+                  style={{ marginBottom: '10px' }}
+                />
+
+                <Button color="primary" onClick={handleAddPart}>
+                  Add parts &nbsp;
+                  <Iconify icon="eva:plus-circle-fill" />
+                </Button>
+              </div>
+              <div className="VRModal-inner-right">
+                <TextField
+                  fullWidth
+                  margin="normal"
+                  label="Previously added parts"
+                  name="Description"
+                  value={formData.Description}
+                  onChange={handleFormChange}
+                  variant="outlined"
+                  mb={2}
+                  multiline
+                  rows={4} // Number of rows for the textarea
+                  style={{ marginBottom: '10px' }}
+                />
                 <DesktopDatePicker
                   label="Service Date"
                   inputFormat="YYYY-MM-DD"
@@ -499,45 +621,6 @@ export default function ServiceTableRow({
                   )}
                 />
                 <div style={{ marginTop: '10px' }}> </div>
-              </div>
-              <div className="VRModal-inner-right">
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  label="Previously added parts"
-                  name="Description"
-                  value={formData.Description}
-                  onChange={handleFormChange}
-                  variant="outlined"
-                  mb={2}
-                  multiline
-                  rows={4} // Number of rows for the textarea
-                  style={{ marginBottom: '10px' }}
-                />
-                {/* Select Part */}
-                <Select
-                  fullWidth
-                  value={selectedPart}
-                  onChange={(e) => setSelectedPart(e.target.value)}
-                  displayEmpty
-                  variant="outlined"
-                  mb={2}
-                  style={{ marginBottom: '10px' }}
-                >
-                  <MenuItem value="">
-                    <em>Select Part</em>
-                  </MenuItem>
-                  {parts.map((part) => (
-                    <MenuItem key={part.id} value={part.id}>
-                      {part.name} - ₹{part.unit_cost}
-                    </MenuItem>
-                  ))}
-                </Select>
-
-                {/* Add Part Button */}
-                <IconButton color="primary" onClick={handleAddPart}>
-                  <Iconify icon="eva:plus-circle-fill" />
-                </IconButton>
                 <TextField
                   fullWidth
                   margin="normal"
@@ -569,7 +652,7 @@ export default function ServiceTableRow({
               <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
                 Cancel
               </Button>
-              <Button onClick={handleFormSubmit} variant="contained" color="inherit">
+              <Button onClick={handleSubmit} variant="contained" color="inherit">
                 Save
               </Button>
             </Box>

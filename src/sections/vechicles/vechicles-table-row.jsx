@@ -96,6 +96,113 @@ export default function VechiclesTableRow({
     setOpen(null);
   };
 
+  const validateFields = () => {
+    // Regular expressions for validation
+    const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
+    const textPattern = /^[A-Za-z\s']+$/; // Only letters and spaces for text fields
+    // const numberPattern = /^[0-9]+$/;
+    const hexColorPattern =
+      /^(#[0-9A-Fa-f]{3}(?:[,\s]*#[0-9A-Fa-f]{3})*|#[0-9A-Fa-f]{6}(?:[,\s]*#[0-9A-Fa-f]{6})*)$/;
+    const currentDate = dayjs().format('YYYY-MM-DD');
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/; // Date format YYYY-MM-DD
+    const barcodePattern = /^[0-9]+$/;
+
+    if (!DealerIDD) {
+      toast.error('Please select Dealer Id');
+      return false;
+    }
+    if (!idPattern.test(DealerIDD)) {
+      toast.error('Dealer ID must be a combination of letters and numbers');
+      return false;
+    }
+
+    if (!modelName) {
+      toast.error('Please enter a name');
+      return false;
+    }
+    if (!textPattern.test(modelName)) {
+      toast.error('Name must be a combination of letters');
+      return false;
+    }
+
+    if (!chassisNo) {
+      toast.error('Please enter a Chassis No');
+      return false;
+    }
+    if (!idPattern.test(chassisNo)) {
+      toast.error('Enter a valid Chassis No');
+      return false;
+    }
+
+    if (!motorNo) {
+      toast.error('Please enter a Motor No');
+      return false;
+    }
+    if (!idPattern.test(motorNo)) {
+      toast.error('Enter a valid Motor No');
+      return false;
+    }
+
+    if (!batchNo) {
+      toast.error('Please enter a Motor No');
+      return false;
+    }
+    if (!idPattern.test(batchNo)) {
+      toast.error('Enter a valid Motor No');
+      return false;
+    }
+
+    if (!colorCode) {
+      toast.error('Please enter a Color code');
+      return false;
+    }
+    if (!hexColorPattern.test(colorCode)) {
+      toast.error('Enter a valid Color Code');
+      return false;
+    }
+
+    if (!mfgDate) {
+      toast.error('Please select a mfg date');
+      return false;
+    }
+    if (!datePattern.test(mfgDate)) {
+      toast.error('Mfg date must be in YYYY-MM-DD format');
+      return false;
+    }
+    // Check if the selected date is in the future
+    if (dayjs(mfgDate).isAfter(currentDate)) {
+      toast.error('Mfg date cannot be in the future. Please select today or a past date.');
+      return false;
+    }
+
+    console.log(typeof(barCode),barCode);
+    // Convert barcode to number
+    const barcodeAsNumber = Number(barCode);
+    console.log(typeof (barcodeAsNumber),barcodeAsNumber);
+    // Check if the conversion is valid
+    if (Number.isNaN(barcodeAsNumber)) {
+      throw new Error('Invalid barcode number conversion.');
+    }
+
+    if (!barcodeAsNumber) {
+      toast.error('Please enter a barcode');
+      return false;
+    }
+    // Check if the conversion is successful and matches the pattern
+    if (Number.isNaN(barcodeAsNumber) || !barcodePattern.test(barcodeAsNumber)) {
+      toast.error('Barcode must be 12 or 13 digits long');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (validateFields()) {
+      handleFormSubmit(); // Call the function only if validation passes
+    }
+  };
+
   const handleFormSubmit = async () => {
     const payload = {
       dealer_id: DealerIDD,
@@ -571,7 +678,7 @@ export default function VechiclesTableRow({
               <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
                 Cancel
               </Button>
-              <Button onClick={handleFormSubmit} variant="contained" color="inherit">
+              <Button onClick={handleSubmit} variant="contained" color="inherit">
                 Save
               </Button>
             </Box>

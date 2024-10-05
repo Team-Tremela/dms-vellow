@@ -77,6 +77,74 @@ export default function SpareTableRow({
     setOpen(null);
   };
 
+  const validateFields = () => {
+    // Regular expressions for validation
+    const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
+    const textPattern = /^[A-Za-z\s-.,;:!?"'()\-–—[\\]+$/; // Only letters and spaces for text fields
+    const numberPattern = /^(0|[1-9][0-9]*)(\.[0-9]{1,2})?$/;
+
+    if (!VendorIDD) {
+      toast.error('Please select a Vendor');
+      return false;
+    }
+
+    if (!idPattern.test(VendorIDD)) {
+      toast.error('Vendor must be a combination letter, number, _');
+    }
+
+    // Dealer ID Validation
+    if (!Name) {
+      toast.error('Please enter a name');
+      return false;
+    }
+    if (!textPattern.test(Name)) {
+      toast.error('Dealer Name must be a combination of letters');
+      return false;
+    }
+
+    // Vehicle ID Validation
+    if (!UnitCost) {
+      toast.error('Please enter Unit cost');
+      return false;
+    }
+    // Convert UnitCost to a number
+    const unitCostNumber = parseFloat(UnitCost);
+
+    // Check if the conversion is successful and matches the pattern
+    if (Number.isNaN(unitCostNumber) || !numberPattern.test(UnitCost)) {
+      toast.error('Unit cost must be a valid number');
+      return false;
+    }
+
+    // Registration number validation
+    if (!Description) {
+      toast.error('Please enter description');
+      return false;
+    }
+    if (!textPattern.test(Description)) {
+      toast.error('Description should contain only letters');
+      return false;
+    }
+
+    // Vehicle ID Validation
+    if (!PartNumber) {
+      toast.error('Please enter Unit cost');
+      return false;
+    }
+    if (!numberPattern.test(PartNumber)) {
+      toast.error('Unit cost must be a combination numbers');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (validateFields()) {
+      handleFormSubmit(); // Call the function only if validation passes
+    }
+  };
+
   const handleFormSubmit = async () => {
     const payload = {
       vendor_id: VendorIDD,
@@ -370,6 +438,7 @@ export default function SpareTableRow({
                 margin="normal"
                 label="Unit Cost"
                 name="UnitCost"
+                type="number"
                 value={formData.UnitCost}
                 onChange={handleFormChange}
               />
@@ -387,7 +456,7 @@ export default function SpareTableRow({
             <Button onClick={handleCloseModal} color="primary" sx={{ mr: 1 }}>
               Cancel
             </Button>
-            <Button onClick={handleFormSubmit} variant="contained" color="inherit">
+            <Button onClick={handleSubmit} variant="contained" color="inherit">
               Save
             </Button>
           </Box>

@@ -70,8 +70,8 @@ export default function ServicePage() {
   const [DealerID, setDealerID] = useState('');
   const [UnitCost, setUnitCost] = useState('');
   const [Registrationno, setRegistrationno] = useState('');
-  // const [LeadTime, setLeadTime] = useState('');
-  // const [ServiceID, setServiceID] = useState('');
+  const [File, setFile] = useState('');
+  const [Discopunt, setDiscount] = useState('');
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -165,6 +165,84 @@ export default function ServicePage() {
     setUnitCost(totalPartsCost);
   }, [totalPartsCost]);
 
+  const validateFields = () => {
+    // Regular expressions for validation
+    const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
+    const registrationPattern = /^[A-Za-z0-9]+$/; // Letters and numbers for registration no
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/; // Date format YYYY-MM-DD
+    const textPattern = /^[A-Za-z\s]+$/; // Only letters and spaces for text fields
+
+    const currentDate = dayjs().format('YYYY-MM-DD');
+
+    // Dealer ID Validation
+    if (!DealerID) {
+      toast.error('Please select a dealer');
+      return false;
+    }
+    if (!idPattern.test(DealerID)) {
+      toast.error('Dealer ID must be a combination of letters and numbers');
+      return false;
+    }
+
+    // Vehicle ID Validation
+    if (!VechicleID) {
+      toast.error('Please select a vehicle');
+      return false;
+    }
+    if (!idPattern.test(VechicleID)) {
+      toast.error('Vehicle ID must be a combination of letters and numbers');
+      return false;
+    }
+
+    // Registration number validation
+    if (!Registrationno) {
+      toast.error('Please enter registration number');
+      return false;
+    }
+    if (!registrationPattern.test(Registrationno)) {
+      toast.error('Registration number should contain only letters and numbers');
+      return false;
+    }
+
+    // Service Date validation
+    if (!ServiceDate) {
+      toast.error('Please select a service date');
+      return false;
+    }
+    if (!datePattern.test(ServiceDate)) {
+      toast.error('Service date must be in YYYY-MM-DD format');
+      return false;
+    }
+    if (dayjs(ServiceDate).isBefore(currentDate)) {
+      toast.error('Service date cannot be in the past. Please select today or a future date.');
+      return false;
+    }
+
+    // Selected Parts Validation
+    if (selectedPartsArray.length === 0) {
+      toast.error('Please select at least one part');
+      return false;
+    }
+
+    // Unit Cost validation
+    if (!totalPartsCost) {
+      toast.error('Unit cost is required');
+      return false;
+    }
+
+    // Description validation
+    if (!Description) {
+      toast.error('Please enter a description');
+      return false;
+    }
+    if (!textPattern.test(Description)) {
+      toast.error('Description should contain only letters and spaces');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -236,6 +314,8 @@ export default function ServicePage() {
     setServiceDate('');
     setVechicleId('');
     setDescription('');
+    setDiscount('');
+    setFile('');
     setDealerID('');
     setUnitCost('');
     setTotalPartsCost('');
@@ -252,6 +332,7 @@ export default function ServicePage() {
       vehicle_id: VechicleID,
       service_date: ServiceDate,
       description: Description,
+      doc: File,
       registration_no: Registrationno,
       cost: UnitCost,
     };
@@ -276,6 +357,8 @@ export default function ServicePage() {
       setVechicleId('');
       setDealerID('');
       setDescription('');
+      setDiscount('');
+      setFile('');
       setUnitCost('');
       setServiceDate('');
       setTotalPartsCost('');
@@ -293,6 +376,12 @@ export default function ServicePage() {
       fetchData();
     } catch (error) {
       setErrorMessage(error.message);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (validateFields()) {
+      handleAddMotor(); // Call the function only if validation passes
     }
   };
 
@@ -552,7 +641,8 @@ export default function ServicePage() {
                 />
 
                 <Button color="primary" onClick={handleAddPart}>
-                  Add parts &nbsp;<Iconify icon="eva:plus-circle-fill" />
+                  Add parts &nbsp;
+                  <Iconify icon="eva:plus-circle-fill" />
                 </Button>
                 {/* Add Part Button
                 <IconButton color="primary" onClick={handleAddPart}>
@@ -564,7 +654,7 @@ export default function ServicePage() {
                 <TextField
                   fullWidth
                   disabled
-                  className='cs-cost'
+                  className="cs-cost"
                   label="Unit Cost"
                   value={totalPartsCost}
                   onChange={(e) => setUnitCost(e.target.value)}
@@ -586,16 +676,16 @@ export default function ServicePage() {
                 <TextField
                   fullWidth
                   label="Discount"
-                  value={Description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={Discopunt}
+                  onChange={(e) => setDiscount(e.target.value)}
                   variant="outlined"
                   mb={2}
                   style={{ marginBottom: '10px' }}
                 />
                 <TextField
                   fullWidth
-                  value={Description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={File}
+                  onChange={(e) => setFile(e.target.value)}
                   // variant="outlined"
                   mb={2}
                   style={{ marginBottom: '10px' }}
@@ -622,7 +712,7 @@ export default function ServicePage() {
               </div>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <Button variant="contained" color="inherit" onClick={handleAddMotor}>
+              <Button variant="contained" color="inherit" onClick={handleSubmit}>
                 Save
               </Button>
             </div>
