@@ -42,6 +42,7 @@ export default function ServiceTableRow({
   Registrationno,
   UpdatedAt,
   onUpdateSuccess,
+  totalPrice,
 }) {
   const [totalPartsCost, setTotalPartsCost] = useState(0);
   const [parts, setParts] = useState([]);
@@ -139,19 +140,19 @@ export default function ServiceTableRow({
   const validateFields = () => {
     let isValid = true;
 
-    // Dealer ID validation
-    if (!DealerIDD) {
-      toast.error('Please select a Dealer.');
-      isValid = false;
-      return isValid;
-    }
+    // // Dealer ID validation
+    // if (!DealerIDD) {
+    //   toast.error('Please select a Dealer.');
+    //   isValid = false;
+    //   return isValid;
+    // }
 
-    // Vehicle ID validation
-    if (!vechicleIDD) {
-      toast.error('Please select a Vehicle.');
-      isValid = false;
-      return isValid;
-    }
+    // // Vehicle ID validation
+    // if (!vechicleIDD) {
+    //   toast.error('Please select a Vehicle.');
+    //   isValid = false;
+    //   return isValid;
+    // }
 
     // Registration number validation (alphanumeric)
     const registrationPattern = /^[a-zA-Z0-9]+$/;
@@ -261,6 +262,9 @@ export default function ServiceTableRow({
   };
 
   const handleFormChange = (event) => {
+    if (formData.UnitCost === UnitCost) {
+      handleFormChange({ target: { name: 'UnitCost', value: '' } });
+    }
     const { name: fieldName, value } = event.target;
     setFormData({
       ...formData,
@@ -506,7 +510,7 @@ export default function ServiceTableRow({
                   style={{ marginBottom: '10px', marginTop: '10px' }}
                 >
                   <MenuItem value="">
-                    <em>Select Dealer</em>
+                    <em>{DealerID}</em>
                   </MenuItem>
                   {dealers.map((dealer) => (
                     <MenuItem key={dealer.dealer_id} value={dealer.dealer_id}>
@@ -524,7 +528,7 @@ export default function ServiceTableRow({
                   style={{ marginBottom: '10px' }}
                 >
                   <MenuItem value="">
-                    <em>Select Vechicle</em>
+                    <em>{VehicleID}</em>
                   </MenuItem>
                   {vechicles.map((vechicle) => (
                     <MenuItem key={vechicle.vehicle_id} value={vechicle.vehicle_id}>
@@ -626,8 +630,10 @@ export default function ServiceTableRow({
                   margin="normal"
                   label="Unit Cost"
                   name="UnitCost"
-                  value={formData.totalPartsCost}
+                  value={totalPartsCost === 0 ? UnitCost : totalPartsCost}
                   onChange={handleFormChange}
+                  // defaultValue={UnitCost}
+                  disabled
                 />
                 {/* <TextField
                 fullWidth
@@ -797,4 +803,5 @@ ServiceTableRow.propTypes = {
   CreatedAt: PropTypes.string,
   UpdatedAt: PropTypes.string,
   onUpdateSuccess: PropTypes.func,
+  totalPrice: PropTypes.any,
 };

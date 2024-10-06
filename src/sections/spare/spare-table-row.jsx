@@ -79,18 +79,18 @@ export default function SpareTableRow({
 
   const validateFields = () => {
     // Regular expressions for validation
-    const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
+    const idPattern = /^[a-zA-Z0-9_-]+$/; // Only letters and numbers
     const textPattern = /^[A-Za-z\s-.,;:!?"'()\-–—[\\]+$/; // Only letters and spaces for text fields
     const numberPattern = /^(0|[1-9][0-9]*)(\.[0-9]{1,2})?$/;
 
-    if (!VendorIDD) {
-      toast.error('Please select a Vendor');
-      return false;
-    }
+    // if (!VendorIDD) {
+    //   toast.error('Please select a Vendor');
+    //   return false;
+    // }
 
-    if (!idPattern.test(VendorIDD)) {
-      toast.error('Vendor must be a combination letter, number, _');
-    }
+    // if (!idPattern.test(VendorIDD)) {
+    //   toast.error('Vendor must be a combination letter, number, _');
+    // }
 
     // Dealer ID Validation
     if (!Name) {
@@ -102,17 +102,13 @@ export default function SpareTableRow({
       return false;
     }
 
-    // Vehicle ID Validation
     if (!UnitCost) {
       toast.error('Please enter Unit cost');
       return false;
     }
-    // Convert UnitCost to a number
-    const unitCostNumber = parseFloat(UnitCost);
 
-    // Check if the conversion is successful and matches the pattern
-    if (Number.isNaN(unitCostNumber) || !numberPattern.test(UnitCost)) {
-      toast.error('Unit cost must be a valid number');
+    if (!numberPattern.test(UnitCost)) {
+      toast.error('Unit cost must be a combination numbers');
       return false;
     }
 
@@ -128,11 +124,11 @@ export default function SpareTableRow({
 
     // Vehicle ID Validation
     if (!PartNumber) {
-      toast.error('Please enter Unit cost');
+      toast.error('Please enter Part Number');
       return false;
     }
-    if (!numberPattern.test(PartNumber)) {
-      toast.error('Unit cost must be a combination numbers');
+    if (!idPattern.test(PartNumber)) {
+      toast.error('Enter a valid Part Number');
       return false;
     }
 
@@ -394,7 +390,7 @@ export default function SpareTableRow({
                 style={{ marginTop: '14px' }}
               >
                 <MenuItem value="">
-                  <em>Select Vendor</em>
+                  <em>{VendorID}</em>
                 </MenuItem>
                 {vendors.map((vendor) => (
                   <MenuItem key={vendor.vendor_id} value={vendor.vendor_id}>
@@ -438,7 +434,6 @@ export default function SpareTableRow({
                 margin="normal"
                 label="Unit Cost"
                 name="UnitCost"
-                type="number"
                 value={formData.UnitCost}
                 onChange={handleFormChange}
               />

@@ -107,14 +107,14 @@ export default function VechiclesTableRow({
     const datePattern = /^\d{4}-\d{2}-\d{2}$/; // Date format YYYY-MM-DD
     const barcodePattern = /^[0-9]+$/;
 
-    if (!DealerIDD) {
-      toast.error('Please select Dealer Id');
-      return false;
-    }
-    if (!idPattern.test(DealerIDD)) {
-      toast.error('Dealer ID must be a combination of letters and numbers');
-      return false;
-    }
+    // if (!DealerIDD) {
+    //   toast.error('Please select Dealer Id');
+    //   return false;
+    // }
+    // if (!idPattern.test(DealerIDD)) {
+    //   toast.error('Dealer ID must be a combination of letters and numbers');
+    //   return false;
+    // }
 
     if (!modelName) {
       toast.error('Please enter a name');
@@ -569,7 +569,7 @@ export default function VechiclesTableRow({
                   style={{ marginTop: '14px' }}
                 >
                   <MenuItem value="">
-                    <em>Select Dealer</em>
+                    <em>{dealerID}</em>
                   </MenuItem>
                   {dealers.map((dealer) => (
                     <MenuItem key={dealer.dealer_id} value={dealer.dealer_id}>
@@ -738,7 +738,7 @@ export default function VechiclesTableRow({
                   readOnly: true,
                 }}
               /> */}
-              <TextField
+              {/* <TextField
                 fullWidth
                 margin="normal"
                 label="Vendor Id"
@@ -747,7 +747,7 @@ export default function VechiclesTableRow({
                 InputProps={{
                   readOnly: true,
                 }}
-              />
+              /> */}
               <TextField
                 fullWidth
                 margin="normal"
@@ -796,16 +796,6 @@ export default function VechiclesTableRow({
                 label="MFG Date"
                 name="mfgDate"
                 value={formData.mfgDate}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Unit Cost"
-                name="unitCost"
-                value={formData.unitCost}
                 InputProps={{
                   readOnly: true,
                 }}

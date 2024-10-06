@@ -144,11 +144,11 @@ export default function SparePage() {
 
     // Vehicle ID Validation
     if (!PartNumber) {
-      toast.error('Please enter Unit cost');
+      toast.error('Please enter Part Number');
       return false;
     }
     if (!numberPattern.test(PartNumber)) {
-      toast.error('Unit cost must be a combination numbers');
+      toast.error('Part Number must be a combination numbers');
       return false;
     }
 

@@ -71,18 +71,18 @@ export default function AccessoryTableRow({
 
   const validateFields = () => {
     // Regular expressions for validation
-    const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
-    const textPattern = /^[A-Za-z\s]+$/; // Only letters and spaces for text fields
-    const numberPattern = /^[0-9]+$/;
+    // const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
+    const textPattern = /^[A-Za-z\s-]+$/; // Only letters and spaces for text fields
+    const numberPattern = /^(0|[1-9][0-9]*)(\.[0-9]{1,2})?$/;
 
-    if(!VendorIDD){
-      toast.error('Please select a Vendor');
-      return false;
-    }
+    // if(!VendorIDD){
+    //   toast.error('Please select a Vendor');
+    //   return false;
+    // }
 
-    if(!idPattern.test(VendorIDD)){
-      toast.error('Vendor must be a combination letter, number, _')
-    }
+    // if(!idPattern.test(VendorIDD)){
+    //   toast.error('Vendor must be a combination letter, number, _')
+    // }
 
     // Dealer ID Validation
     if (!Name) {
@@ -373,7 +373,7 @@ export default function AccessoryTableRow({
             style={{ marginBottom: '10px', marginTop: '10px' }}
           >
             <MenuItem value="">
-              <em>Select Vendor</em>
+              <em>{VendorID}</em>
             </MenuItem>
             {vendors.map((vendor) => (
               <MenuItem key={vendor.vendor_id} value={vendor.vendor_id}>

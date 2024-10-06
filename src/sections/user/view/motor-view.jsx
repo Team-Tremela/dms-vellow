@@ -89,9 +89,9 @@ export default function MotorPage() {
     // const numberPattern = /^[0-9]+$/;
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const phoneNumberPattern = /^(?:\+?\d{1,3})?[-. ]?\(?\d{1,4}?\)?[-. ]?\d{1,4}[-. ]?\d{1,9}$/;
-    const aadharPattern = /^\d{4}\s?\d{4}\s?\d{4}$/;
-    const gstPattern = /^[0-9]{2}[A-Z]{4}[0-9]{4}[A-Z]{1}[0-9]{1}[Z]{1}[0-9]{1}$/;
-    const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+    const aadharPattern = /^[0-9]{4}\s?[0-9]{4}\s?[0-9]{4}$/;
+    const gstPattern = /^[0-9][A-Z]$/;
+    const panPattern = /^[A-Z][0-9]$/;
 
     if (!Name) {
       toast.error('Please enter a name');
@@ -134,7 +134,7 @@ export default function MotorPage() {
       return false;
     }
     if (!aadharPattern.test(Aadharcard)) {
-      toast.error('Please enter a valid Aadhar Card number');
+      toast.error('Please enter a valid Aadhar Card number(9999 9999 9999 9999)');
       return false;
     }
 

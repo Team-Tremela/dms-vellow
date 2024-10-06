@@ -100,8 +100,8 @@ export default function AccessoryPage() {
   const validateFields = () => {
     // Regular expressions for validation
     const idPattern = /^[a-zA-Z0-9_]+$/; // Only letters and numbers
-    const textPattern = /^[A-Za-z\s]+$/; // Only letters and spaces for text fields
-    const numberPattern = /^[0-9]+$/;
+    const textPattern = /^[A-Za-z\s-]+$/; // Only letters and spaces for text fields
+    const numberPattern = /^(0|[1-9][0-9]*)(\.[0-9]{1,2})?$/;
 
     if(!VendorID){
       toast.error('Please select a Vendor');

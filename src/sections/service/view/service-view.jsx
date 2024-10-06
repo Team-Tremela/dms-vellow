@@ -486,6 +486,7 @@ export default function ServicePage() {
                             selected={selected.indexOf(row.service_id) !== -1}
                             handleClick={(event) => handleClick(event, row.service_id)}
                             onUpdateSuccess={fetchData}
+                            totalPrice={totalPartsCost}
                           />
                         ))
                     )}
