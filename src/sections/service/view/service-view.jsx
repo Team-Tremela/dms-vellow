@@ -327,23 +327,21 @@ export default function ServicePage() {
   };
 
   const handleAddMotor = async () => {
-    const newService = {
-      dealer_id: DealerID,
-      vehicle_id: VechicleID,
-      service_date: ServiceDate,
-      description: Description,
-      doc: File,
-      registration_no: Registrationno,
-      cost: UnitCost,
-    };
-    console.log(newService);
+    const formData = new FormData();
+    formData.append('dealer_id', DealerID);
+    formData.append('vehicle_id', VechicleID);
+    formData.append('service_date', ServiceDate);
+    formData.append('description', Description);
+    formData.append('doc', File); // Assumes 'File' is a file object
+    formData.append('registration_no', Registrationno);
+    formData.append('cost', UnitCost);
     try {
       const response = await fetch('https://vlmtrs.onrender.com/v1/service/add', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newService),
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
+        body: formData,
       });
 
       if (!response.ok) {
